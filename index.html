@@ -790,7 +790,14 @@ L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r
 }).addTo(map);
 
 const jpStops = STOPS.filter(s => s.type === 'stop');
-map.fitBounds(L.latLngBounds(jpStops.map(s => [s.lat, s.lng])), { padding: [55, 60] });
+const initialBounds = L.latLngBounds(jpStops.map(s => [s.lat, s.lng]));
+map.fitBounds(initialBounds, { padding: [55, 60] });
+
+function resetMap() {
+  // Close popup and fly back to full itinerary view
+  map.closePopup();
+  map.flyToBounds(initialBounds, { padding: [55, 60], duration: 1.2, easeLinearity: 0.3 });
+}
 
 // ── ICONS ────────────────────────────────────────────────────
 function makeIcon(label, color, active, isTransit) {
@@ -1044,10 +1051,18 @@ function toggleExpand(idx, e) {
 
   if (!wasExpanded) {
     activateStop(idx);
-    // After animation, scroll so the card header stays visible at top
     setTimeout(() => {
       card.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }, 60);
+  } else {
+    // Card closed — deactivate and reset map to full view
+    card.classList.remove('active');
+    const lm = lMarkers[idx];
+    if (lm) lm.m.setIcon(makeIcon(lm.lbl, STOPS[idx].color || '#999', false, lm.isT));
+    const dot = document.getElementById(`dot-${idx}`);
+    if (dot) { dot.classList.remove('active'); dot.style.opacity = '0.4'; dot.style.transform = 'scale(1)'; }
+    activeIdx = null;
+    resetMap();
   }
 }
 
