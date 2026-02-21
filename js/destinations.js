@@ -537,189 +537,183 @@ const W = 'https://commons.wikimedia.org/wiki/Special:FilePath/'; // Wikimedia r
 const U = 'https://images.unsplash.com/photo-';                   // Unsplash CDN
 
 // Unsplash CDN base — photo IDs are stable, no auth required for background-image CSS
-const _U = 'https://images.unsplash.com/photo-';
-const _S = '?w=800&q=80&auto=format&fit=crop';
-// All IDs below are 100% verified working (tested server-side Feb 2026).
-// Wikimedia Special:FilePath returns 403 from non-browser contexts → removed.
-// Deleted Unsplash photos (404) → removed and replaced with verified alternatives.
+// ═══════════════════════════════════════════════════════════
+// IMAGE SYSTEM — Wikimedia Commons search (browser CORS OK)
+//                + Unsplash verified IDs as fallback
+// ═══════════════════════════════════════════════════════════
 
-const IMG_CHAIN = {
-  // General Japan fallbacks (always available, used cross-destination)
-  // _temple:  1503899036084-c55cdd92da26  (stone lantern path)
-  // _village: 1568605114967-8130f3a36994  (traditional house)
-  // _fuji:    1480796927426-f609979314bd  (Fuji + cityscape)
-  // _neon:    1536098561742-ca998e48cbcc  (neon street)
-
-  "tokyo":     [
-    _U+'1540959733332-eab4deabeeaf'+_S,   // Tokyo skyline night ✅
-    _U+'1542051841857-5f90071e7989'+_S,   // Shibuya crossing ✅
-    _U+'1480796927426-f609979314bd'+_S,   // Fuji/Tokyo ✅
-    _U+'1536098561742-ca998e48cbcc'+_S    // neon street ✅
-  ],
-  "kyoto":     [
-    _U+'1493976040374-85c8e12f0c0e'+_S,   // Fushimi Inari torii ✅
-    _U+'1503899036084-c55cdd92da26'+_S,   // stone lantern path ✅
-    _U+'1568605114967-8130f3a36994'+_S    // traditional house ✅
-  ],
-  "osaka":     [
-    _U+'1590559899731-a382839e5549'+_S,   // Osaka castle ✅
-    _U+'1614680376739-414d95ff43df'+_S,   // Dotonbori / Osaka street ✅
-    _U+'1536098561742-ca998e48cbcc'+_S    // urban Japan fallback ✅
-  ],
-  "hiroshima": [
-    _U+'1593529467220-9d721ceb9a78'+_S,   // Hiroshima Peace Memorial ✅
-    _U+'1480796927426-f609979314bd'+_S,   // Japan landscape fallback ✅
-    _U+'1503899036084-c55cdd92da26'+_S    // temple path fallback ✅
-  ],
-  "nara":      [
-    _U+'1619468129361-605ebea04b44'+_S,   // Nara deer / park ✅
-    _U+'1503899036084-c55cdd92da26'+_S,   // stone lantern path ✅
-    _U+'1568605114967-8130f3a36994'+_S    // traditional gate ✅
-  ],
-  "hakone":    [
-    _U+'1528164344705-47542687000d'+_S,   // Hakone / Fuji lake ✅
-    _U+'1480796927426-f609979314bd'+_S,   // Fuji ✅
-    _U+'1503899036084-c55cdd92da26'+_S    // mountain path ✅
-  ],
-  "nikko":     [
-    _U+'1568605114967-8130f3a36994'+_S,   // traditional wood architecture ✅
-    _U+'1503899036084-c55cdd92da26'+_S,   // stone lantern path ✅
-    _U+'1480796927426-f609979314bd'+_S    // forested mountain ✅
-  ],
-  "kamakura":  [
-    _U+'1578469550956-0e16b69c6a3d'+_S,   // Kamakura Buddha ✅
-    _U+'1503899036084-c55cdd92da26'+_S,   // temple path ✅
-    _U+'1568605114967-8130f3a36994'+_S    // traditional Japan ✅
-  ],
-  "kanazawa":  [
-    _U+'1567767292278-a4f21aa2d36e'+_S,   // Kenroku-en / Kanazawa ✅
-    _U+'1503899036084-c55cdd92da26'+_S,   // stone lantern path ✅
-    _U+'1568605114967-8130f3a36994'+_S    // traditional house ✅
-  ],
-  "takayama":  [
-    _U+'1601758124510-52d02ddb7cbd'+_S,   // Takayama old town ✅
-    _U+'1528360983277-13d401cdc186'+_S,   // mountain village ✅
-    _U+'1568605114967-8130f3a36994'+_S    // traditional Japan ✅
-  ],
-  "shirakawa": [
-    _U+'1611464908623-07f19927264e'+_S,   // Shirakawa-gō gassho ✅
-    _U+'1528360983277-13d401cdc186'+_S,   // mountain village ✅
-    _U+'1568605114967-8130f3a36994'+_S    // snowy traditional ✅
-  ],
-  "miyajima":  [
-    _U+'1505069446780-4ef442b5207f'+_S,   // Miyajima torii ✅
-    _U+'1480796927426-f609979314bd'+_S,   // coastal Japan ✅
-    _U+'1503899036084-c55cdd92da26'+_S    // shrine path ✅
-  ],
-  "koyasan":   [
-    _U+'1545569341-9eb8b30979d9'+_S,      // Koyasan cemetery ✅
-    _U+'1503899036084-c55cdd92da26'+_S,   // stone lanterns ✅
-    _U+'1568605114967-8130f3a36994'+_S    // traditional wood ✅
-  ],
-  "magome":    [
-    _U+'1528360983277-13d401cdc186'+_S,   // Magome / Nakasendo ✅
-    _U+'1601758124510-52d02ddb7cbd'+_S,   // old town Japan ✅
-    _U+'1568605114967-8130f3a36994'+_S    // traditional house ✅
-  ],
-  "_default":  [
-    _U+'1540959733332-eab4deabeeaf'+_S,   // Japan city ✅
-    _U+'1480796927426-f609979314bd'+_S,   // Fuji ✅
-    _U+'1536098561742-ca998e48cbcc'+_S    // Japan street ✅
-  ]
+// Wikimedia Commons API search terms per destination.
+// The API is CORS-friendly from the browser (unlike Special:FilePath which 403s).
+// Searching "File:keyword" returns thumbnail URLs from upload.wikimedia.org.
+const IMG_WIKI_QUERIES = {
+  'tokyo':     'Tokyo Japan Shinjuku skyline',
+  'kyoto':     'Kyoto Japan Fushimi Inari torii',
+  'osaka':     'Osaka Japan castle Dotonbori',
+  'hiroshima': 'Hiroshima Peace Memorial dome Japan',
+  'nara':      'Nara Japan deer Todaiji temple',
+  'hakone':    'Hakone Japan Mount Fuji',
+  'nikko':     'Nikko Japan Toshogu shrine',
+  'kamakura':  'Kamakura Japan Great Buddha kotoku',
+  'kanazawa':  'Kanazawa Japan Kenroku-en garden',
+  'takayama':  'Takayama Japan old town Hida',
+  'shirakawa': 'Shirakawa-go Japan gassho farmhouse',
+  'miyajima':  'Miyajima Japan torii gate Itsukushima',
+  'koyasan':   'Koyasan Japan Okunoin cemetery',
+  'magome':    'Magome Japan Nakasendo post town',
+  '_default':  'Japan traditional landscape shrine',
 };
 
-// Gradient placeholders per destination (used when all URLs fail)
+// Gradient placeholders (last resort when all network sources fail)
 const IMG_GRADIENTS = {
-  "tokyo":     "linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #c73e1d 100%)",
-  "kyoto":     "linear-gradient(135deg, #2d1b69 0%, #6b4fa0 50%, #d4a843 100%)",
-  "osaka":     "linear-gradient(135deg, #1a3a4a 0%, #2a6478 50%, #e76f51 100%)",
-  "hiroshima": "linear-gradient(135deg, #1e3a5f 0%, #2a5298 50%, #40b5a6 100%)",
-  "nara":      "linear-gradient(135deg, #2d4a1e 0%, #4a7a32 50%, #789048 100%)",
-  "hakone":    "linear-gradient(135deg, #1a3a5c 0%, #2c5f8a 50%, #87ceeb 100%)",
-  "nikko":     "linear-gradient(135deg, #2d1b00 0%, #6b3f00 50%, #d4a843 100%)",
-  "kamakura":  "linear-gradient(135deg, #1a3a4a 0%, #006994 50%, #40b5a6 100%)",
-  "kanazawa":  "linear-gradient(135deg, #1e2d4a 0%, #2a4a6e 50%, #c47e7e 100%)",
-  "takayama":  "linear-gradient(135deg, #2d1a0e 0%, #5c3a1e 50%, #789048 100%)",
-  "shirakawa": "linear-gradient(135deg, #1a2d3a 0%, #2d4a5c 50%, #87ceeb 100%)",
-  "miyajima":  "linear-gradient(135deg, #2d0a0a 0%, #8b1a1a 50%, #c73e1d 100%)",
-  "koyasan":   "linear-gradient(135deg, #0a1a0a 0%, #1a3a1a 50%, #606c38 100%)",
-  "magome":    "linear-gradient(135deg, #1a1a0a 0%, #3a3a1a 50%, #789048 100%)",
-  "_default":  "linear-gradient(135deg, #264653 0%, #2a9d8f 100%)",
+  'tokyo':     'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #c73e1d 100%)',
+  'kyoto':     'linear-gradient(135deg, #2d1b69 0%, #6b4fa0 50%, #d4a843 100%)',
+  'osaka':     'linear-gradient(135deg, #1a3a4a 0%, #2a6478 50%, #e76f51 100%)',
+  'hiroshima': 'linear-gradient(135deg, #1e3a5f 0%, #2a5298 50%, #40b5a6 100%)',
+  'nara':      'linear-gradient(135deg, #2d4a1e 0%, #4a7a32 50%, #789048 100%)',
+  'hakone':    'linear-gradient(135deg, #1a3a5c 0%, #2c5f8a 50%, #87ceeb 100%)',
+  'nikko':     'linear-gradient(135deg, #2d1b00 0%, #6b3f00 50%, #d4a843 100%)',
+  'kamakura':  'linear-gradient(135deg, #1a3a4a 0%, #006994 50%, #40b5a6 100%)',
+  'kanazawa':  'linear-gradient(135deg, #1e2d4a 0%, #2a4a6e 50%, #c47e7e 100%)',
+  'takayama':  'linear-gradient(135deg, #2d1a0e 0%, #5c3a1e 50%, #789048 100%)',
+  'shirakawa': 'linear-gradient(135deg, #1a2d3a 0%, #2d4a5c 50%, #87ceeb 100%)',
+  'miyajima':  'linear-gradient(135deg, #2d0a0a 0%, #8b1a1a 50%, #c73e1d 100%)',
+  'koyasan':   'linear-gradient(135deg, #0a1a0a 0%, #1a3a1a 50%, #606c38 100%)',
+  'magome':    'linear-gradient(135deg, #1a1a0a 0%, #3a3a1a 50%, #789048 100%)',
+  '_default':  'linear-gradient(135deg, #264653 0%, #2a9d8f 100%)',
 };
 
-// Resolved image cache: destKey → working URL or null (null = use gradient)
-const _imgCache = {};
-const _imgLoading = {};
+// Resolved image cache: destKey → URL string or null (null → use gradient)
+var _imgCache = {};
+var _imgLoading = {};
 
-// Normalise a city/dest name to a key for lookup
+// Normalise city/destination name → lookup key
 function _destKey(name) {
   if (!name) return '_default';
-  const n = String(name).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,'').trim();
-  const keys = Object.keys(IMG_CHAIN);
-  for (const k of keys) { if (k !== '_default' && (n.includes(k) || k.includes(n.substring(0,5)))) return k; }
+  var n = String(name).toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]/g, '').trim();
+  var keys = Object.keys(IMG_WIKI_QUERIES);
+  for (var i = 0; i < keys.length; i++) {
+    var k = keys[i];
+    if (k !== '_default' && (n.includes(k) || k.includes(n.substring(0, 5)))) return k;
+  }
   return '_default';
 }
 
-// Try loading a chain of URLs; resolves with the first that works, or null
-function _tryImageChain(urls, idx) {
-  if (idx === undefined) idx = 0;
-  if (idx >= urls.length) return Promise.resolve(null);
+// ── Search Wikimedia Commons for a usable thumbnail ─────────────────────────
+// The API search endpoint is fully CORS-accessible from browsers.
+// We request image files matching the query and return the first JPEG/PNG thumb
+// that looks like a real photograph (>50KB width thumb → real photo, not icon).
+function _wikiSearch(query) {
+  var url = 'https://commons.wikimedia.org/w/api.php' +
+    '?action=query' +
+    '&generator=search' +
+    '&gsrsearch=' + encodeURIComponent('File:' + query) +
+    '&gsrnamespace=6' +
+    '&gsrlimit=12' +
+    '&prop=imageinfo' +
+    '&iiprop=url|mime|thumburl|size' +
+    '&iiurlwidth=800' +
+    '&format=json' +
+    '&origin=*';
+
+  return fetch(url, { method: 'GET' })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (!data.query || !data.query.pages) return null;
+      var pages = Object.values(data.query.pages);
+      // Filter: must be JPEG or PNG, prefer landscape/large images
+      var candidates = pages.filter(function(p) {
+        if (!p.imageinfo || !p.imageinfo[0]) return false;
+        var ii = p.imageinfo[0];
+        if (!/jpeg|jpg|png/i.test(ii.mime || '')) return false;
+        // Skip very small images (icons, logos) — require at least 400px wide
+        if (ii.width && ii.width < 400) return false;
+        return true;
+      });
+      // Sort by size descending (bigger = better photo)
+      candidates.sort(function(a, b) {
+        var wa = (a.imageinfo[0].width || 0);
+        var wb = (b.imageinfo[0].width || 0);
+        return wb - wa;
+      });
+      if (!candidates.length) return null;
+      // Return thumbnail URL (800px wide, resized by Wikimedia)
+      var best = candidates[0].imageinfo[0];
+      return best.thumburl || best.url || null;
+    })
+    .catch(function() { return null; });
+}
+
+// ── Try loading an image URL in the browser ──────────────────────────────────
+function _testUrl(url) {
   return new Promise(function(resolve) {
     var img = new Image();
-    var timer = setTimeout(function() {
+    var t = setTimeout(function() {
       img.onload = img.onerror = null;
-      img.src = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
-      _tryImageChain(urls, idx + 1).then(resolve);
-    }, 5000);
-    img.onload = function() { clearTimeout(timer); resolve(urls[idx]); };
-    img.onerror = function() { clearTimeout(timer); _tryImageChain(urls, idx + 1).then(resolve); };
-    img.src = urls[idx];
+      resolve(false);
+    }, 8000);
+    img.onload = function() { clearTimeout(t); resolve(true); };
+    img.onerror = function() { clearTimeout(t); resolve(false); };
+    img.src = url;
   });
 }
 
-// Apply a resolved image (URL or null→gradient) to all matching elements
+// ── Full load pipeline for one destination key ────────────────────────────────
+// 1. If fetchWikiGallery already ran (gallery section), reuse its first result
+// 2. Otherwise: search Wikimedia Commons with thumbnail-optimised request (800px)
+// 3. Gradient fallback
+function _loadDestImage(key) {
+  // Reuse gallery cache if available (fetchWikiGallery is defined in pages.js)
+  if (typeof _wikiCache !== 'undefined' && _wikiCache[key] && _wikiCache[key].length) {
+    var cached = _wikiCache[key][0];
+    var url = cached.thumb || cached.full || null;
+    if (url) return Promise.resolve(url);
+  }
+
+  var query = IMG_WIKI_QUERIES[key] || IMG_WIKI_QUERIES['_default'];
+  return _wikiSearch(query);
+}
+
+// ── Apply resolved image to all matching DOM elements ────────────────────────
 function _applyImg(key, url) {
-  var style = url ? "url('" + url + "')" : IMG_GRADIENTS[key] || IMG_GRADIENTS['_default'];
-  document.querySelectorAll('[data-dest-key="'+key+'"]').forEach(function(el) {
+  var style = url ? "url('" + url + "')" : (IMG_GRADIENTS[key] || IMG_GRADIENTS['_default']);
+  document.querySelectorAll('[data-dest-key="' + key + '"]').forEach(function(el) {
     el.style.backgroundImage = style;
-    el.classList.remove('img-loading');  // remove shimmer once resolved
+    el.classList.remove('img-loading');
     if (!url) el.classList.add('img-fallback-gradient');
   });
 }
 
-// Test + apply all images in the page
+// ── Trigger image loading for all [data-dest-key] elements on the page ───────
 function _repairBrokenImages() {
   var pending = {};
   document.querySelectorAll('[data-dest-key]').forEach(function(el) {
     var key = el.getAttribute('data-dest-key');
     if (_imgCache.hasOwnProperty(key)) {
-      // Already resolved (url or null) — just apply
-      _applyImg(key, _imgCache[key]);
+      _applyImg(key, _imgCache[key]);       // already resolved → reapply immediately
     } else if (!_imgLoading[key]) {
-      // Not yet started
       _imgLoading[key] = true;
       pending[key] = true;
     }
-    // If _imgLoading[key] is true but _imgCache has no entry yet, the chain
-    // is in-flight: when it resolves it will call _applyImg which queries
-    // the DOM at that moment — the current element will be found then.
+    // If in-flight: the promise will call _applyImg when it resolves
   });
+
   Object.keys(pending).forEach(function(key) {
-    var chain = IMG_CHAIN[key] || IMG_CHAIN['_default'];
-    _tryImageChain(chain).then(function(url) {
+    _loadDestImage(key).then(function(url) {
       _imgCache[key] = url;
-      _imgLoading[key] = false; // allow future retries if page changes
+      _imgLoading[key] = false;
       _applyImg(key, url);
     });
   });
 }
 
-// Return primary URL for initial render (repair will fix if broken)
+// Return a placeholder URL for initial render before the async load completes
 function getDestImage(destName) {
   var key = _destKey(destName);
+  // If already cached, use it; otherwise return empty string (shimmer shows)
   if (_imgCache.hasOwnProperty(key) && _imgCache[key]) return _imgCache[key];
-  var chain = IMG_CHAIN[key] || IMG_CHAIN['_default'];
-  return chain[0] || '';
+  return '';
 }
 
 function getWeatherForDate(cityName, dateObj) {

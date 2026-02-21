@@ -5,6 +5,13 @@
 // ─── THEME MANAGEMENT ───
 const ThemeManager = {
   STORAGE_KEY: 'ldva-theme',
+  CYCLE: ['light', 'sakura', 'dark'],
+
+  THEME_META: {
+    light:  { next: 'sakura', icon: '🌸', label: 'Sakura',      title: 'Passer en mode Sakura' },
+    sakura: { next: 'dark',   icon: '🌙', label: 'Sombre',      title: 'Passer en mode sombre' },
+    dark:   { next: 'light',  icon: '☀️', label: 'Clair',       title: 'Passer en mode clair'  },
+  },
 
   init() {
     const saved = localStorage.getItem(this.STORAGE_KEY);
@@ -18,8 +25,7 @@ const ThemeManager = {
   },
 
   apply(theme, animate = true) {
-    // On initial load (animate=false): suppress transition to avoid flash
-    // On toggle click (animate=true): let CSS transitions run naturally
+    if (!this.THEME_META[theme]) theme = 'light';
     if (!animate) {
       document.documentElement.style.transition = 'none';
       document.documentElement.setAttribute('data-theme', theme);
@@ -32,20 +38,19 @@ const ThemeManager = {
   },
 
   _updateButtons(theme) {
-    const isDark = theme === 'dark';
-    const icon  = isDark ? '☀️' : '🌙';
-    const label = isDark ? 'Mode clair' : 'Mode sombre';
+    const meta = this.THEME_META[theme];
     document.querySelectorAll('#theme-btn, #theme-btn-mobile').forEach(btn => {
-      btn.title = label;
+      btn.title = meta.title;
       const iconSpan  = btn.querySelector('.theme-icon');
       const labelSpan = btn.querySelector('.theme-label');
-      if (iconSpan)  iconSpan.textContent  = icon;
-      if (labelSpan) labelSpan.textContent = label;
+      if (iconSpan)  iconSpan.textContent  = meta.icon;
+      if (labelSpan) labelSpan.textContent = meta.label;
     });
   },
 
   toggle() {
-    this.apply(this.current === 'dark' ? 'light' : 'dark');
+    const meta = this.THEME_META[this.current];
+    this.apply(meta ? meta.next : 'light');
   }
 };
 
@@ -176,9 +181,9 @@ function patchLeafletPopups() {
 
 // ─── INITIALIZATION ───
 async function initApp() {
-  console.log('🏯 Little Domo Very Arigato V13 — Initializing…');
+  console.log('🏯 Little Domo Very Arigato V15 — Initializing…');
   // Bust image cache on new version deploy
-  var _imgVer = 'ldva-img-v13';
+  var _imgVer = 'ldva-img-v15';
   if (localStorage.getItem('ldva-img-ver') !== _imgVer) {
     Object.keys(localStorage).filter(function(k){ return k.startsWith('ldva-img'); }).forEach(function(k){ localStorage.removeItem(k); });
     localStorage.setItem('ldva-img-ver', _imgVer);

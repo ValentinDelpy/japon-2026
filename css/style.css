@@ -52,7 +52,96 @@
   --t: .22s;
 }
 
-/* ─── DARK MODE TOKENS ─── */
+/* ─── SAKURA THEME ─── */
+[data-theme="sakura"] {
+  --bg:      #fdf0f3;      /* pétale rosé très pâle */
+  --surface: #fff5f7;      /* blanc teinté fleur de cerisier */
+  --surface2: #fce8ed;     /* surfaces secondaires */
+  --border:  #f0d0d8;      /* bordures roses claires */
+  --border2: #e0b8c4;      /* bordures un peu plus définies */
+
+  /* Accents recolorisés vers le rose/prune en mode Sakura */
+  --sage:    #b06080;      /* prune (remplace vert) */
+  --sage-l:  #fce8ef;
+  --sage-d:  #884860;
+  --blush:   #d4607a;      /* cerisier vif */
+  --blush-l: #ffe8ec;
+  --blush-d: #b04060;
+  --sky:     #9070b0;      /* mauve doux */
+  --sky-l:   #f0e8f8;
+  --amber:   #c0707a;      /* corail rosé */
+  --amber-l: #ffe8ec;
+  --amber-d: #904058;
+  --lavender: #c080b0;
+  --lavender-l: #f8e8f4;
+
+  --ink:  #2c1820;         /* encre sombre avec teinte prune */
+  --ink2: #5c3848;
+  --ink3: #987888;        /* désactivé */
+  --snow: #fff9fb;
+  --white: #ffffff;
+  --paper-warm: #fff0f4;
+
+  --shadow-xs: 0 1px 2px rgba(176,64,96,.05);
+  --shadow-sm: 0 1px 4px rgba(176,64,96,.08), 0 0 1px rgba(176,64,96,.04);
+  --shadow-md: 0 4px 16px rgba(176,64,96,.10);
+  --shadow-lg: 0 12px 36px rgba(176,64,96,.14);
+  --shadow-xl: 0 24px 60px rgba(176,64,96,.20);
+
+  /* Sidebar ivoire rosé, très différent du mode sombre */
+  --sidebar-bg:          #2a1420;   /* prune foncé */
+  --sidebar-border:      rgba(255,200,210,.08);
+  --sidebar-text:        rgba(255,210,220,.45);
+  --sidebar-text-active: #fff5f7;
+  --sidebar-active-bg:   rgba(255,160,180,.12);
+  --sidebar-hover-bg:    rgba(255,160,180,.07);
+}
+
+/* Corps en mode Sakura : motif pétales très subtil + dégradé */
+[data-theme="sakura"] body {
+  background-image:
+    radial-gradient(ellipse at 15% 10%, rgba(255,150,170,.12) 0%, transparent 55%),
+    radial-gradient(ellipse at 85% 90%, rgba(192,96,128,.08) 0%, transparent 55%),
+    radial-gradient(ellipse at 50% 50%, rgba(255,220,230,.06) 0%, transparent 70%);
+}
+
+/* Sakura : pétales flottants décoratifs (pseudo-element sur body) */
+[data-theme="sakura"] .sidebar::after {
+  content: '🌸';
+  position: absolute; bottom: 80px; right: 16px;
+  font-size: 1.8rem; opacity: .12; pointer-events: none;
+  animation: float 4s ease-in-out infinite;
+}
+
+/* Stat cards : accent top en dégradé sakura */
+[data-theme="sakura"] .stat-card::before {
+  background: linear-gradient(90deg, #e8a0b0, #c070a0, #d46080) !important;
+}
+
+/* Leaflet tiles légèrement teintés rose en Sakura */
+[data-theme="sakura"] .leaflet-tile {
+  filter: sepia(.15) hue-rotate(300deg) saturate(.9) brightness(1.02);
+}
+[data-theme="sakura"] .leaflet-control {
+  background: var(--snow) !important;
+  border-color: var(--border) !important;
+}
+[data-theme="sakura"] .leaflet-control a {
+  color: var(--ink) !important;
+  background-color: var(--snow) !important;
+}
+
+/* Mobile header en Sakura */
+[data-theme="sakura"] .mobile-header {
+  background: rgba(255,245,247,.92);
+  border-bottom-color: var(--border);
+}
+
+/* Scrollbar en rose en Sakura */
+[data-theme="sakura"] ::-webkit-scrollbar-thumb {
+  background: var(--border2);
+}
+
 [data-theme="dark"] {
   --bg: #18160e;
   --surface: #252118;
@@ -873,3 +962,156 @@ a:hover { color: var(--blush); }
 .page-container {
   background: transparent;
 }
+
+/* ════════════════════════════════════════════════
+   V14 — SAKURA THEME POLISH
+   ════════════════════════════════════════════════ */
+
+/* Countdown widget sakura tinting */
+[data-theme="sakura"] .countdown-widget {
+  background: rgba(255,160,180,.12);
+  border-color: rgba(255,160,180,.25);
+}
+[data-theme="sakura"] .countdown-days {
+  color: #d4607a;
+  text-shadow: 0 0 24px rgba(212,96,122,.2);
+}
+
+/* Nav active state sakura */
+[data-theme="sakura"] .nav-link.active {
+  background: rgba(255,160,180,.14) !important;
+  color: #fff5f7 !important;
+}
+[data-theme="sakura"] .nav-link.active .nav-icon {
+  filter: none;
+}
+
+/* Stat cards sakura */
+[data-theme="sakura"] .stat-card {
+  background: var(--surface);
+  border-color: var(--border);
+}
+[data-theme="sakura"] .stat-value.indigo { color: #9070b0; }
+[data-theme="sakura"] .stat-value.teal   { color: #b06080; }
+[data-theme="sakura"] .stat-value.vermillion { color: #d4607a; }
+[data-theme="sakura"] .stat-value.gold   { color: #c0707a; }
+[data-theme="sakura"] .stat-value.bamboo { color: #a86088; }
+
+/* Stop cards sakura */
+[data-theme="sakura"] .stop-card {
+  background: var(--surface);
+  border-color: var(--border);
+}
+[data-theme="sakura"] .stop-card:hover {
+  border-color: var(--border2);
+  box-shadow: var(--shadow-md);
+}
+
+/* Quick chips sakura */
+[data-theme="sakura"] .quick-chip.qc-sage { background: #fce8ef; color: #b06080; }
+[data-theme="sakura"] .quick-chip.qc-sky  { background: #f0e8f8; color: #9070b0; }
+[data-theme="sakura"] .quick-chip.qc-amber { background: #ffe8ec; color: #c0707a; }
+[data-theme="sakura"] .quick-chip.qc-green { background: #e8f8ec; color: #508060; }
+
+/* Budget table sakura */
+[data-theme="sakura"] .budget-table tr:hover td { background: var(--surface2); }
+
+/* map-title-bar sakura */
+[data-theme="sakura"] .map-title-bar {
+  background: linear-gradient(90deg, rgba(255,200,210,.25) 0%, transparent 100%);
+  border-bottom-color: var(--border);
+}
+
+/* Guide cards sakura */
+[data-theme="sakura"] .guide-dest-card {
+  background: var(--surface);
+  border-color: var(--border);
+}
+[data-theme="sakura"] .guide-dest-card:hover {
+  border-color: #e0b0c0;
+  box-shadow: var(--shadow-md);
+}
+[data-theme="sakura"] .dest-tag-price  { background: #ffe8ec; color: #c06070; }
+[data-theme="sakura"] .dest-tag-act    { background: #f0e8f8; color: #9070b0; }
+[data-theme="sakura"] .dest-tag-temp   { background: #fef0e0; color: #c07070; }
+[data-theme="sakura"] .dest-tag-ok     { background: #e8f4ec; color: #508060; }
+
+/* Theme toggle sakura tint in sidebar */
+[data-theme="sakura"] .theme-btn:hover {
+  background: rgba(255,160,180,.15) !important;
+  border-color: rgba(212,96,122,.4) !important;
+  color: #d4607a !important;
+}
+
+/* Progress bars sakura */
+[data-theme="sakura"] .prog-fill-sage  { background: linear-gradient(90deg, #e8a0b0, #d4607a); }
+[data-theme="sakura"] .prog-fill-sky   { background: linear-gradient(90deg, #c0a0d0, #9070b0); }
+[data-theme="sakura"] .prog-fill-amber { background: linear-gradient(90deg, #e8b0b0, #c06070); }
+[data-theme="sakura"] .prog-fill-blush { background: linear-gradient(90deg, #e8a0b8, #d04070); }
+
+/* Page header accent sakura */
+[data-theme="sakura"] .page-header h1 {
+  background: linear-gradient(135deg, #2c1820 0%, #b06080 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Converter card sakura */
+[data-theme="sakura"] .converter-card {
+  border-color: var(--border);
+  background: var(--surface);
+}
+
+/* Trip status banner sakura variants */
+[data-theme="sakura"] .tsb-before {
+  background: linear-gradient(90deg, rgba(255,200,220,.4) 0%, rgba(255,230,235,.2) 100%);
+  border-color: rgba(212,96,122,.25);
+  color: #904060;
+}
+[data-theme="sakura"] .tsb-during {
+  background: linear-gradient(90deg, rgba(200,240,220,.4) 0%, rgba(230,255,235,.2) 100%);
+}
+
+/* Sakura decorative petal watermark on main content */
+[data-theme="sakura"] .main-content::before {
+  content: '🌸';
+  position: fixed; bottom: 40px; right: 40px; z-index: 0;
+  font-size: 8rem; opacity: .04; pointer-events: none;
+  transform: rotate(-15deg);
+  transition: opacity .3s;
+}
+
+/* Note editor sakura */
+[data-theme="sakura"] .note-editor-block {
+  background: rgba(255,200,215,.2);
+  border-color: rgba(212,96,122,.2);
+}
+[data-theme="sakura"] .note-editor-label { color: #d4607a; }
+[data-theme="sakura"] .note-edit-btn.has-note {
+  border-color: #d4607a;
+  color: #d4607a;
+  background: rgba(255,200,215,.2);
+}
+[data-theme="sakura"] .note-btn.note-save { background: #d4607a; }
+[data-theme="sakura"] .note-btn.note-save:hover { background: #b04060; }
+
+/* Check toggles sakura */
+[data-theme="sakura"] .check-toggle.ct-logement.checked {
+  background: rgba(212,96,122,.12);
+  color: #d4607a;
+  border-color: rgba(212,96,122,.3);
+}
+[data-theme="sakura"] .check-toggle.ct-billets.checked {
+  background: rgba(144,112,176,.12);
+  color: #9070b0;
+  border-color: rgba(144,112,176,.3);
+}
+
+/* Timeline sakura */
+[data-theme="sakura"] .tl-card { background: var(--surface); border-color: var(--border); }
+[data-theme="sakura"] .tl-card.tl-current { border-color: #d4607a; box-shadow: 0 0 0 3px rgba(212,96,122,.1); }
+[data-theme="sakura"] .tl-badge-wx   { background: rgba(255,200,215,.3); color: #c06070; }
+[data-theme="sakura"] .tl-badge-stay { background: rgba(212,96,122,.12); color: #d4607a; }
+[data-theme="sakura"] .tl-badge-move { background: rgba(144,112,176,.12); color: #9070b0; }
+[data-theme="sakura"] .tl-badge-res  { background: rgba(80,128,96,.12);   color: #508060; }
