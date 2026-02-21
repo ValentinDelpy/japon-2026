@@ -402,3 +402,77 @@ function findDestination(locationName) {
 
   return { ...DESTINATIONS_DB["_default"], name: locationName };
 }
+
+// =============================================
+// CLIMATE DATA — Historical monthly averages
+// =============================================
+const WEATHER_CLIMATE = {
+  // city key → month (0=Jan…11=Dec) → {high, low, rain%, icon, desc}
+  tokyo: {
+    10: {high:17,low:11,rain:8,icon:'☀️',desc:'Novembre est le mois le plus sec et ensoleillé de l\'automne à Tokyo. Températures descendant progressivement : −16°C mi-novembre, −12°C début décembre. Feuillages (momiji) à leur pic autour du 25–30 nov. Très peu de pluie.'},
+    11: {high:12,low:6,rain:5,icon:'☀️',desc:'Décembre à Tokyo est frais et lumineux. Les ciels clairs permettent souvent d\'apercevoir le Fuji depuis la ville. Les illuminations de Noël décorent Shinjuku et Roppongi. Froid mais agréable.'}
+  },
+  kanazawa: {
+    10: {high:14,low:7,rain:55,icon:'🌦️',desc:'Novembre à Kanazawa est beau malgré quelques averses. Le jardin Kenroku-en revêt ses couleurs d\'automne — un spectacle exceptionnel. Les premières pluies de l\'hiver arrivent en fin de mois.'},
+    11: {high:9,low:3,rain:65,icon:'🌧️',desc:'Décembre marque le début de la saison des neiges à Kanazawa. La ville et le jardin Kenroku-en sous la neige sont magnifiques, mais il faut s\'habiller chaudement.'}
+  },
+  takayama: {
+    10: {high:11,low:4,rain:32,icon:'🌤️',desc:'Novembre à Takayama : les feuillages d\'automne sont superbes et les températures fraîches. Shirakawa-go commence à se couvrir de neige en fin de mois — les premières neiges sont spectaculaires.'},
+    11: {high:5,low:-1,rain:45,icon:'⛅',desc:'Décembre à Takayama est froid et enneigé. Les hameaux de Shirakawa-go sous la neige sont classés au patrimoine mondial — une vision féerique. Habillez-vous comme en montagne.'}
+  },
+  kyoto: {
+    10: {high:17,low:10,rain:11,icon:'🌤️',desc:'Novembre à Kyoto : c\'est le moment le plus recherché de l\'année. Les érables (momiji) rougissent dans les temples à partir du 15 novembre. Foules importantes mais spectacle incomparable à Tofuku-ji et Arashiyama.'},
+    11: {high:12,low:5,rain:9,icon:'☀️',desc:'Décembre à Kyoto est calme et serein. Les temples sans la foule, un ciel clair et parfois un peu de givre le matin. Les jardins Zen ont une beauté minimaliste et apaisante en hiver.'}
+  },
+  hiroshima: {
+    10: {high:17,low:10,rain:14,icon:'🌤️',desc:'Novembre à Hiroshima est doux et agréable. La ville et l\'île de Miyajima sont parées de couleurs automnales. Le torii de Miyajima se reflète dans des eaux calmes et colorées.'},
+    11: {high:12,low:4,rain:15,icon:'🌤️',desc:'Décembre à Hiroshima est frais et ensoleillé. Moins de touristes pour le mémorial et Miyajima. L\'atmosphère recueillie de ces lieux se prête particulièrement bien à la saison hivernale.'}
+  },
+  osaka: {
+    10: {high:18,low:11,rain:10,icon:'🌤️',desc:'Novembre à Osaka : les cerisiers et érables en automne sont beaux, mais Osaka se vit surtout la nuit avec les néons de Dotonbori. Temps agréable pour se perdre dans les ruelles et manger.'},
+    11: {high:13,low:6,rain:8,icon:'☀️',desc:'Décembre à Osaka est frais et festif. Les illuminations de Noël sont spectaculaires à Osaka Castle et Midosuji. Le konbini chaud et les izakayas deviennent vos meilleurs amis.'}
+  },
+  magome: {
+    11: {high:7,low:1,rain:40,icon:'⛅',desc:'Décembre dans la vallée de Kiso est froid et magique. Le chemin de Nakasendo reliant Magome à Tsumago se couvre parfois de neige — une expérience de marche hors du temps dans un Japon médiéval intact.'}
+  },
+  nara: {
+    10: {high:16,low:9,rain:11,icon:'🌤️',desc:'Novembre à Nara : les cerfs se promènent parmi les arbres aux couleurs de feu autour du Todai-ji. C\'est l\'une des visions les plus iconiques du Japon automnal.'},
+    11: {high:12,low:4,rain:9,icon:'☀️',desc:'Décembre à Nara : le parc est calme, les cerfs ont l\'air frigorifiés mais sont toujours aussi accueillants. Le temple Todai-ji sous un ciel hivernal a une beauté austère saisissante.'}
+  },
+  // Fallback pour villes inconnues — données Japon central
+  _default: {
+    10: {high:15,low:8,rain:15,icon:'🌤️',desc:'Novembre au Japon est généralement agréable, avec des températures fraîches et de beaux paysages automnaux.'},
+    11: {high:10,low:3,rain:12,icon:'🌤️',desc:'Décembre est frais et sec sur la majeure partie du Japon central. Bonnes conditions pour voyager.'}
+  }
+};
+
+function getCityWeatherKey(cityName) {
+  if (!cityName) return '_default';
+  const n = cityName.toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/[^a-z0-9\s]/g,'').trim();
+  const known = ['tokyo','kanazawa','takayama','kyoto','hiroshima','osaka','magome','nara','hakone','nikko','kamakura','miyajima','koyasan'];
+  for (const k of known) {
+    if (n.includes(k) || k.includes(n.split(/\s/)[0])) return k;
+  }
+  if (n.includes('aeroport') || n.includes('airport')) return null;
+  return '_default';
+}
+
+function getWeatherForDate(cityName, dateObj) {
+  const key = getCityWeatherKey(cityName);
+  if (!key) return null;
+  const db = WEATHER_CLIMATE[key] || WEATHER_CLIMATE['_default'];
+  const month = dateObj.getMonth();
+  const data = db[month] || db[Object.keys(db)[0]];
+  // Slight realistic day-of-month variation
+  const dayInMonth = dateObj.getDate();
+  const variation = Math.sin(dayInMonth * 0.4) * 1.5;
+  return {
+    icon: data.icon,
+    high: Math.round(data.high + variation),
+    low:  Math.round(data.low  + variation * 0.6),
+    rain: Math.max(0, Math.round(data.rain + variation * 2)),
+    desc: data.desc
+  };
+}

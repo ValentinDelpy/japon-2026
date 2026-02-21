@@ -1,9 +1,5 @@
 // =============================================
-// DATA SERVICE
-// Fetches data from Google Sheets + Exchange rates
-// Columns: Jour, Lieu, Logement, Alternative logement, Prix,
-//   Prix / personne, Réservé ?, Activités, Durée trajet,
-//   Prix trajet / personne, Billets réservés ?, Infos supplémentaires
+// DATA SERVICE — Little Domo Very Arigato
 // =============================================
 
 const SHEET_ID = '1ZOze3lbKEsa-nJpt30hhA8rlrZlkC0y295NkH_GLnJ4';
@@ -12,8 +8,9 @@ const DataService = {
   exchangeRate: null,
   rawData: null,
   lastSync: null,
+  linkMap: {},   // "cellValue" → href
 
-  // Fetch sheet via gviz
+  // ── Fetch sheet JSON ──
   async fetchSheet(gid) {
     const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=${gid}`;
     const resp = await fetch(url);
@@ -26,149 +23,284 @@ const DataService = {
     const rows = (json.table.rows || []).map(row => {
       const obj = {};
       (row.c || []).forEach((cell, i) => {
-        if (i < cols.length) {
-          let val = cell ? (cell.f || cell.v) : '';
-          if (val === null || val === undefined) val = '';
-          obj[cols[i]] = String(val);
+        if (i >= cols.length) return;
+        let val = '';
+        if (cell && cell.v !== null && cell.v !== undefined) {
+          const dateMatch = String(cell.v).match(/^Date\((\d+),(\d+),(\d+)\)$/);
+          if (dateMatch) {
+            const d = new Date(+dateMatch[1], +dateMatch[2], +dateMatch[3]);
+            val = d.getDate().toString().padStart(2,'0') + '/' +
+                  (d.getMonth()+1).toString().padStart(2,'0') + '/' +
+                  d.getFullYear();
+          } else {
+            val = cell.f !== null && cell.f !== undefined ? String(cell.f) : String(cell.v);
+          }
         }
+        obj[cols[i]] = val;
       });
       return obj;
     });
     return { cols, rows };
   },
 
-  // Load everything
-  async loadAllData() {
-    const [sheetResult, _] = await Promise.allSettled([
-      this.tryFetchSheets(),
-      this.fetchExchangeRate()
-    ]);
-    if (!this.rawData) {
-      console.warn('Sheet fetch failed, using fallback');
-      this.useFallbackData();
+  // ── Fetch HTML export to extract hyperlinks (value-keyed) ──
+  async fetchSheetHtmlLinks(gid) {
+    try {
+      const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:html&gid=${gid}`;
+      const resp = await fetch(url);
+      const html = await resp.text();
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(html, 'text/html');
+      const links = {};
+      doc.querySelectorAll('a[href]').forEach(function(a) {
+        const text = a.textContent.trim();
+        let href = a.getAttribute('href') || '';
+        const gMatch = href.match(/[?&]q=([^&]+)/);
+        if (gMatch) { try { href = decodeURIComponent(gMatch[1]); } catch(e) {} }
+        if (text && href && !href.startsWith('#')) {
+          links[text] = href;
+        }
+      });
+      return links;
+    } catch(e) {
+      console.warn('HTML links fetch failed:', e.message);
+      return {};
     }
+  },
+
+  // ── Load everything ──
+  async loadAllData() {
+    await Promise.allSettled([this.tryFetchSheets(), this.fetchExchangeRate()]);
+    if (!this.rawData) { console.warn('Sheet failed, using fallback'); this.useFallbackData(); }
     this.lastSync = new Date();
     return true;
   },
 
   async tryFetchSheets() {
-    const gidsToTry = ['2038497907', '0'];
-    for (const gid of gidsToTry) {
+    for (const gid of ['2038497907', '0']) {
       try {
         const result = await this.fetchSheet(gid);
         if (result && result.rows.length > 0) {
           this.rawData = result;
-          console.log('Loaded sheet gid=' + gid + ':', result.rows.length, 'rows, cols:', result.cols);
+          console.log('Loaded sheet gid=' + gid, result.rows.length, 'rows, cols:', result.cols.join(', '));
+          // Async hyperlink fetch
+          this.fetchSheetHtmlLinks(gid).then(lm => {
+            this.linkMap = lm;
+            console.log('Links loaded:', Object.keys(lm).length, 'entries');
+          });
           return;
         }
-      } catch (e) {
-        console.warn('Sheet gid=' + gid + ' failed:', e.message);
-      }
+      } catch(e) { console.warn('gid=' + gid + ' failed:', e.message); }
     }
   },
 
-  // Exchange Rate
+  // ── Exchange rate EUR→JPY ──
   async fetchExchangeRate() {
-    try {
-      const resp = await fetch('https://open.er-api.com/v6/latest/EUR');
-      const data = await resp.json();
-      if (data.rates && data.rates.JPY) { this.exchangeRate = data.rates.JPY; return; }
-    } catch (e) {}
-    try {
-      const resp = await fetch('https://api.exchangerate-api.com/v4/latest/EUR');
-      const data = await resp.json();
-      if (data.rates && data.rates.JPY) { this.exchangeRate = data.rates.JPY; return; }
-    } catch (e) {}
+    const apis = [
+      'https://open.er-api.com/v6/latest/EUR',
+      'https://api.exchangerate-api.com/v4/latest/EUR'
+    ];
+    for (const url of apis) {
+      try {
+        const data = await (await fetch(url)).json();
+        if (data.rates && data.rates.JPY) { this.exchangeRate = data.rates.JPY; return; }
+      } catch(e) {}
+    }
     this.exchangeRate = 162.5;
   },
 
-  jpyToEur(amountJPY) {
-    if (!this.exchangeRate || !amountJPY) return null;
-    return (amountJPY / this.exchangeRate).toFixed(2);
+  jpyToEur(amount) {
+    if (!this.exchangeRate || !amount) return null;
+    return (amount / this.exchangeRate).toFixed(2);
   },
 
-  // Smart column finder
-  _findCol() {
+  // ── Smart column finder ──
+  _col(...keywords) {
     if (!this.rawData) return null;
-    const keywords = Array.from(arguments);
     for (const kw of keywords) {
-      const found = this.rawData.cols.find(function(c) {
-        return c.toLowerCase().includes(kw.toLowerCase());
-      });
+      const found = this.rawData.cols.find(c => c.toLowerCase().includes(kw.toLowerCase()));
       if (found) return found;
     }
     return null;
   },
 
-  // Get structured steps
-  getSteps() {
-    if (!this.rawData) return [];
+  // ── Parse a date string to Date object ──
+  parseDate(str) {
+    if (!str) return null;
+    str = String(str).trim();
+    // DD/MM/YYYY or DD/MM/YY
+    let m = str.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+    if (m) return new Date(+m[3], +m[2]-1, +m[1]);
+    // DD/MM (no year)
+    m = str.match(/^(\d{1,2})\/(\d{1,2})$/);
+    if (m) return new Date(2026, +m[2]-1, +m[1]);
+    // YYYY-MM-DD
+    m = str.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if (m) return new Date(+m[1], +m[2]-1, +m[3]);
+    // Date(Y,M,D)
+    m = str.match(/Date\((\d+),(\d+),(\d+)\)/);
+    if (m) return new Date(+m[1], +m[2], +m[3]);
+    // French: "18 nov. 2026" or "18 nov 2026"
+    const MONTHS = {jan:0,fév:1,feb:1,mar:2,avr:3,apr:3,mai:4,may:4,juin:5,jun:5,
+                    juil:6,jul:6,août:7,aug:7,sep:8,oct:9,nov:10,déc:11,dec:11};
+    m = str.match(/(\d{1,2})\s+([a-zéûô]+)\.?\s*(\d{4})?/i);
+    if (m) {
+      const mo = MONTHS[m[2].toLowerCase().substring(0,3)];
+      if (mo !== undefined) return new Date(m[3] ? +m[3] : 2026, mo, +m[1]);
+    }
+    return null;
+  },
 
-    const COL = {
-      jour:         this._findCol('Jour', 'Date', 'Day'),
-      lieu:         this._findCol('Lieu', 'Ville', 'City', 'Destination'),
-      logement:     this._findCol('Logement', 'Hébergement', 'Hotel'),
-      altLogement:  this._findCol('Alternative logement', 'Alternative'),
-      prix:         this._findCol('Prix'),
-      prixPersonne: this._findCol('Prix / personne', 'Prix/personne'),
-      reserve:      this._findCol('Réservé'),
-      activites:    this._findCol('Activités', 'Activité', 'Activity'),
-      dureeTrajet:  this._findCol('Durée trajet', 'Durée', 'Transport'),
-      prixTrajet:   this._findCol('Prix trajet', 'Coût trajet'),
-      billetsRes:   this._findCol('Billets réservés', 'Billets'),
-      infos:        this._findCol('Infos supplémentaires', 'Infos', 'Notes')
+  // ── Build structured groups (one per destination stay) ──
+  getGroups() {
+    if (!this.rawData) return [];
+    const C = {
+      jour:         this._col('Jour','Date','Day'),
+      lieu:         this._col('Lieu','Ville','City','Destination'),
+      logement:     this._col('Logement','Hébergement','Hotel'),
+      altLogement:  this._col('Alternative logement','Alternative'),
+      prix:         this._col('Prix'),
+      prixPersonne: this._col('Prix / personne','Prix/personne'),
+      reserve:      this._col('Réservé'),
+      activites:    this._col('Activités','Activité','Activity'),
+      dureeTrajet:  this._col('Durée trajet','Durée','Transport'),
+      prixTrajet:   this._col('Prix trajet','Coût trajet'),
+      billetsRes:   this._col('Billets réservés','Billets'),
+      infos:        this._col('Infos supplémentaires','Infos','Notes')
     };
 
-    return this.rawData.rows
-      .filter(function(r) {
-        var lieu = COL.lieu ? r[COL.lieu] : '';
-        var jour = COL.jour ? r[COL.jour] : '';
-        return (lieu && lieu.trim()) || (jour && jour.trim());
-      })
-      .map(function(row, idx) {
-        return {
-          index: idx + 1,
-          jour:         COL.jour ? row[COL.jour] || '' : '',
-          lieu:         COL.lieu ? row[COL.lieu] || '' : '',
-          logement:     COL.logement ? row[COL.logement] || '' : '',
-          altLogement:  COL.altLogement ? row[COL.altLogement] || '' : '',
-          prix:         COL.prix ? row[COL.prix] || '' : '',
-          prixPersonne: COL.prixPersonne ? row[COL.prixPersonne] || '' : '',
-          reserve:      COL.reserve ? row[COL.reserve] || '' : '',
-          activites:    COL.activites ? row[COL.activites] || '' : '',
-          dureeTrajet:  COL.dureeTrajet ? row[COL.dureeTrajet] || '' : '',
-          prixTrajet:   COL.prixTrajet ? row[COL.prixTrajet] || '' : '',
-          billetsRes:   COL.billetsRes ? row[COL.billetsRes] || '' : '',
-          infos:        COL.infos ? row[COL.infos] || '' : '',
-          raw: row
-        };
+    // Step 1: annotate each row with parsed date + inherited city
+    const annotated = [];
+    let currentCity = '';
+    for (const row of this.rawData.rows) {
+      const jourRaw = C.jour ? (row[C.jour] || '') : '';
+      const date = this.parseDate(jourRaw);
+      if (!date) continue; // skip non-date rows (totals etc.)
+      const lieu = (C.lieu ? row[C.lieu] || '' : '').trim();
+      if (lieu) currentCity = lieu;
+      annotated.push({
+        date,
+        city: currentCity,
+        row,
+        logement:     C.logement    ? row[C.logement]    || '' : '',
+        altLogement:  C.altLogement ? row[C.altLogement] || '' : '',
+        prix:         C.prix        ? row[C.prix]        || '' : '',
+        prixPersonne: C.prixPersonne? row[C.prixPersonne]|| '' : '',
+        reserve:      C.reserve     ? row[C.reserve]     || '' : '',
+        activites:    C.activites   ? row[C.activites]   || '' : '',
+        dureeTrajet:  C.dureeTrajet ? row[C.dureeTrajet] || '' : '',
+        prixTrajet:   C.prixTrajet  ? row[C.prixTrajet]  || '' : '',
+        billetsRes:   C.billetsRes  ? row[C.billetsRes]  || '' : '',
+        infos:        C.infos       ? row[C.infos]       || '' : '',
+        hasCity: !!lieu
       });
+    }
+
+    if (annotated.length === 0) return [];
+
+    // Step 2: group consecutive rows with same city
+    const groups = [];
+    let cur = null;
+    for (const a of annotated) {
+      if (!cur || (a.hasCity && a.city !== cur.city)) {
+        // Start new group
+        cur = {
+          city:       a.city,
+          startDate:  a.date,
+          endDate:    a.date,
+          nights:     0,
+          logement:   a.logement,
+          altLogement:a.altLogement,
+          prix:       a.prix,
+          prixPersonne: a.prixPersonne,
+          reserve:    a.reserve,
+          dureeTrajet:a.dureeTrajet,
+          prixTrajet: a.prixTrajet,
+          billetsRes: a.billetsRes,
+          infos:      a.infos,
+          activites:  [],
+          dates:      [a.date],
+          rows:       [a.row]
+        };
+        if (a.activites.trim()) cur.activites.push(a.activites.trim());
+        groups.push(cur);
+      } else {
+        // Continue current group
+        cur.endDate = a.date;
+        cur.nights++;
+        cur.dates.push(a.date);
+        cur.rows.push(a.row);
+        if (a.activites.trim()) cur.activites.push(a.activites.trim());
+        // Fill in logement/prix if current group is missing them
+        if (!cur.logement && a.logement) cur.logement = a.logement;
+        if (!cur.altLogement && a.altLogement) cur.altLogement = a.altLogement;
+        if (!cur.prix && a.prix) cur.prix = a.prix;
+        if (!cur.prixPersonne && a.prixPersonne) cur.prixPersonne = a.prixPersonne;
+        if (!cur.reserve && a.reserve) cur.reserve = a.reserve;
+        if (!cur.infos && a.infos) cur.infos = a.infos;
+        if (!cur.billetsRes && a.billetsRes) cur.billetsRes = a.billetsRes;
+      }
+    }
+
+    return groups.filter(g => g.city);
+  },
+
+  // Legacy getSteps (kept for dashboard/print)
+  getSteps() {
+    const groups = this.getGroups();
+    const steps = [];
+    groups.forEach(g => {
+      g.dates.forEach((d, i) => {
+        steps.push({
+          index: steps.length + 1,
+          jour: g.dates[0].getDate().toString().padStart(2,'0') + '/' + (g.dates[0].getMonth()+1).toString().padStart(2,'0'),
+          lieu: g.city,
+          logement: g.logement,
+          altLogement: g.altLogement,
+          prix: g.prix,
+          prixPersonne: g.prixPersonne,
+          reserve: g.reserve,
+          activites: g.activites.join(', '),
+          dureeTrajet: g.dureeTrajet,
+          prixTrajet: g.prixTrajet,
+          billetsRes: g.billetsRes,
+          infos: g.infos,
+          raw: g.rows[0]
+        });
+      });
+    });
+    // Deduplicate by city
+    const seen = {};
+    return steps.filter(s => { if (seen[s.lieu]) return false; seen[s.lieu] = true; return true; });
   },
 
   getCols() { return this.rawData ? this.rawData.cols : []; },
   getRows() { return this.rawData ? this.rawData.rows : []; },
 
-  // Fallback
+  // ── Fallback data matching real sheet structure ──
   useFallbackData() {
-    var cols = ['Jour', 'Lieu', 'Logement', 'Alternative logement', 'Prix', 'Prix / personne', 'Réservé ?', 'Activités', 'Durée trajet', 'Prix trajet / personne', 'Billets réservés ?', 'Infos supplémentaires'];
-    var rows = [
-      { 'Jour': 'J1 - 15/03', 'Lieu': 'Tokyo', 'Logement': 'Hotel Shinjuku Granbell', 'Alternative logement': '', 'Prix': '15000', 'Prix / personne': '7500', 'Réservé ?': 'Oui', 'Activités': 'Arrivée Narita, Shinjuku, Golden Gai', 'Durée trajet': '', 'Prix trajet / personne': '', 'Billets réservés ?': '', 'Infos supplémentaires': 'Décalage horaire' },
-      { 'Jour': 'J2 - 16/03', 'Lieu': 'Tokyo', 'Logement': 'Hotel Shinjuku Granbell', 'Alternative logement': '', 'Prix': '15000', 'Prix / personne': '7500', 'Réservé ?': 'Oui', 'Activités': 'Asakusa, Senso-ji, Akihabara, Shibuya', 'Durée trajet': '', 'Prix trajet / personne': '', 'Billets réservés ?': '', 'Infos supplémentaires': '' },
-      { 'Jour': 'J3 - 17/03', 'Lieu': 'Tokyo', 'Logement': 'Hotel Shinjuku Granbell', 'Alternative logement': '', 'Prix': '15000', 'Prix / personne': '7500', 'Réservé ?': 'Oui', 'Activités': 'Tsukiji, Harajuku, Meiji-jingu, Roppongi', 'Durée trajet': '', 'Prix trajet / personne': '', 'Billets réservés ?': '', 'Infos supplémentaires': '' },
-      { 'Jour': 'J4 - 18/03', 'Lieu': 'Hakone', 'Logement': 'Ryokan avec onsen', 'Alternative logement': '', 'Prix': '35000', 'Prix / personne': '17500', 'Réservé ?': 'Non', 'Activités': 'Lac Ashi, Owakudani, Open-Air Museum', 'Durée trajet': '1h30', 'Prix trajet / personne': '2500', 'Billets réservés ?': 'Non', 'Infos supplémentaires': 'Hakone Free Pass' },
-      { 'Jour': 'J5 - 19/03', 'Lieu': 'Kyoto', 'Logement': 'Machiya traditionnelle', 'Alternative logement': 'Piece Hostel', 'Prix': '18000', 'Prix / personne': '9000', 'Réservé ?': 'Oui', 'Activités': 'Fushimi Inari, Gion, Nishiki Market', 'Durée trajet': '2h', 'Prix trajet / personne': '4500', 'Billets réservés ?': 'JR Pass', 'Infos supplémentaires': '' },
-      { 'Jour': 'J6 - 20/03', 'Lieu': 'Kyoto', 'Logement': 'Machiya traditionnelle', 'Alternative logement': '', 'Prix': '18000', 'Prix / personne': '9000', 'Réservé ?': 'Oui', 'Activités': 'Arashiyama, bambouseraie, Kinkaku-ji', 'Durée trajet': '', 'Prix trajet / personne': '', 'Billets réservés ?': '', 'Infos supplémentaires': '' },
-      { 'Jour': 'J7 - 21/03', 'Lieu': 'Nara', 'Logement': 'Day trip depuis Kyoto', 'Alternative logement': '', 'Prix': '', 'Prix / personne': '', 'Réservé ?': '', 'Activités': 'Todai-ji, cerfs, Kasuga Taisha', 'Durée trajet': '45min', 'Prix trajet / personne': '720', 'Billets réservés ?': 'JR Pass', 'Infos supplémentaires': 'Excursion journée' },
-      { 'Jour': 'J8 - 22/03', 'Lieu': 'Osaka', 'Logement': 'Airbnb Namba', 'Alternative logement': 'Cross Hotel Osaka', 'Prix': '12000', 'Prix / personne': '6000', 'Réservé ?': 'Oui', 'Activités': 'Dotonbori, street food, Shinsekai', 'Durée trajet': '15min', 'Prix trajet / personne': '570', 'Billets réservés ?': '', 'Infos supplémentaires': '' },
-      { 'Jour': 'J9 - 23/03', 'Lieu': 'Osaka', 'Logement': 'Airbnb Namba', 'Alternative logement': '', 'Prix': '12000', 'Prix / personne': '6000', 'Réservé ?': 'Oui', 'Activités': 'Château Osaka, Kuromon, Umeda Sky', 'Durée trajet': '', 'Prix trajet / personne': '', 'Billets réservés ?': '', 'Infos supplémentaires': '' },
-      { 'Jour': 'J10 - 24/03', 'Lieu': 'Hiroshima', 'Logement': 'Hotel Granvia', 'Alternative logement': '', 'Prix': '14000', 'Prix / personne': '7000', 'Réservé ?': 'Non', 'Activités': 'Mémorial Paix, Dôme', 'Durée trajet': '1h30', 'Prix trajet / personne': '5500', 'Billets réservés ?': 'JR Pass', 'Infos supplémentaires': '' },
-      { 'Jour': 'J11 - 25/03', 'Lieu': 'Miyajima', 'Logement': 'Day trip Hiroshima', 'Alternative logement': '', 'Prix': '', 'Prix / personne': '', 'Réservé ?': '', 'Activités': 'Torii flottant, Mont Misen', 'Durée trajet': '1h ferry', 'Prix trajet / personne': '360', 'Billets réservés ?': 'JR Pass', 'Infos supplémentaires': 'Vérifier marées' },
-      { 'Jour': 'J12 - 26/03', 'Lieu': 'Kanazawa', 'Logement': 'Hotel Nikko', 'Alternative logement': '', 'Prix': '16000', 'Prix / personne': '8000', 'Réservé ?': 'Non', 'Activités': 'Kenroku-en, quartier samouraï', 'Durée trajet': '3h', 'Prix trajet / personne': '7500', 'Billets réservés ?': 'JR Pass', 'Infos supplémentaires': '' },
-      { 'Jour': 'J13 - 27/03', 'Lieu': 'Takayama', 'Logement': 'Minshuku', 'Alternative logement': '', 'Prix': '14000', 'Prix / personne': '7000', 'Réservé ?': 'Non', 'Activités': 'Sanmachi Suji, boeuf Hida', 'Durée trajet': '2h', 'Prix trajet / personne': '3500', 'Billets réservés ?': '', 'Infos supplémentaires': 'Option Shirakawa-go' },
-      { 'Jour': 'J14 - 28/03', 'Lieu': 'Tokyo', 'Logement': 'Hotel Shibuya', 'Alternative logement': '', 'Prix': '18000', 'Prix / personne': '9000', 'Réservé ?': 'Non', 'Activités': 'Shopping, dernière soirée', 'Durée trajet': '3h30', 'Prix trajet / personne': '8500', 'Billets réservés ?': 'JR Pass', 'Infos supplémentaires': '' },
-      { 'Jour': 'J15 - 29/03', 'Lieu': 'Tokyo → Paris', 'Logement': '—', 'Alternative logement': '', 'Prix': '', 'Prix / personne': '', 'Réservé ?': '', 'Activités': 'Vol retour', 'Durée trajet': '13h vol', 'Prix trajet / personne': '', 'Billets réservés ?': 'Oui', 'Infos supplémentaires': '' }
+    const cols = ['Jour','Lieu','Logement','Alternative logement','Prix','Prix / personne','Réservé ?','Activités','Durée trajet','Prix trajet / personne','Billets réservés ?','Infos supplémentaires'];
+    const rows = [
+      {'Jour':'18/11/2026','Lieu':'Aéroport Toulouse - Blagnac','Logement':'Pas de logement','Alternative logement':'','Prix':'','Prix / personne':'','Réservé ?':'','Activités':'','Durée trajet':'','Prix trajet / personne':'','Billets réservés ?':'','Infos supplémentaires':'Départ'},
+      {'Jour':'19/11/2026','Lieu':'Tokyo','Logement':'Logement low cost','Alternative logement':'Ca a de la gueule','Prix':'363','Prix / personne':'90.75','Réservé ?':'Non','Activités':'','Durée trajet':'','Prix trajet / personne':'','Billets réservés ?':'','Infos supplémentaires':''},
+      {'Jour':'20/11/2026','Lieu':'','Logement':'','Alternative logement':'','Prix':'','Prix / personne':'','Réservé ?':'','Activités':'','Durée trajet':'','Prix trajet / personne':'','Billets réservés ?':'','Infos supplémentaires':''},
+      {'Jour':'21/11/2026','Lieu':'','Logement':'','Alternative logement':'','Prix':'','Prix / personne':'','Réservé ?':'','Activités':'Tsukiji, Shibuya crossing, Shinjuku','Durée trajet':'','Prix trajet / personne':'','Billets réservés ?':'','Infos supplémentaires':'3 nuits · Premier contact avec Tokyo'},
+      {'Jour':'22/11/2026','Lieu':'Kanazawa','Logement':'Moyen cost - à voir pour moins cher','Alternative logement':'Marrant','Prix':'250','Prix / personne':'62.50','Réservé ?':'Non','Activités':'Peut-être plutôt deux jours','Durée trajet':'2h30','Prix trajet / personne':'90','Billets réservés ?':'Non','Infos supplémentaires':''},
+      {'Jour':'23/11/2026','Lieu':'Takayama','Logement':'C\'est joli','Alternative logement':'Lave-linge + sèche-linge','Prix':'475','Prix / personne':'118.75','Réservé ?':'','Activités':'Shirakawa-go / Recommandation kiné','Durée trajet':'1h15','Prix trajet / personne':'30','Billets réservés ?':'Non','Infos supplémentaires':''},
+      {'Jour':'24/11/2026','Lieu':'','Logement':'','Alternative logement':'','Prix':'','Prix / personne':'','Réservé ?':'','Activités':'','Durée trajet':'','Prix trajet / personne':'','Billets réservés ?':'','Infos supplémentaires':''},
+      {'Jour':'25/11/2026','Lieu':'Kyoto','Logement':'Lave-linge','Alternative logement':'Sèche-linge','Prix':'250','Prix / personne':'62.50','Réservé ?':'Non','Activités':'Fushimi Inari, Bambouseraie, Gion','Durée trajet':'Train 3h30','Prix trajet / personne':'65','Billets réservés ?':'Non','Infos supplémentaires':''},
+      {'Jour':'26/11/2026','Lieu':'','Logement':'','Alternative logement':'','Prix':'','Prix / personne':'','Réservé ?':'','Activités':'','Durée trajet':'','Prix trajet / personne':'','Billets réservés ?':'','Infos supplémentaires':''},
+      {'Jour':'27/11/2026','Lieu':'','Logement':'','Alternative logement':'','Prix':'','Prix / personne':'','Réservé ?':'','Activités':'Nara A/R','Durée trajet':'','Prix trajet / personne':'9','Billets réservés ?':'Non','Infos supplémentaires':''},
+      {'Jour':'28/11/2026','Lieu':'Hiroshima','Logement':'Prix sympa','Alternative logement':'Trad house','Prix':'137','Prix / personne':'34.25','Réservé ?':'Non','Activités':'Mémorial Paix, Dôme, Miyajima','Durée trajet':'1h45','Prix trajet / personne':'70','Billets réservés ?':'Non','Infos supplémentaires':''},
+      {'Jour':'29/11/2026','Lieu':'Osaka','Logement':'Very economic','Alternative logement':'Fancy time (très cool)','Prix':'100','Prix / personne':'25','Réservé ?':'Non','Activités':'Dotonbori, Universal Studio (jour 2)','Durée trajet':'1h30','Prix trajet / personne':'65','Billets réservés ?':'Non','Infos supplémentaires':''},
+      {'Jour':'30/11/2026','Lieu':'','Logement':'','Alternative logement':'','Prix':'','Prix / personne':'','Réservé ?':'','Activités':'Universal Studio','Durée trajet':'','Prix trajet / personne':'','Billets réservés ?':'','Infos supplémentaires':''},
+      {'Jour':'01/12/2026','Lieu':'','Logement':'','Alternative logement':'','Prix':'','Prix / personne':'','Réservé ?':'','Activités':'','Durée trajet':'','Prix trajet / personne':'','Billets réservés ?':'','Infos supplémentaires':''},
+      {'Jour':'02/12/2026','Lieu':'Magome','Logement':'Ryokan O','Alternative logement':'','Prix':'140','Prix / personne':'35','Réservé ?':'Non','Activités':'A réfléchir - peut-être Shibu Onsen','Durée trajet':'3h30-4h','Prix trajet / personne':'50','Billets réservés ?':'Non','Infos supplémentaires':''},
+      {'Jour':'03/12/2026','Lieu':'Tokyo','Logement':'Correct','Alternative logement':'','Prix':'371','Prix / personne':'92.75','Réservé ?':'Non','Activités':'Shopping, dernière soirée','Durée trajet':'3h','Prix trajet / personne':'80','Billets réservés ?':'Non','Infos supplémentaires':''},
+      {'Jour':'04/12/2026','Lieu':'','Logement':'','Alternative logement':'','Prix':'','Prix / personne':'','Réservé ?':'','Activités':'','Durée trajet':'','Prix trajet / personne':'','Billets réservés ?':'','Infos supplémentaires':''},
+      {'Jour':'05/12/2026','Lieu':'Aéroport de Tokyo','Logement':'Pas de logement','Alternative logement':'','Prix':'','Prix / personne':'','Réservé ?':'','Activités':'','Durée trajet':'13h vol','Prix trajet / personne':'','Billets réservés ?':'Oui','Infos supplémentaires':'Retour'}
     ];
-    this.rawData = { cols: cols, rows: rows };
+    this.rawData = { cols, rows };
     this.exchangeRate = this.exchangeRate || 162.5;
   }
 };
