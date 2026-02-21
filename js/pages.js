@@ -209,11 +209,31 @@ function createDashboardMap(groups) {
   _dashState.markers = [];
   var pts = [], seen = {};
 
+  // Pre-compute coordinate usage to offset overlapping markers
+  var coordUse = {};
+  groups.forEach(function(g) {
+    var c = getCoords(g.city);
+    if (!c) return;
+    var key = c[0].toFixed(3)+','+c[1].toFixed(3);
+    if (!coordUse[key]) coordUse[key] = 0;
+    coordUse[key]++;
+  });
+  var coordIdx = {};
+
   groups.forEach(function(g, idx) {
     var coords = getCoords(g.city);
     var color = STOP_COLORS[idx % STOP_COLORS.length];
     if (!coords || seen[g.city]) { _dashState.markers.push(null); return; }
     seen[g.city] = true;
+    // Offset overlapping markers in a circle
+    var key = coords[0].toFixed(3)+','+coords[1].toFixed(3);
+    if (!coordIdx[key]) coordIdx[key] = 0;
+    if (coordUse[key] > 1) {
+      var angle = (coordIdx[key] / coordUse[key]) * 2 * Math.PI;
+      var offset = 0.015;
+      coords = [coords[0] + Math.cos(angle)*offset, coords[1] + Math.sin(angle)*offset];
+      coordIdx[key]++;
+    }
     var marker = L.marker(coords, {icon: makeStopIcon(idx+1, color, false)}).addTo(map);
     L.marker(coords,{icon:L.divIcon({className:'marker-label-wrapper',html:'<div class="marker-label">'+g.city+'</div>',iconSize:[100,20],iconAnchor:[-18,10]}),interactive:false}).addTo(map);
 
@@ -222,7 +242,7 @@ function createDashboardMap(groups) {
     var wx = g.startDate ? getWeatherForDate(g.city, g.startDate) : null;
     var popup = '<div class="popup-card">';
     popup += '<div class="popup-img" style="background-image:url(\''+dest.image+'\');position:relative">';
-    popup += '<div style="position:absolute;bottom:0;left:0;right:0;padding:8px 10px;background:linear-gradient(transparent,rgba(0,0,0,0.65));color:#fff;font-family:\'Noto Serif JP\',serif;font-size:0.88rem;font-weight:700">'+g.city+(dest.nameJP ? ' <span style="font-size:0.7em;opacity:0.8">'+dest.nameJP+'</span>' : '')+'</div>';
+    popup += '<div style="position:absolute;bottom:0;left:0;right:0;padding:8px 10px;background:linear-gradient(transparent,rgba(0,0,0,0.65));color:#fff;font-family:\'Shippori Mincho\',serif;font-size:0.88rem;font-weight:700">'+g.city+(dest.nameJP ? ' <span style="font-size:0.7em;opacity:0.8">'+dest.nameJP+'</span>' : '')+'</div>';
     popup += '</div>';
     popup += '<div class="popup-body">';
     if (g.startDate) popup += '<div class="popup-dates">📅 '+formatDateRange(g)+' · '+nightsLabel(g)+'</div>';
@@ -510,15 +530,45 @@ function renderItinerary() {
   html += '</tbody></table></div></div>';
 
   if (extraRows.length > 0) {
-    html += '<div class="itinerary-full-table mt-2 mb-2 extra-rows-card">';
-    html += '<div class="map-title-bar">📊 Récapitulatif &amp; totaux</div>';
-    html += '<div class="table-scroll"><table class="iti-table"><thead><tr>';
-    cols.forEach(function(c){html+='<th>'+c+'</th>';});
-    html += '</tr></thead><tbody>';
+    // Build a clean summary from extra rows - pivot into a readable format
+    var prixCol = cols.find(function(c){return /^prix$/i.test(c.trim());}) || '';
+    var ppCol = cols.find(function(c){return /prix.*personne/i.test(c);}) || '';
+    var resCol = cols.find(function(c){return /réservé/i.test(c);}) || '';
+    var ptCol = cols.find(function(c){return /prix.*trajet/i.test(c);}) || '';
+    var btCol = cols.find(function(c){return /billets/i.test(c);}) || '';
+
+    html += '<div class="recap-section mt-2 mb-2">';
+    html += '<div class="recap-header"><span class="recap-title">📊 Récapitulatif &amp; totaux</span></div>';
+    html += '<div class="recap-grid">';
     extraRows.forEach(function(row) {
-      html += '<tr>'; cols.forEach(function(c){ html += '<td>'+linkify(formatCellBool(row[c]||''))+'</td>'; }); html += '</tr>';
+      // Find the first non-empty text column to use as label
+      var label = '';
+      var vals = {};
+      cols.forEach(function(c) {
+        var v = String(row[c]||'').trim();
+        if (!v) return;
+        var cl = c.toLowerCase();
+        if (/prix.*personne/i.test(c) && v) vals.prixPers = v;
+        else if (/^prix$/i.test(c.trim()) && v) vals.prix = v;
+        else if (/prix.*trajet/i.test(c) && v) vals.trajet = v;
+        else if (/réservé/i.test(c) && v) vals.reserve = v;
+        else if (/billets/i.test(c) && v) vals.billets = v;
+        else if (!label && v && !/jour|date/i.test(c)) label = v;
+      });
+      // Only show rows that have some useful data
+      var hasVals = vals.prix || vals.prixPers || vals.trajet;
+      if (!hasVals && !label) return;
+
+      html += '<div class="recap-card">';
+      if (label) html += '<div class="recap-card-label">'+label+'</div>';
+      if (vals.prix) html += '<div class="recap-kv"><span class="recap-k">Prix total</span><span class="recap-v">'+formatEURint(parseBudget(vals.prix))+'</span></div>';
+      if (vals.prixPers) html += '<div class="recap-kv"><span class="recap-k">Par personne</span><span class="recap-v">'+formatEURint(parseBudget(vals.prixPers))+'</span></div>';
+      if (vals.trajet) html += '<div class="recap-kv"><span class="recap-k">Transport/pers</span><span class="recap-v">'+formatEURint(parseBudget(vals.trajet))+'</span></div>';
+      if (vals.reserve) html += '<div class="recap-kv"><span class="recap-k">Réservé</span><span class="recap-v">'+formatCellBool(vals.reserve)+'</span></div>';
+      if (vals.billets) html += '<div class="recap-kv"><span class="recap-k">Billets</span><span class="recap-v">'+formatCellBool(vals.billets)+'</span></div>';
+      html += '</div>';
     });
-    html += '</tbody></table></div></div>';
+    html += '</div></div>';
   }
 
   html += '<div class="itinerary-summary-cards mt-2">';
@@ -527,7 +577,7 @@ function renderItinerary() {
     var lienLog = getLodgeLink(g.logement);
     var lienAlt = getLodgeLink(g.altLogement);
     html += '<div class="summary-card"><h3>📍 '+g.city+'</h3><ul class="summary-list">';
-    html += '<li><span class="s-label">Dates</span><span class="s-value text-sm" style="font-family:\'DM Sans\'">'+formatDateRange(g)+'</span></li>';
+    html += '<li><span class="s-label">Dates</span><span class="s-value text-sm" style="font-family:\'Outfit\'">'+formatDateRange(g)+'</span></li>';
     html += '<li><span class="s-label">Nuits</span><span class="s-value">'+nightsLabel(g)+'</span></li>';
     if (parseBudget(g.prix)) html += '<li><span class="s-label">Logement</span><span class="s-value">'+formatEURint(parseBudget(g.prix))+'</span></li>';
     if (parseBudget(g.prixPersonne)) html += '<li><span class="s-label">Prix/pers.</span><span class="s-value">'+formatEURint(parseBudget(g.prixPersonne))+'</span></li>';

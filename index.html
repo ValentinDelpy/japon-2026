@@ -7,17 +7,14 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700&family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&family=Cormorant+Garamond:ital,wght@1,400;1,500&display=swap" rel="stylesheet">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⛩️</text></svg>">
 </head>
 <body>
-  <!-- MOBILE NAV OVERLAY -->
   <div id="mobile-overlay" class="mobile-overlay" onclick="closeMobileMenu()"></div>
-
-  <!-- SIDEBAR NAV -->
   <nav id="sidebar" class="sidebar">
     <div class="sidebar-header">
-      <span class="logo-icon">⛩️</span>
+      <span class="logo-kanji">日本</span>
       <div class="logo-text">
         <span class="logo-title">Little Domo</span>
         <span class="logo-subtitle">Very Arigatō</span>
@@ -49,10 +46,7 @@
       </div>
     </div>
   </nav>
-
-  <!-- MAIN CONTENT -->
   <main id="main-content" class="main-content">
-    <!-- MOBILE HEADER -->
     <header class="mobile-header">
       <button class="hamburger" onclick="openMobileMenu()" aria-label="Menu">
         <span></span><span></span><span></span>
@@ -60,20 +54,15 @@
       <span class="mobile-title">⛩️ Little Domo</span>
       <button onclick="refreshData()" class="refresh-btn-mobile" title="Rafraîchir">↻</button>
     </header>
-
-    <!-- PAGE CONTAINER -->
     <div id="page-container" class="page-container">
       <div class="loading-screen" id="loading-screen">
         <div class="loading-torii">⛩️</div>
-        <p class="loading-text">Chargement des données...</p>
+        <p class="loading-text">Chargement des données…</p>
         <div class="loading-bar"><div class="loading-bar-fill"></div></div>
       </div>
     </div>
   </main>
-
-  <!-- PRINT VIEW (hidden, used for print) -->
   <div id="print-view" class="print-view"></div>
-
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="js/destinations.js"></script>
   <script src="js/data.js"></script>

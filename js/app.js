@@ -109,7 +109,7 @@ async function initApp() {
   Router.init();
 
   console.log('✅ App ready!',
-    `Data: ${DataService.mainData ? DataService.mainData.rows.length + ' rows' : 'fallback'}`,
+    `Data: ${DataService.rawData ? DataService.rawData.rows.length + ' rows' : 'fallback'}`,
     `Rate: ${DataService.exchangeRate}`
   );
 

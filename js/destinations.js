@@ -92,7 +92,7 @@ const DESTINATIONS_DB = {
   "hiroshima": {
     name: "Hiroshima",
     nameJP: "広島",
-    image: "https://images.unsplash.com/photo-1576623684013-f3c8e09c7445?w=800&q=80",
+    image: "https://images.unsplash.com/photo-1599922407858-a3d0e1e6b7de?w=800&q=80",
     intro: "Hiroshima est une leçon d'humanité. La ville, rasée le 6 août 1945, a renaît de ses cendres pour devenir un symbole mondial de paix. Aujourd'hui, c'est une cité vibrante et accueillante, connue pour ses okonomiyaki uniques et sa proximité avec la sublime île de Miyajima.",
     highlights: [
       "Se recueillir au Mémorial de la Paix et au Dôme de la Bombe A",
@@ -438,7 +438,7 @@ function findDestination(locationName) {
     "enoshima": "kamakura",
     "chuzenji": "nikko",
     "shirakawa go": "shirakawa", "shirakawago": "shirakawa", "shirakawa-go": "shirakawa",
-    "tsumago": "magome",
+    "tsumago": "magome", "nakasendo": "magome", "kiso": "magome",
     "owakudani": "hakone", "ashi": "hakone",
     "hida": "takayama",
     "kenrokuen": "kanazawa"
