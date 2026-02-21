@@ -1494,3 +1494,191 @@ a:hover { color: var(--blush); }
   .surprise-btn { padding: 18px 32px; }
   .stats-bar-label { width: 80px; }
 }
+
+/* ═══════════════════════════════════════════════════════════
+   MÉTÉO & SAISON
+═══════════════════════════════════════════════════════════ */
+.meteo-banner {
+  display: flex; align-items: flex-start; gap: 16px;
+  background: linear-gradient(135deg, #fff8ee, #fff3e0);
+  border: 1.5px solid #f0c060; border-radius: var(--r-md);
+  padding: 18px 20px; margin-bottom: 20px;
+}
+[data-theme="dark"] .meteo-banner { background: rgba(160,96,32,.15); border-color: rgba(160,96,32,.4); }
+.meteo-banner-emoji { font-size: 2.2rem; flex-shrink: 0; }
+.meteo-banner-title { font-weight: 700; font-size: .95rem; color: var(--ink); margin-bottom: 4px; }
+.meteo-banner-text { font-size: .78rem; color: var(--ink2); line-height: 1.6; }
+
+.meteo-legend { display: flex; gap: 20px; margin-bottom: 16px; flex-wrap: wrap; }
+.meteo-leg-item { font-size: .72rem; color: var(--ink3); display: flex; align-items: center; gap: 4px; }
+
+.meteo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 14px; margin-bottom: 24px; }
+
+.meteo-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--r-md); padding: 14px 16px;
+  transition: box-shadow var(--t);
+}
+.meteo-card:hover { box-shadow: var(--shadow-sm); }
+.meteo-card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.meteo-city-icon { font-size: 1.5rem; }
+.meteo-city-name { font-weight: 700; font-size: .9rem; color: var(--ink); }
+.meteo-city-jp { font-size: .7rem; color: var(--ink3); }
+
+.meteo-stats { display: flex; gap: 16px; margin-bottom: 8px; }
+.meteo-stat { display: flex; align-items: center; gap: 5px; font-size: .78rem; color: var(--ink2); font-weight: 600; }
+.meteo-stat-icon { font-size: .85rem; }
+
+.meteo-koyo {
+  font-size: .72rem; color: #a06020; background: #fff8ee;
+  padding: 4px 9px; border-radius: 20px; margin-bottom: 10px;
+  display: inline-flex; align-items: center; gap: 5px; font-weight: 600;
+}
+[data-theme="dark"] .meteo-koyo { background: rgba(160,96,32,.2); color: #d09050; }
+.meteo-koyo-icon { font-size: .85rem; }
+
+.meteo-tips { margin: 0; padding: 0 0 0 14px; }
+.meteo-tips li { font-size: .74rem; color: var(--ink2); line-height: 1.55; margin-bottom: 4px; }
+
+.meteo-packing-tip {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--r-md); padding: 16px 18px;
+}
+.meteo-packing-title { font-weight: 700; font-size: .88rem; color: var(--ink); margin-bottom: 12px; }
+.meteo-packing-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
+.meteo-packing-item { display: flex; align-items: flex-start; gap: 10px; }
+.meteo-packing-icon { font-size: 1.4rem; flex-shrink: 0; }
+.meteo-packing-label { font-size: .78rem; font-weight: 600; color: var(--ink); }
+.meteo-packing-note { font-size: .7rem; color: var(--ink3); margin-top: 2px; }
+
+/* ═══════════════════════════════════════════════════════════
+   AGENDA CULTUREL
+═══════════════════════════════════════════════════════════ */
+.agenda-filters {
+  display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 24px;
+}
+.agenda-filter-btn {
+  padding: 5px 12px; border: 1.5px solid var(--border); border-radius: 20px;
+  background: var(--surface); color: var(--ink2); font-size: .72rem; font-weight: 600;
+  cursor: pointer; transition: all var(--t); font-family: 'Outfit', sans-serif;
+}
+.agenda-filter-btn:hover { border-color: var(--accent); color: var(--accent); }
+.agenda-filter-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+.agenda-timeline { display: flex; flex-direction: column; gap: 20px; }
+
+.agenda-city-block {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--r-md); overflow: hidden;
+}
+.agenda-city-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 16px; background: var(--surface2); border-bottom: 1px solid var(--border);
+}
+.agenda-city-info { display: flex; align-items: baseline; gap: 8px; }
+.agenda-city-name { font-weight: 700; font-size: .95rem; color: var(--ink); }
+.agenda-city-jp { font-size: .7rem; color: var(--ink3); }
+.agenda-city-dates { font-size: .72rem; color: var(--ink2); font-weight: 600; }
+
+.agenda-events { display: flex; flex-direction: column; }
+.agenda-event {
+  display: grid; grid-template-columns: 36px 1fr auto;
+  gap: 12px; align-items: start;
+  padding: 14px 16px; border-bottom: 1px solid var(--border);
+  transition: background var(--t);
+}
+.agenda-event:last-child { border-bottom: none; }
+.agenda-event:hover { background: var(--surface2); }
+.agenda-event-emoji { font-size: 1.4rem; padding-top: 2px; }
+.agenda-event-name { font-weight: 700; font-size: .85rem; color: var(--ink); margin-bottom: 2px; }
+.agenda-event-date { font-size: .68rem; color: var(--ink3); margin-bottom: 4px; }
+.agenda-event-desc { font-size: .76rem; color: var(--ink2); line-height: 1.55; }
+.agenda-event-tip {
+  margin-top: 6px; font-size: .7rem; color: #806020; font-weight: 600;
+  background: #fff8e8; padding: 3px 8px; border-radius: 4px; display: inline-block;
+}
+[data-theme="dark"] .agenda-event-tip { background: rgba(160,96,32,.2); color: #c09050; }
+.agenda-event-meta { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
+.agenda-type-badge {
+  font-size: .62rem; font-weight: 700; padding: 2px 8px;
+  border-radius: 20px; background: var(--surface2); color: var(--ink2);
+  white-space: nowrap;
+}
+.agenda-price { font-size: .68rem; color: var(--ink3); font-weight: 600; white-space: nowrap; }
+
+@media (max-width: 600px) {
+  .agenda-event { grid-template-columns: 28px 1fr; }
+  .agenda-event-meta { display: none; }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   MOODBOARD
+═══════════════════════════════════════════════════════════ */
+.mood-filters {
+  display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 20px;
+}
+.mood-filter-btn {
+  padding: 5px 12px; border: 1.5px solid var(--border); border-radius: 20px;
+  background: var(--surface); color: var(--ink2); font-size: .72rem; font-weight: 600;
+  cursor: pointer; transition: all var(--t); font-family: 'Outfit', sans-serif;
+}
+.mood-filter-btn:hover { border-color: var(--accent); color: var(--accent); }
+.mood-filter-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+.mood-grid { display: flex; flex-direction: column; gap: 24px; }
+
+.mood-section-header {
+  display: flex; align-items: baseline; gap: 10px;
+  padding-left: 10px; margin-bottom: 10px;
+}
+.mood-section-city { font-weight: 700; font-size: .92rem; color: var(--ink); }
+.mood-section-jp { font-size: .7rem; color: var(--ink3); }
+
+.mood-images {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 8px;
+}
+
+.mood-img-wrap {
+  position: relative; border-radius: var(--r-sm); overflow: hidden;
+  cursor: zoom-in; background: var(--surface2);
+  aspect-ratio: 4/3;
+}
+.mood-img {
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform .3s var(--ease), opacity .3s;
+  display: block;
+}
+.mood-img.img-loading { opacity: 0; }
+.mood-img-wrap:hover .mood-img { transform: scale(1.04); }
+.mood-img-caption {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  background: linear-gradient(transparent, rgba(0,0,0,.65));
+  color: #fff; font-size: .65rem; font-weight: 600;
+  padding: 20px 8px 6px; opacity: 0; transition: opacity var(--t);
+  pointer-events: none;
+}
+.mood-img-wrap:hover .mood-img-caption { opacity: 1; }
+
+.mood-lightbox {
+  position: fixed; inset: 0; background: rgba(0,0,0,.92);
+  z-index: 9999; display: flex !important; flex-direction: column;
+  align-items: center; justify-content: center; gap: 12px;
+  padding: 20px; box-sizing: border-box;
+}
+.mood-lb-close {
+  position: absolute; top: 16px; right: 20px;
+  background: rgba(255,255,255,.15); border: none; color: #fff;
+  font-size: 1.5rem; width: 36px; height: 36px; border-radius: 50%;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: background var(--t);
+}
+.mood-lb-close:hover { background: rgba(255,255,255,.3); }
+.mood-lb-img {
+  max-width: 90vw; max-height: 80vh;
+  object-fit: contain; border-radius: var(--r-sm);
+}
+.mood-lb-caption {
+  color: rgba(255,255,255,.8); font-size: .78rem; text-align: center;
+}

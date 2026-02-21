@@ -816,63 +816,118 @@ var JAPON101_DATA = [
   {
     icon: '🙇', title: 'Codes sociaux & étiquette',
     items: [
-      { q: 'Le pourboire', a: '<strong>N\'en donnez jamais.</strong> Au Japon, laisser de l\'argent en dehors du prix fixé est considéré comme impoli ou embarrassant. Les serveurs peuvent courir après vous pour vous le rendre.' },
-      { q: 'Parler dans les transports', a: 'Les conversations à voix haute et les appels téléphoniques sont mal vus dans le métro et le Shinkansen. Mettez votre téléphone en silencieux et parlez à voix basse.' },
-      { q: 'La file d\'attente', a: 'Les Japonais font la queue de façon exemplaire. Sur les quais de métro, des lignes peintes au sol indiquent exactement où attendre. Respectez-les toujours.' },
-      { q: 'Côté escalator', a: '<strong>À Osaka :</strong> restez à droite (gauche pour marcher). <strong>Partout ailleurs :</strong> restez à gauche (droite pour marcher). Exception notable !' },
-      { q: 'La carte de visite (meishi)', a: 'Si quelqu\'un vous tend une carte de visite à deux mains, prenez-la à deux mains et lisez-la. Ne la rangez pas immédiatement dans votre poche — posez-la devant vous.' },
-      { q: 'Chaussures', a: 'On retire ses chaussures à l\'entrée des maisons, de nombreux ryokan, temples et certains restaurants. Des pantoufles sont souvent fournies. Évitez les lacets compliqués.' },
-      { q: 'Tatouages', a: 'Les tatouages restent tabous dans certains onsen et piscines — ils sont associés à la yakuza. Cherchez des établissements "tattoo-friendly" si c\'est votre cas.' },
+      { q: 'Le pourboire', a: '<strong>N\'en donnez jamais, nulle part.</strong> Au Japon, laisser de l\'argent en dehors du prix fixé est considéré comme impoli ou embarrassant. Les serveurs peuvent courir après vous dans la rue pour vous le rendre. Ça inclut les taxis, les guides, les masseurs — absolument tous les services.' },
+      { q: 'Parler dans les transports', a: 'Conversations à voix haute et appels téléphoniques sont mal vus dans le métro et le Shinkansen. Réglez votre téléphone en mode silencieux dès que vous entrez dans un train. Dans le Shinkansen, si vous devez appeler, rendez-vous dans l\'espace inter-wagons.' },
+      { q: 'La file d\'attente', a: 'Les Japonais font la queue de façon exemplaire et naturelle. Sur les quais de métro, des lignes peintes au sol indiquent exactement où attendre — respectez-les. On laisse sortir les passagers avant de monter. Couper la file, même accidentellement, crée un malaise palpable.' },
+      { q: 'Côté escalator', a: '<strong>À Osaka :</strong> restez à droite (gauche pour marcher vite). <strong>Partout ailleurs :</strong> restez à gauche (droite pour marcher). Exception historique d\'Osaka qui prend plaisir à être différente !' },
+      { q: 'Chaussures', a: 'On retire ses chaussures à l\'entrée des maisons privées, des ryokan, de nombreux temples et de certains restaurants traditionnels. Des pantoufles sont souvent fournies. <strong>Attention :</strong> dans les WC, il y a souvent des pantoufles spéciales "WC" — on les change à l\'entrée, et on <em>n\'oublie pas</em> de les remettre en sortant (erreur classique de touriste).' },
+      { q: 'Cadeaux & emballage', a: 'Offrir un cadeau est courant, mais on ne l\'ouvre généralement pas devant la personne (pour ne pas montrer de déception ou d\'enthousiasme excessif). L\'emballage compte autant que le contenu — les Japonais emballent avec un soin extrême.' },
+      { q: 'Respect du silence', a: 'Le silence n\'est pas embarrassant au Japon — il est respectueux. Ne cherchez pas à remplir les silences dans une conversation. Dans les espaces publics (librairies, musées, trains), le volume ambiant est souvent étonnamment bas.' },
+      { q: 'Tatouages', a: 'Les tatouages restent tabous dans certains onsen, piscines et ryokan — ils sont historiquement associés à la yakuza. Des établissements "tattoo-friendly" existent mais sont moins répandus. Si vous en avez, couvrez-les dans les lieux publics pour éviter les situations délicates.' },
     ]
   },
   {
     icon: '🍱', title: 'Nourriture & Restaurants',
     items: [
-      { q: 'Itadakimasu & Gochisōsama', a: 'Avant de manger, dites <strong>いただきます (itadakimasu)</strong>. Après, <strong>ごちそうさまでした (gochisōsama deshita)</strong>. Ce sont des formules de gratitude incontournables.' },
-      { q: 'Oshibori', a: 'Le petit tissu humide qu\'on vous apporte à l\'arrivée sert à vous essuyer les mains. Pas le visage (en public). Rendez-le plié après usage.' },
-      { q: 'Manger en marchant', a: 'Déconseillé, sauf dans les festivals et marchés de rue (comme Dotonbori). Dans la vie courante, trouvez-vous un endroit pour vous asseoir.' },
-      { q: 'Baguettes', a: 'Ne les plantez jamais verticalement dans un bol de riz (symbolique funéraire). Ne les tendez jamais à quelqu\'un d\'autre baguette-à-baguette. Posez-les sur le repose-baguettes.' },
-      { q: 'Commander sans parler japonais', a: 'Beaucoup de restaurants ont des <strong>photos dans le menu ou des maquettes en vitrine</strong> — pointez simplement. Les tablettes de commande tactile (souvent en anglais) sont très répandues.' },
-      { q: 'Konbini', a: 'Les convenience stores japonais (7-Eleven, Lawson, FamilyMart) sont extraordinaires. Onigiri frais, bento chauds, ramen, yakitori… à toute heure, pour ¥500–900. Incontournable.' },
+      { q: 'Itadakimasu & Gochisōsama', a: 'Avant de manger, dites <strong>いただきます (itadakimasu)</strong> — "Je reçois humblement". Après, <strong>ごちそうさまでした (gochisōsama deshita)</strong> — "C\'était un festin". Ce ne sont pas juste des formules de politesse : elles expriment une gratitude envers tous ceux qui ont contribué au repas.' },
+      { q: 'Oshibori', a: 'Le petit tissu humide qu\'on vous apporte à l\'arrivée sert à s\'essuyer <strong>uniquement les mains</strong>. Pas le visage en public (bien que certains Japonais le fassent en privé). Rendez-le replié proprement après usage.' },
+      { q: 'Manger en marchant', a: 'Déconseillé dans la vie quotidienne — ça se fait dans les festivals et marchés de rue uniquement. Une exception notable : les ruelles de Kyoto ou Nara où c\'est toléré pour les touristes. Mais trouvez un endroit pour vous asseoir autant que possible.' },
+      { q: 'Baguettes — les interdits', a: 'Ne les plantez <strong>jamais</strong> verticalement dans un bol de riz (geste funéraire — rappelle les offrandes aux morts). Ne les tendez jamais à quelqu\'un d\'autre baguette-à-baguette (idem, symbolique funéraire de passage des os). Posez-les sur le repose-baguettes ou horizontalement sur le bol.' },
+      { q: 'Le bruit en mangeant', a: 'Contrairement à l\'étiquette occidentale, <strong>aspirer bruyamment ses ramen ou ses soba est poli</strong> — cela refroidit les nouilles et signifie qu\'on apprécie. Ne soyez pas gêné par le bruit des tables voisines.' },
+      { q: 'Commander sans parler japonais', a: 'Beaucoup de restaurants ont des photos dans le menu ou des <em>sampuru</em> (maquettes en plastique ultra-réalistes) en vitrine — pointez simplement. Les tablettes de commande tactile en anglais sont très répandues. L\'appli Google Translate avec mode caméra déchiffre les menus en temps réel.' },
+      { q: 'Konbini — bien plus qu\'un magasin', a: 'Les 7-Eleven, Lawson et FamilyMart japonais sont extraordinaires. Onigiri frais (¥120), bento chauds, ramen cup de qualité, yakitori, café... mais aussi <strong>payer ses factures, retirer de l\'argent, imprimer, envoyer des colis</strong>. Ouverts 24h/24, ils sont un pilier de la vie quotidienne.' },
+      { q: 'Les files d\'attente pour les restaurants', a: 'Les grandes files devant un restaurant sont une <strong>garantie de qualité</strong> au Japon. Les locaux ne font pas la queue n\'importe où. Utilisez l\'app <strong>Tabelog</strong> (équivalent TripAdvisor) pour voir les notes et gérer les attentes.' },
     ]
   },
   {
     icon: '🚇', title: 'Transport',
     items: [
-      { q: 'Ponctualité', a: 'Les trains japonais ont un retard moyen de 18 secondes par an. Soyez à l\'heure sur le quai. Un retard de 1 minute fait l\'objet d\'excuses officielles par haut-parleur.' },
-      { q: 'Validation des tickets', a: 'Passez toujours votre carte IC ou votre ticket à l\'entrée ET à la sortie des portiques. Un ticket non validé à la sortie bloque le portique.' },
-      { q: 'Noms de stations en anglais', a: 'Toutes les grandes stations sont indiquées en romaji (alphabet latin). Les annonces dans le Shinkansen et le métro de Tokyo sont souvent en anglais.' },
-      { q: 'Taxis', a: 'Les portières des taxis s\'ouvrent et se ferment automatiquement. N\'essayez pas de les forcer. Donnez l\'adresse en japonais si possible — les chauffeurs parlent rarement anglais.' },
-      { q: 'Vélo', a: 'Le vélo est omniprésent et pratique dans des villes plates comme Kyoto ou Kanazawa. Des sociétés de vélo en libre-service existent. Garez-vous dans des zones dédiées.' },
+      { q: 'Ponctualité légendaire', a: 'Les trains japonais ont un retard moyen de 18 secondes par an. Soyez au quai à l\'heure — la porte s\'ouvre et se ferme à la minute exacte. Un retard de 2 minutes déclenche des excuses officielles par haut-parleur. Les trains de retard rares sont suffisamment inhabituels pour faire la une des journaux.' },
+      { q: 'Carte IC (Suica / Pasmo)', a: 'La carte IC est le sésame du transport japonais : métro, bus, trains locaux, konbini, certains distributeurs. Chargez-la à l\'aéroport dès l\'arrivée. Minimum ¥500 de dépôt récupérable. Sur iPhone récent, vous pouvez l\'ajouter dans Apple Wallet.' },
+      { q: 'Validation des tickets', a: 'Passez toujours votre carte à l\'entrée <strong>ET</strong> à la sortie des portiques. La sortie est cruciale — le système calcule le tarif à la sortie selon la distance. Un oubli bloque le portique et nécessite l\'assistance du guichetier.' },
+      { q: 'Lire les panneaux', a: 'Toutes les grandes stations affichent les noms en romaji (alphabet latin). Les annonces dans le Shinkansen et le métro de Tokyo sont en anglais. Les lignes de métro ont des couleurs et des numéros — utilisez les numéros plutôt que les noms japonais.' },
+      { q: 'Taxis', a: 'Les portières s\'ouvrent et se ferment <strong>automatiquement</strong> — ne les touchez pas. Donnez l\'adresse en japonais si possible (montrez votre téléphone avec la carte). Les taxis sont chers mais propres, ponctuels et les chauffeurs portent souvent des gants blancs.' },
+      { q: 'Shinkansen — astuces', a: 'Réservez un siège côté <strong>droite (sens Tokyo→Osaka)</strong> pour voir le Mont Fuji. La voiture 11 en épi est souvent réservée aux porteurs de bagages encombrants. Le Nozomi (le plus rapide) ne prend pas le JR Pass standard.' },
+      { q: 'Vélo', a: 'Idéal dans les villes plates comme Kyoto, Kanazawa ou le long des rivières. Des loueurs proposent des vélos à la journée (~¥1,000). Stationnez uniquement dans les zones dédiées — les vélos mal garés sont confisqués et récupérables contre une amende.' },
     ]
   },
   {
     icon: '🏯', title: 'Temples & Sites',
     items: [
-      { q: 'Temizuya (purification)', a: 'À l\'entrée d\'un sanctuaire shinto, rincez vos mains au bassin rituels (temizuya) : versez de l\'eau sur la main gauche, puis droite, puis dans le creux de la main gauche pour vous rincer la bouche.' },
-      { q: 'Torii', a: 'Les torii (portiques vermillon) marquent l\'entrée d\'un sanctuaire shinto. Inclinez légèrement la tête en passant dessous, et évitez de marcher au centre (réservé aux divinités).' },
-      { q: 'Photos', a: 'Vérifiez toujours les panneaux "No Photography". Les espaces intérieurs sacrés, certains jardins zen et trésors nationaux l\'interdisent.' },
-      { q: 'Tenue', a: 'Pas de dress code strict pour les touristes, mais évitez les tenues ultra-courtes ou provocatrices dans les temples. Épaules couvertes recommandées dans certains lieux.' },
+      { q: 'Shinto vs Bouddhisme', a: 'Le Japon pratique les deux en parallèle sans contradiction : <strong>les sanctuaires (jinja) sont shinto</strong> — portiques torii, renards et cordes tressées (shimenawa). <strong>Les temples (tera/ji) sont bouddhistes</strong> — pagodes, statues de Bouddha, encens. Une même famille peut se marier en shinto et se faire enterrer en bouddhiste.' },
+      { q: 'Temizuya — purification', a: 'À l\'entrée d\'un sanctuaire shinto, rincez vos mains au bassin (temizuya) : puisez de l\'eau avec la louche, versez sur la main gauche, puis droite, puis dans le creux de la main gauche pour vous rincer la bouche (ne buvez pas !), puis redressee la louche pour que l\'eau coule sur le manche.' },
+      { q: 'Torii & déplacement sacré', a: 'Les torii marquent le passage du monde profane au monde sacré. Inclinez légèrement la tête en passant dessous. Évitez de marcher au centre de l\'allée (réservé aux divinités) — tenez-vous sur le côté.' },
+      { q: 'Offrandes et prières', a: 'Dans un sanctuaire shinto : lancez une pièce dans le coffre, sonnez la cloche, inclinez-vous deux fois, frappez deux fois des mains, inclinez-vous encore une fois. Dans un temple bouddhiste : brûlez un bâton d\'encens (senko), orientez la fumée vers vous (purifiante), joignez les mains et priez.' },
+      { q: 'Omamori — les amulettes', a: 'Ces petits sachets en tissu brodé vendus dans tous les sanctuaires sont des amulettes pour la santé, l\'amour, la réussite, la sécurité en route... On ne les ouvre jamais (ça brise la protection) et on les rapporte au temple après un an pour les brûler. Un beau souvenir.' },
+      { q: 'Goshuin — le carnet de temple', a: 'Le <em>goshuincho</em> est un carnet accordéon dans lequel les temples et sanctuaires apposent un tampon calligraphié unique (goshuin). Un souvenir extraordinaire qui se collectionne tout au long du voyage. Vendez dans les temple shops (~¥1,000).' },
+      { q: 'Photos', a: 'Vérifiez toujours les panneaux "No Photography". Les espaces intérieurs sacrés, certains jardins zen et trésors nationaux l\'interdisent. Ne photographiez jamais les gens dans les espaces sacrés sans leur accord tacite (les geishas de Gion y sont particulièrement sensibles).' },
     ]
   },
   {
-    icon: '♨️', title: 'Onsen',
+    icon: '♨️', title: 'Onsen & Sento',
     items: [
-      { q: 'Règles fondamentales', a: 'On entre dans l\'onsen entièrement nu. Pas de maillot. Rincez-vous soigneusement à la douche avant d\'entrer dans le bassin.' },
-      { q: 'Serviette', a: 'La petite serviette sert à se couvrir en marchant et peut être posée sur la tête dans l\'eau. Elle n\'entre pas dans le bassin.' },
-      { q: 'Cheveux', a: 'Les cheveux longs doivent être attachés ou relevés pour ne pas toucher l\'eau.' },
-      { q: 'Tatouages', a: 'Beaucoup d\'onsen refusent les personnes tatouées. Cherchez "tattoo-friendly onsen" si nécessaire. Certains proposent des bains privés.' },
-      { q: 'Après l\'onsen', a: 'Évitez de vous rincer après l\'onsen — les minéraux sont censés rester sur la peau. Buvez de l\'eau pour vous hydrater.' },
+      { q: 'Règles fondamentales', a: 'On entre dans l\'onsen <strong>entièrement nu</strong>. Pas de maillot — jamais. Rincez-vous soigneusement à la douche individuelle (avec le pommeau) <strong>avant</strong> d\'entrer dans le bassin commun. C\'est une règle d\'hygiène absolue.' },
+      { q: 'La petite serviette', a: 'Elle sert à se couvrir en marchant vers le bassin et peut être posée, repliée, sur le bord ou sur votre tête dans l\'eau (pratique pour ne pas s\'évaporer). Elle <strong>n\'entre jamais</strong> dans le bassin lui-même.' },
+      { q: 'Cheveux longs', a: 'Attachez ou relevez vos cheveux pour qu\'ils ne touchent pas l\'eau du bassin. Des élastiques sont souvent disponibles à l\'accueil.' },
+      { q: 'Température & durée', a: 'Les onsens japonais sont <strong>très chauds</strong> (40–45°C). Entrez lentement, jusqu\'aux épaules. Ne restez pas plus de 10–15 min d\'affilée pour éviter l\'hypotension. Hydratez-vous bien avant et après.' },
+      { q: 'Sento vs Onsen', a: 'Le <strong>sento</strong> est un bain public avec eau du robinet chauffée — abordable (~¥500), très local. L\'<strong>onsen</strong> utilise de l\'eau thermale naturelle aux minéraux — expérience plus "authentique". Dans les deux cas, les règles de nudité et d\'hygiène s\'appliquent.' },
+      { q: 'Rotenburo — bain en plein air', a: 'Le <em>rotenburo</em> est un bassin extérieur dans un cadre naturel (forêt, montagne, vue sur mer). Avec neige en hiver, c\'est une expérience transcendante. Prévu dans votre itinéraire si vous êtes dans une auberge avec onsen.' },
+      { q: 'Après l\'onsen', a: 'Évitez de vous rincer — les minéraux sont censés rester sur la peau pour leurs bienfaits. Buvez beaucoup d\'eau. Le yukata (kimono léger) que vous enfilez après est idéal pour se promener dans le ryokan et dîner.' },
     ]
   },
   {
-    icon: '💡', title: 'Infos pratiques',
+    icon: '💰', title: 'Argent & Shopping',
     items: [
-      { q: 'Poubelles', a: '<strong>Il n\'y a quasi pas de poubelles dans la rue</strong> au Japon. Promenez-vous avec un sac pour vos déchets et jetez-les à votre hôtel, dans un konbini ou aux WC publics.' },
-      { q: 'WC japonais', a: 'Les WC électroniques (washlet) font peur mais sont addictifs. Le bouton 大 est pour les selles, 小 pour l\'urine. Il y a toujours un mode "bruit de fond" pour couvrir les sons.' },
-      { q: 'Courant électrique', a: '100V / 50-60Hz, prises type A (identiques aux prises US). Vos appareils européens ont besoin d\'un adaptateur (et vérifiez la tension !).' },
-      { q: 'Décalage horaire', a: 'Toulouse → Tokyo = +8h en hiver. Prévoyez 2–3 jours d\'adaptation. Restez éveillés jusqu\'à 22h le premier soir.' },
-      { q: 'Applications utiles', a: '<strong>Google Maps</strong> (transport en commun très précis), <strong>Google Translate</strong> (caméra pour lire le japonais), <strong>Tabelog</strong> (avis de restaurants), <strong>Hyperdia</strong> (calcul de trajets JR).' },
+      { q: 'Le Japon reste très cash', a: 'Malgré l\'essor du paiement sans contact, <strong>beaucoup de temples, petits restaurants et boutiques artisanales n\'acceptent que les espèces</strong>. Prévoyez toujours 20 000–50 000 ¥ en liquide. Ne soyez jamais à court.' },
+      { q: 'ATM — où retirer', a: '<strong>ATM 7-Bank</strong> (dans tous les 7-Eleven) : la référence pour les cartes étrangères, interface en anglais, commission ~¥110. <strong>Japan Post ATM</strong> (bureaux de poste) : aussi fiable. La plupart des ATMs de banques locales classiques refusent les cartes étrangères.' },
+      { q: 'Payer par carte', a: 'Visa et Mastercard sont acceptés dans les grands magasins, chaînes et hôtels. American Express bien moins. Certains restaurants ont un minimum de consommation pour la carte. La carte IC (Suica) s\'utilise comme moyen de paiement dans les konbini et certains commerces.' },
+      { q: 'Tax Free Shopping', a: 'En tant que touriste étranger, vous êtes exonéré de TVA (10%) sur les achats dépassant ¥5,000 dans les magasins affiliés. Présentez votre passeport à la caisse — on vous remet une enveloppe de remboursement. Très pratique dans les grands magasins.' },
+      { q: 'Don Quijote (Donki)', a: 'Cette chaîne de grandes surfaces fouillies et labyrinthiques est le paradis des achats : cosmétiques japonais, snacks, gadgets, alcools, vêtements, électronique... à des prix souvent très avantageux. Ouvert souvent jusqu\'à minuit voire 24h/24.' },
+      { q: 'Marchandage', a: '<strong>On ne marchande pas au Japon</strong>. Le prix affiché est le prix. Tenter de négocier dans une boutique est perçu comme impoli. Les seules exceptions : certains marchés aux puces et brocantes.' },
+    ]
+  },
+  {
+    icon: '🌤️', title: 'Météo de novembre–décembre',
+    items: [
+      { q: 'Températures à attendre', a: '<strong>Tokyo :</strong> 8–17°C. <strong>Kyoto / Osaka :</strong> 8–16°C. <strong>Hiroshima :</strong> 9–17°C. <strong>Kanazawa :</strong> 5–13°C. <strong>Takayama :</strong> 0–10°C (froid et neige possible). Fin novembre = début du grand froid dans les Alpes japonaises.' },
+      { q: 'Les koyo — feuilles d\'automne', a: 'Novembre est <strong>la saison du koyo</strong> (紅葉) : les érables japonais (momiji) et ginkgos virent au rouge, orange et jaune vif. C\'est l\'une des deux grandes saisons touristiques avec les cerisiers. Kyoto, Nara et Kanazawa sont particulièrement spectaculaires. Réservez à l\'avance.' },
+      { q: 'Quoi porter', a: 'Superposez ! Matin et soir froids, journées douces. Manteau ou veste chaude indispensable, écharpe, t-shirts thermiques pour Takayama et les zones de montagne. Les températures chutent de 5–8°C entre les plaines et les Alpes japonaises.' },
+      { q: 'Pluie & parapluie', a: 'Novembre est relativement sec, mais des averses sont possibles. Les japonais ont une culture du parapluie très poussée — chaque konbini vend des parapluies transparents pour ~¥500 (les <em>bijin kasa</em>). Emportez un imperméable léger ou achetez-en un sur place.' },
+      { q: 'Jours fériés novembre', a: '<strong>3 novembre</strong> : Journée de la Culture (musées et sites peuvent être très fréquentés). <strong>15 novembre</strong> : Shichi-go-san (fête des enfants de 3, 5 et 7 ans — vous verrez des enfants en kimono dans les sanctuaires). <strong>23 novembre</strong> : Journée du Travail.' },
+      { q: 'Illuminations de décembre', a: 'Début décembre, les illuminations de Noël s\'allument dans tout le Japon — paradoxalement très populaires malgré la minorité chrétienne. Shibuya, Marunouchi à Tokyo, et les grandes villes brillent de mille feux. Ambiance féerique.' },
+    ]
+  },
+  {
+    icon: '📱', title: 'Tech & Applications',
+    items: [
+      { q: 'Google Maps — indispensable', a: '<strong>Téléchargez les zones offline avant de partir</strong> (Tokyo, Kyoto, Osaka, Hiroshima, Kanazawa). Google Maps est exceptionnellement précis au Japon pour les transports en commun : il donne les numéros de quai, les correspondances à la minute, les prix.' },
+      { q: 'Google Translate — mode caméra', a: 'L\'IA de traduction en temps réel via la caméra lit les menus, panneaux et étiquettes japonais instantanément. <strong>Téléchargez le pack japonais offline</strong> — vous n\'aurez pas toujours du WiFi.' },
+      { q: 'Applications utiles', a: '<strong>Tabelog</strong> : avis de restaurants (note /5 très fiable). <strong>Gurunavi</strong> : réservations en ligne. <strong>Japan Official Travel App</strong> : infos transport officielles. <strong>Hyperdia</strong> ou <strong>Navitime</strong> : calcul de trajets JR avec tarifs. <strong>Yurekuru</strong> : alertes séismes.' },
+      { q: 'Connectivité — vos options', a: '<strong>eSIM</strong> (Airalo, Holafly) : activation immédiate, data uniquement. <strong>SIM locale</strong> (IIJmio, Sakura Mobile) : commander avant le départ. <strong>Pocket WiFi</strong> : routeur partageable entre 4, ~¥5/jour. Recommandation : eSIM individuelle + désactivation du roaming.' },
+      { q: 'Prises & courant', a: 'Japon : <strong>100V</strong>, prises type A (identiques aux prises US — plates à deux broches). Vos chargeurs USB-C européens fonctionnent généralement sans adaptateur. Vérifiez la tension de vos appareils (marquée sur le chargeur). Un multiprise compact est très utile dans les chambres d\'hôtel.' },
+      { q: 'Urgences digitales', a: 'Sauvegardez en offline : votre itinéraire complet, les confirmations d\'hôtels, votre passeport scanné, les numéros d\'urgence (police 110, pompiers/SAMU 119, ambassade de France +81-3-5798-6000). Un téléphone mort sans batterie externe à 14h à Tokyo = situation de stress.' },
+    ]
+  },
+  {
+    icon: '🏥', title: 'Santé & Sécurité',
+    items: [
+      { q: 'Le Japon est très sûr', a: 'Le Japon est l\'un des pays les plus sûrs au monde. Le taux de criminalité est extrêmement bas. Vous pouvez laisser votre sac sur votre chaise dans un café, votre vélo non attaché, marcher seul la nuit dans les grandes villes sans crainte réelle.' },
+      { q: 'Séismes', a: 'Le Japon est l\'un des pays les plus sismiques du monde. En cas de séisme : réfugiez-vous sous une table solide ou dans l\'encadrement d\'une porte, protégez votre tête. Les immeubles modernes japonais sont conçus pour résister — faites confiance à la construction.' },
+      { q: 'Assurance médicale', a: '<strong>La carte européenne d\'assurance maladie ne fonctionne pas au Japon.</strong> Une hospitalisation peut coûter ¥100 000+ par nuit. Souscrivez une assurance voyage avant le départ (AXA, April, Chapka...). Gardez vos ordonnances et noms génériques de vos médicaments.' },
+      { q: 'Pharmacies japonaises', a: 'Les pharmacies (薬局 / yakkyoku) sont bien fournies. Cherchez Matsumoto Kiyoshi ou CocoDrug. Pour les médicaments courants (antidouleurs, anti-diarrhée, pastilles gorge), inutile d\'en emmener des quantités — vous trouverez sur place, souvent sans ordonnance.' },
+      { q: 'Urgences médicales', a: 'Appelez le <strong>119</strong> (SAMU/pompiers). Ou cherchez un hôpital avec une unité "Foreign Patient" — Tokyo et Osaka en ont plusieurs. L\'appli <strong>AMDA International Medical Information Center</strong> aide à trouver des médecins anglophones.' },
+      { q: 'Ambassade de France à Tokyo', a: 'Adresse : 4-11-44 Minami-Azabu, Minato-ku, Tokyo. Téléphone : <strong>+81-3-5798-6000</strong>. Urgences consulaires hors heures ouvrables disponibles. Enregistrez ce numéro et aussi le numéro du Quai d\'Orsay : +33-1-77-67-67-67.' },
+    ]
+  },
+  {
+    icon: '💡', title: 'Vie quotidienne & Infos pratiques',
+    items: [
+      { q: 'Poubelles — le grand mystère', a: '<strong>Il n\'y a quasi pas de poubelles dans les rues japonaises</strong>, depuis les attentats au sarin de 1995 dans le métro. Promenez-vous avec un sac plastique pour vos déchets et jetez-les à l\'hôtel, dans un konbini (seuls les déchets du konbini) ou aux WC publics. Les Japonais ramènent chez eux leurs déchets.' },
+      { q: 'WC japonais', a: 'Les washlet (WC électroniques) font peur mais deviennent addictifs. <strong>大 (大 = grand)</strong> : grosse chasse. <strong>小 (小 = petit)</strong> : petite chasse. Le bouton "son de flush" couvre les bruits — largement utilisé. La lunette est souvent chauffante en hiver. Profitez.' },
+      { q: 'Décalage horaire', a: 'Toulouse → Tokyo = <strong>+8h en hiver</strong> (UTC+9 vs UTC+1). Un vol de 13h vous fait arriver le lendemain matin. Conseil d\'adaptation : ne dormez pas dans l\'avion, résistez jusqu\'à 22h local le premier soir, exposez-vous à la lumière dès le matin.' },
+      { q: 'Dormir en ryokan', a: 'Le futon est posé directement sur le tatami — rangé dans le placard le matin par le personnel. On dort en yukata. Le repas du soir (kaiseki) est servi dans votre chambre. Arrivez pour l\'heure de check-in prévue — le rituel est orchestré.' },
+      { q: 'Tri des déchets', a: 'Le tri sélectif est très strict au Japon. Dans les ryokan et appartements, les poubelles sont compartimentées : burnable (燃えるゴミ), non-burnable (燃えないゴミ), recyclable (缶・瓶・ペット). Suivez ce que fait l\'hôtel.' },
+      { q: 'Ambiance générale', a: 'Le Japon peut sembler distant ou formel au premier abord. En réalité, <strong>les Japonais sont incroyablement serviables</strong>. Si vous avez l\'air perdu, quelqu\'un viendra vous aider spontanément — même sans parler anglais, ils vous accompagneront physiquement à votre destination plutôt que d\'expliquer.' },
     ]
   },
 ];
@@ -1179,4 +1234,580 @@ function renderStats() {
   html += '</div>';
 
   document.getElementById('page-container').innerHTML = html;
+}
+
+
+// ═══════════════════════════════════════════════════════════════════
+// 9. MÉTÉO & SAISON
+// ═══════════════════════════════════════════════════════════════════
+var METEO_DATA = [
+  {
+    city: 'Tokyo', nameJP: '東京', icon: '🗼',
+    temps: { min: 8, max: 17, rain: 3 },
+    koyo: 'Fin novembre — Shinjuku Gyoen, Rikugien',
+    tips: [
+      'Les jardins comme Rikugien s\'illuminent certains soirs pour le koyo nocturne (¥300, spectaculaire)',
+      'Prenez un imperméable léger — quelques averses possibles en novembre',
+      'Début décembre : illuminations de Noël à Marunouchi et Omotesando',
+    ]
+  },
+  {
+    city: 'Kanazawa', nameJP: '金沢', icon: '🏺',
+    temps: { min: 5, max: 13, rain: 7 },
+    koyo: 'Mi-novembre — Kenroku-en, Gyokusen-inmaru',
+    tips: [
+      'Kanazawa reçoit beaucoup plus de pluie que le reste du Japon en novembre — parapluie indispensable',
+      'Le Kenroku-en est magnifique sous la pluie fine : les feuilles luisent',
+      'Les yukitsuri (armatures de bambou pour protéger les arbres de la neige) sont installés à partir de novembre — spectacle unique',
+    ]
+  },
+  {
+    city: 'Takayama', nameJP: '高山', icon: '🏔️',
+    temps: { min: 0, max: 10, rain: 4 },
+    koyo: 'Début novembre (déjà terminé fin nov.)',
+    tips: [
+      'Takayama peut recevoir ses premières neiges fin novembre — prévoyez des chaussures imperméables',
+      'Les ruelles de Sanmachi Suji sous un ciel gris hivernal ont un charme particulier et moins de touristes',
+      'Shirakawa-go début décembre : les toits de chaume peuvent déjà être enneigés — féerique',
+    ]
+  },
+  {
+    city: 'Kyoto', nameJP: '京都', icon: '⛩️',
+    temps: { min: 7, max: 16, rain: 4 },
+    koyo: 'Mi à fin novembre — Eikan-do, Tofuku-ji, Arashiyama',
+    tips: [
+      'Le Tofuku-ji est LE spot koyo de Kyoto : un tapis rouge et orange à perte de vue depuis le pont Tsutenkaku',
+      'Éikan-do propose des illuminations nocturnes du koyo en novembre — queue de 2h mais exceptionnel',
+      'Fin novembre à Kyoto = très fréquenté. Arrivez aux sites avant 8h ou après 16h',
+      'Le marché Nishiki reste vivant même par temps froid — parfait pour se réchauffer avec du dashi',
+    ]
+  },
+  {
+    city: 'Nara', nameJP: '奈良', icon: '🦌',
+    temps: { min: 6, max: 16, rain: 4 },
+    koyo: 'Mi-novembre — Parc de Nara, Yoshiki-en',
+    tips: [
+      'Les érables du parc de Nara sont splendides mi-novembre avec les cerfs qui se promènent entre les feuilles rouges',
+      'Visite en journée depuis Kyoto recommandée — Nara est à 45 min en train',
+      'Novembre = foules plus raisonnables que l\'automne de Kyoto, profitez-en',
+    ]
+  },
+  {
+    city: 'Hiroshima', nameJP: '広島', icon: '🕊️',
+    temps: { min: 9, max: 17, rain: 3 },
+    koyo: 'Fin novembre — Shukkei-en, Miyajima',
+    tips: [
+      'Le Mont Misen à Miyajima est particulièrement beau avec les érables d\'automne fin novembre',
+      'Le torii vu depuis un ferry au coucher du soleil en novembre = lumière dorée parfaite, peu de touristes',
+      'Hiroshima est une des villes les plus clémentes de l\'itinéraire en termes de météo hivernale',
+    ]
+  },
+  {
+    city: 'Osaka', nameJP: '大阪', icon: '🎡',
+    temps: { min: 8, max: 17, rain: 4 },
+    koyo: 'Fin novembre — Expo\'70 Commemorative Park',
+    tips: [
+      'Osaka est le hub pour la journée de koyo à l\'Expo\'70 Park (érables exceptionnels)',
+      'Universal Studios Japan : moins de queue en novembre qu\'en été, mais vêtements chauds requis',
+      'Dotonbori est encore plus photogénique la nuit dans le froid de novembre — vapeurs des restaurants, néons réfléchis',
+    ]
+  },
+  {
+    city: 'Magome', nameJP: '馬籠', icon: '🪵',
+    temps: { min: 2, max: 10, rain: 4 },
+    koyo: 'Début décembre — parfois encore quelques érables',
+    tips: [
+      'Début décembre à Magome = frais voire froid (3–10°C). Habillez-vous en conséquence pour la randonnée',
+      'Les pavés de la route Nakasendo peuvent être glissants après la pluie ou si gelés',
+      'Les ruelles de Magome presque vides en décembre — l\'atmosphère médiévale est saisissante',
+    ]
+  },
+];
+
+function renderMeteo() {
+  var html = _newPageHeader('🌤️', 'Météo & Saison', '気候と季節', 'Novembre–décembre au Japon : à quoi s\'attendre');
+
+  // Season intro banner
+  html += '<div class="meteo-banner">';
+  html += '<div class="meteo-banner-emoji">🍁</div>';
+  html += '<div class="meteo-banner-body">';
+  html += '<div class="meteo-banner-title">Saison idéale — le koyo</div>';
+  html += '<div class="meteo-banner-text">Votre voyage tombe pendant l\'une des plus belles saisons du Japon : le <strong>koyo</strong> (紅葉), la coloration automnale des érables. Des milliers de momiji virent au rouge, orange et jaune dans tous les parcs et temples. Températures fraîches et agréables, foules inférieures à l\'été.</div>';
+  html += '</div></div>';
+
+  // Legend
+  html += '<div class="meteo-legend">';
+  html += '<span class="meteo-leg-item"><span class="meteo-temp-icon" style="color:#2a7090">🌡️</span> Min / Max °C</span>';
+  html += '<span class="meteo-leg-item"><span class="meteo-temp-icon" style="color:#5c8f7d">☔</span> Jours de pluie/mois</span>';
+  html += '<span class="meteo-leg-item"><span class="meteo-temp-icon" style="color:#c73e1d">🍁</span> Koyo</span>';
+  html += '</div>';
+
+  // City cards
+  html += '<div class="meteo-grid">';
+  METEO_DATA.forEach(function(m) {
+    html += '<div class="meteo-card">';
+    html += '<div class="meteo-card-header">';
+    html += '<span class="meteo-city-icon">' + m.icon + '</span>';
+    html += '<div><div class="meteo-city-name">' + m.city + '</div><div class="meteo-city-jp">' + m.nameJP + '</div></div>';
+    html += '</div>';
+
+    html += '<div class="meteo-stats">';
+    html += '<div class="meteo-stat"><span class="meteo-stat-icon">🌡️</span><span class="meteo-stat-val">' + m.temps.min + '–' + m.temps.max + '°C</span></div>';
+    html += '<div class="meteo-stat"><span class="meteo-stat-icon">☔</span><span class="meteo-stat-val">~' + m.temps.rain + ' j/mois</span></div>';
+    html += '</div>';
+
+    html += '<div class="meteo-koyo"><span class="meteo-koyo-icon">🍁</span>' + m.koyo + '</div>';
+
+    html += '<ul class="meteo-tips">';
+    m.tips.forEach(function(t){ html += '<li>' + t + '</li>'; });
+    html += '</ul>';
+
+    html += '</div>';
+  });
+  html += '</div>';
+
+  // Packing tip
+  html += '<div class="meteo-packing-tip">';
+  html += '<div class="meteo-packing-title">🧥 Quoi mettre dans sa valise pour cette saison</div>';
+  html += '<div class="meteo-packing-grid">';
+  var packingItems = [
+    { icon: '🧥', label: 'Manteau ou veste chaude', note: 'Indispensable, surtout Takayama & Magome' },
+    { icon: '🧣', label: 'Écharpe & bonnet', note: 'Matins et soirs froids partout' },
+    { icon: '👕', label: 'Sous-vêtements thermiques', note: 'Chaleur légère sans surcharger' },
+    { icon: '👟', label: 'Chaussures imperméables', note: 'Pavés mouillés à Kanazawa et Magome' },
+    { icon: '☂️', label: 'Parapluie compact', note: 'Ou achetez-en un konbini pour ¥500' },
+    { icon: '🧴', label: 'Crème hydratante', note: 'L\'air sec d\'automne dessèche la peau' },
+  ];
+  packingItems.forEach(function(p) {
+    html += '<div class="meteo-packing-item"><span class="meteo-packing-icon">' + p.icon + '</span>';
+    html += '<div><div class="meteo-packing-label">' + p.label + '</div><div class="meteo-packing-note">' + p.note + '</div></div></div>';
+  });
+  html += '</div></div>';
+
+  document.getElementById('page-container').innerHTML = html;
+}
+
+
+// ═══════════════════════════════════════════════════════════════════
+// 8. AGENDA CULTUREL
+// ═══════════════════════════════════════════════════════════════════
+var AGENDA_DATA = [
+  {
+    city: 'Tokyo', nameJP: '東京', dates: '19–21 nov',
+    events: [
+      {
+        name: 'Koyo nocturne — Rikugien',
+        type: 'Nature', emoji: '🍁',
+        date: '1–23 nov (soirs)',
+        desc: 'Le jardin Rikugien illumine ses érables chaque soir en novembre. Tapis rouge et reflets dans l\'étang, atmosphère zen et magique.',
+        price: '¥300', tip: '⏰ Ouvert 18h–21h, queue conseillée 17h30'
+      },
+      {
+        name: 'Koyo — Shinjuku Gyoen',
+        type: 'Nature', emoji: '🌳',
+        date: 'Fin novembre',
+        desc: 'Le grand jardin national de Tokyo mélange érables japonais et ginkgos dorés. Parfait pour une demi-journée de pique-nique dans les feuilles.',
+        price: '¥500', tip: '📍 Entrée Shinjuku-mon'
+      },
+      {
+        name: 'Festival de musique au Budokan',
+        type: 'Musique', emoji: '🎵',
+        date: 'Tout novembre',
+        desc: 'La salle légendaire de Tokyo accueille des concerts régulièrement. Vérifiez le programme sur Pia ou LiveNation Japan pour les dates exactes.',
+        price: '¥4,000–10,000', tip: '🎫 Billetterie en ligne recommandée'
+      },
+      {
+        name: 'Marchés de Noël Allemand — Marunouchi',
+        type: 'Marché', emoji: '🎄',
+        date: 'Mi-nov à fin déc',
+        desc: 'Marché de Noël style bavarois au cœur du quartier d\'affaires. Glühwein, saucisses, décorations. Atmosphère inattendue et très populaire.',
+        price: 'Entrée libre', tip: '✨ Plus beau en soirée, illuminations 17h–22h'
+      },
+    ]
+  },
+  {
+    city: 'Kanazawa', nameJP: '金沢', dates: '22–24 nov',
+    events: [
+      {
+        name: 'Yukitsuri — Kenroku-en',
+        type: 'Tradition', emoji: '🪢',
+        date: '1er nov → mars',
+        desc: 'Installation des armatures de bambou et corde pour protéger les pins de la neige. Un art japonais ancestral et photographique. Le Kenroku-en est l\'un des plus beaux spots.',
+        price: '¥320', tip: '🌟 Ne pas manquer — exclusivité de la région'
+      },
+      {
+        name: 'Kanazawa Jazz Street (automne)',
+        type: 'Musique', emoji: '🎷',
+        date: 'Novembre (TBC)',
+        desc: 'Festival de jazz dans les quartiers historiques. Des musiciens jouent dans les bars, rues et espaces culturels de la ville.',
+        price: 'Entrée libre pour la majorité', tip: '🎶 Programme sur kanazawa-jazz.jp'
+      },
+      {
+        name: 'Koyo — Gyokusen-inmaru Garden',
+        type: 'Nature', emoji: '🍁',
+        date: 'Mi-novembre',
+        desc: 'Jardin récemment restauré, moins connu que le Kenroku-en mais souvent plus beau pour le koyo. Vue sur le château.',
+        price: '¥310', tip: '📸 Spot photo peu fréquenté'
+      },
+    ]
+  },
+  {
+    city: 'Takayama', nameJP: '高山', dates: '23–24 nov',
+    events: [
+      {
+        name: 'Marchés du matin (Jinya-mae & Miyagawa)',
+        type: 'Marché', emoji: '🥕',
+        date: 'Tous les matins',
+        desc: 'Petits marchés paysans quotidiens dans les ruelles historiques. Légumes de montagne, pickles, fleurs séchées, artisanat local. Atmosphère vivante et authentique.',
+        price: 'Gratuit', tip: '⏰ 7h–12h'
+      },
+      {
+        name: 'Saké no Yado — dégustations de brasseries',
+        type: 'Gastronomie', emoji: '🍶',
+        date: 'Toute l\'année',
+        desc: 'Les 6 brasseries de saké de Sanmachi Suji proposent des dégustations libres. En automne, les nouvelles cuvées (shiboritate) arrivent — c\'est le meilleur moment.',
+        price: 'Gratuit (dégus)', tip: '🍶 Cherchez la boule de cèdre verte (sugidama) à l\'entrée'
+      },
+      {
+        name: 'Excursion Shirakawa-go — village enneigé',
+        type: 'Excursion', emoji: '🏔️',
+        date: 'Déc — illuminations nocturnes',
+        desc: 'Si votre passage coïncide avec un week-end d\'illumination hivernal, le village gasshō-zukuri sous la neige éclairé la nuit est une des images les plus féeriques du Japon.',
+        price: 'Bus ~¥2,600 A/R', tip: '📅 Vérifiez les dates exactes d\'illumination sur Shirakawa-go.gr.jp'
+      },
+    ]
+  },
+  {
+    city: 'Kyoto', nameJP: '京都', dates: '25–27 nov',
+    events: [
+      {
+        name: 'Koyo nocturne — Eikan-do',
+        type: 'Nature', emoji: '🍁',
+        date: '1–30 nov (soirs)',
+        desc: 'Le temple Eikan-do illumine ses jardins d\'érables chaque soir en novembre. Probablement le plus beau spectacle de koyo nocturne de tout le Japon. Attente jusqu\'à 2h mais inoubliable.',
+        price: '¥600', tip: '⏰ Ouvre 17h30 — arrivez avant 17h'
+      },
+      {
+        name: 'Koyo — Tofuku-ji',
+        type: 'Nature', emoji: '🌊',
+        date: 'Mi à fin novembre',
+        desc: 'Le pont Tsutenkaku enjambe une mer d\'érables rouges — la scène la plus photographiée du koyo de Kyoto. Arrivez avant 8h ou après 16h pour éviter les foules.',
+        price: '¥600', tip: '🌅 Meilleure lumière tôt le matin'
+      },
+      {
+        name: 'Arashiyama Hanatouro — illuminations',
+        type: 'Tradition', emoji: '🏮',
+        date: 'Déb. déc (vérifier)',
+        desc: 'Des milliers de lanternes illuminent les bambous et temples d\'Arashiyama le soir. Si vous êtes encore à Kyoto début décembre, c\'est à ne pas manquer.',
+        price: 'Gratuit', tip: '🎋 Programme sur hanatouro.jp'
+      },
+      {
+        name: 'Excursion Nara — cerfs et érables',
+        type: 'Excursion', emoji: '🦌',
+        date: 'Mi-novembre (koyo)',
+        desc: 'À 45 min de Kyoto, le parc de Nara conjugue cerfs sacrés et érables colorés. Le combo parfait pour une journée d\'automne.',
+        price: 'Train ~¥9 A/R (carte IC)', tip: '🚃 Kintetsu Nara line depuis Kyoto'
+      },
+    ]
+  },
+  {
+    city: 'Hiroshima', nameJP: '広島', dates: '28 nov',
+    events: [
+      {
+        name: 'Commémoration & Mémorial de la Paix',
+        type: 'Histoire', emoji: '🕊️',
+        date: 'Toute l\'année',
+        desc: 'Le musée de la Paix retrace l\'histoire du 6 août 1945 avec une rigueur poignante. Une visite qui transforme. Prévoir 2h minimum et de la place mentale.',
+        price: '¥200', tip: '🙏 La partie des objets personnels est particulièrement émouvante'
+      },
+      {
+        name: 'Koyo — Shukkei-en & Miyajima',
+        type: 'Nature', emoji: '🍁',
+        date: 'Fin novembre',
+        desc: 'Le jardin Shukkei-en en ville est superbe à l\'automne. Sur l\'île de Miyajima, les érables du Mont Misen créent un cadre naturel exceptionnel.',
+        price: '¥260 (jardin)', tip: '🚢 Ferry Miyajima inclus dans certains JR passes régionaux'
+      },
+      {
+        name: 'Festival d\'huîtres de Miyajima',
+        type: 'Gastronomie', emoji: '🦪',
+        date: 'Novembre–mars (saison)',
+        desc: 'C\'est la pleine saison des huîtres de la mer intérieure de Seto. Les stands de Miyajima proposent des huîtres grillées sur charbon, cuites à la sauce ponzu ou en beignet.',
+        price: '¥600–1,500', tip: '🔥 Mangez-les directement sur le grill, chaudes'
+      },
+    ]
+  },
+  {
+    city: 'Osaka', nameJP: '大阪', dates: '29 nov–1 déc',
+    events: [
+      {
+        name: 'Universal Studios Japan — Zone Nintendo',
+        type: 'Loisirs', emoji: '🎮',
+        date: 'Toute l\'année',
+        desc: 'Super Nintendo World est une attraction unique au monde : Mario Kart en AR, Yoshi\'s Adventure, et le château de Peach grandeur nature. Réservez les Express Pass à l\'avance.',
+        price: '¥10,400 + Express Pass ~¥5,000', tip: '📅 Achetez les tickets en ligne — souvent complet en nov'
+      },
+      {
+        name: 'Illuminations de Noël — Midosuji Avenue',
+        type: 'Illuminations', emoji: '✨',
+        date: 'Mid-nov à fin déc',
+        desc: '4 km d\'arbres illuminés le long du boulevard principal d\'Osaka. Une des illuminations les plus spectaculaires du Japon, avec des millions de LEDs.',
+        price: 'Gratuit', tip: '🌃 Parfait pour une promenade du soir'
+      },
+      {
+        name: 'Vente de saké nouveau (Shinbōritachi)',
+        type: 'Gastronomie', emoji: '🍶',
+        date: 'Novembre',
+        desc: 'La période de mise en vente des nouvelles cuvées de saké de l\'année. Les izakayas et brasseries proposent des shiboritate (saké non filtré, frais) en quantité limitée.',
+        price: '¥500–1,500/verre', tip: '🍶 Cherchez les panneaux "新酒" dans les izakayas'
+      },
+    ]
+  },
+  {
+    city: 'Magome', nameJP: '馬籠', dates: '2 déc',
+    events: [
+      {
+        name: 'Randonnée Nakasendo — Magome à Tsumago',
+        type: 'Randonnée', emoji: '🥾',
+        date: 'Toute l\'année (idéal mai–déc)',
+        desc: '8 km de chemin forestier sur l\'ancienne route des shoguns. Rizières en terrasses, forêts de cèdres, auberges d\'époque. La randonnée la plus belle et la plus accessible du Japon.',
+        price: 'Gratuit (bagagerie ~¥1,000/valise)', tip: '🎒 Envoyez vos valises au ryokan, marchez léger'
+      },
+      {
+        name: 'Marché artisanal de Magome',
+        type: 'Marché', emoji: '🏮',
+        date: 'Week-ends',
+        desc: 'Les boutiques des ruelles pavées de Magome vendent artisanat local, soba, teintures indigo, et objets en bois de cèdre liés à la route Nakasendo.',
+        price: 'Gratuit', tip: '🪵 Cherchez les bouteilles de saké local et les lacques'
+      },
+    ]
+  },
+  {
+    city: 'Tokyo (retour)', nameJP: '東京', dates: '3–4 déc',
+    events: [
+      {
+        name: 'Illuminations Marunouchi Bright Christmas',
+        type: 'Illuminations', emoji: '🎄',
+        date: 'Nov–25 déc',
+        desc: 'L\'avenue principale du quartier d\'affaires se transforme en allée de lumières champagne. Élégant, japonais dans l\'esprit, photographique.',
+        price: 'Gratuit', tip: '📸 Plus beau 18h–22h'
+      },
+      {
+        name: 'Shopping final — Akihabara & Don Quijote',
+        type: 'Shopping', emoji: '🛍️',
+        date: 'Toute l\'année',
+        desc: 'Dernière occasion pour les Kit Kat rares, la papeterie Tokyu Hands, les gadgets électroniques et les cosmétiques japoanais. Vérifiez le poids de votre valise avant !',
+        price: 'Selon appétit 😄', tip: '🧳 Tax-free disponible avec passeport (>¥5,000)'
+      },
+      {
+        name: 'Koyo tardif — Shinjuku Gyoen',
+        type: 'Nature', emoji: '🍁',
+        date: 'Début décembre',
+        desc: 'Début décembre, quelques érables tardifs et cerisiers hiver fleurissent encore dans le Shinjuku Gyoen. Un au revoir botanique avant de reprendre l\'avion.',
+        price: '¥500', tip: '🌸 Les Prunus × subhirtella fleurissent en décembre !'
+      },
+    ]
+  },
+];
+
+var _agendaFilter = 'all';
+
+function renderAgenda() {
+  var typeSet = {};
+  AGENDA_DATA.forEach(function(city) {
+    city.events.forEach(function(e){ typeSet[e.type] = e.emoji; });
+  });
+  var types = Object.keys(typeSet).sort();
+
+  var html = _newPageHeader('🎌', 'Agenda culturel', '文化カレンダー', 'Événements et activités pendant votre séjour nov–déc 2026');
+
+  // Filter buttons
+  html += '<div class="agenda-filters">';
+  html += '<button class="agenda-filter-btn' + (_agendaFilter==='all'?' active':'') + '" onclick="setAgendaFilter(\'all\')">Tout</button>';
+  types.forEach(function(t) {
+    html += '<button class="agenda-filter-btn' + (_agendaFilter===t?' active':'') + '" onclick="setAgendaFilter(\'' + t + '\')">' + typeSet[t] + ' ' + t + '</button>';
+  });
+  html += '</div>';
+
+  // City sections
+  html += '<div class="agenda-timeline">';
+  AGENDA_DATA.forEach(function(city) {
+    var events = _agendaFilter === 'all' ? city.events : city.events.filter(function(e){ return e.type === _agendaFilter; });
+    if (!events.length) return;
+
+    html += '<div class="agenda-city-block" data-city="' + city.city + '">';
+    html += '<div class="agenda-city-header">';
+    html += '<div class="agenda-city-info">';
+    html += '<span class="agenda-city-name">' + city.city + '</span>';
+    html += '<span class="agenda-city-jp">' + city.nameJP + '</span>';
+    html += '</div>';
+    html += '<span class="agenda-city-dates">📅 ' + city.dates + '</span>';
+    html += '</div>';
+
+    html += '<div class="agenda-events">';
+    events.forEach(function(ev) {
+      html += '<div class="agenda-event">';
+      html += '<div class="agenda-event-emoji">' + ev.emoji + '</div>';
+      html += '<div class="agenda-event-body">';
+      html += '<div class="agenda-event-name">' + ev.name + '</div>';
+      html += '<div class="agenda-event-date">📆 ' + ev.date + '</div>';
+      html += '<div class="agenda-event-desc">' + ev.desc + '</div>';
+      if (ev.tip) html += '<div class="agenda-event-tip">' + ev.tip + '</div>';
+      html += '</div>';
+      html += '<div class="agenda-event-meta">';
+      html += '<span class="agenda-type-badge">' + ev.emoji + ' ' + ev.type + '</span>';
+      html += '<span class="agenda-price">' + ev.price + '</span>';
+      html += '</div>';
+      html += '</div>';
+    });
+    html += '</div></div>';
+  });
+  html += '</div>';
+
+  document.getElementById('page-container').innerHTML = html;
+}
+
+function setAgendaFilter(type) {
+  _agendaFilter = type;
+  renderAgenda();
+}
+
+
+// ═══════════════════════════════════════════════════════════════════
+// 9. MOODBOARD
+// ═══════════════════════════════════════════════════════════════════
+var MOODBOARD_DATA = [
+  {
+    city: 'Tokyo', nameJP: '東京', color: '#2a3a5a',
+    images: [
+      { url: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=600&q=80', alt: 'Tokyo skyline', caption: 'Skyline depuis Shibuya' },
+      { url: 'https://images.unsplash.com/photo-1492571350019-22de08371fd3?w=600&q=80', alt: 'Shibuya crossing', caption: 'Carrefour de Shibuya' },
+      { url: 'https://images.unsplash.com/photo-1513407030348-c983a97b98d8?w=600&q=80', alt: 'Senso-ji', caption: 'Temple Senso-ji, Asakusa' },
+      { url: 'https://images.unsplash.com/photo-1503899036084-c55cdd92da26?w=600&q=80', alt: 'Ramen', caption: 'Ramen dans les ruelles' },
+    ]
+  },
+  {
+    city: 'Kanazawa', nameJP: '金沢', color: '#4a3a1a',
+    images: [
+      { url: 'https://images.unsplash.com/photo-1567767292278-a4f21aa2d36e?w=600&q=80', alt: 'Kanazawa', caption: 'Kenroku-en en automne' },
+      { url: 'https://images.unsplash.com/photo-1590012314607-cda9d9b699ae?w=600&q=80', alt: 'Geisha district', caption: 'Quartier Higashi Chaya' },
+    ]
+  },
+  {
+    city: 'Takayama', nameJP: '高山', color: '#3a2a1a',
+    images: [
+      { url: 'https://images.unsplash.com/photo-1580533089532-54e9b8f62997?w=600&q=80', alt: 'Takayama', caption: 'Ruelles Sanmachi Suji' },
+      { url: 'https://images.unsplash.com/photo-1611464908623-07f19927264e?w=600&q=80', alt: 'Shirakawa-go', caption: 'Shirakawa-go sous la neige' },
+    ]
+  },
+  {
+    city: 'Kyoto', nameJP: '京都', color: '#3a1a2a',
+    images: [
+      { url: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=600&q=80', alt: 'Kyoto temple', caption: 'Fushimi Inari au crépuscule' },
+      { url: 'https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=600&q=80', alt: 'Bamboo forest', caption: 'Forêt de bambous, Arashiyama' },
+      { url: 'https://images.unsplash.com/photo-1545569341-9eb8b30979d9?w=600&q=80', alt: 'Geisha Gion', caption: 'Maiko dans Gion, crépuscule' },
+      { url: 'https://images.unsplash.com/photo-1570459027562-4a916cc6113f?w=600&q=80', alt: 'Koyo Kyoto', caption: 'Érables rouges de novembre' },
+    ]
+  },
+  {
+    city: 'Hiroshima & Miyajima', nameJP: '広島・宮島', color: '#1a3a2a',
+    images: [
+      { url: 'https://images.unsplash.com/photo-1505069446780-4ef442b5207f?w=600&q=80', alt: 'Miyajima torii', caption: 'Torii flottant, Miyajima' },
+      { url: 'https://images.unsplash.com/photo-1599922407858-a3d0e1e6b7de?w=600&q=80', alt: 'Hiroshima peace', caption: 'Dôme de la Bombe A, Hiroshima' },
+    ]
+  },
+  {
+    city: 'Osaka', nameJP: '大阪', color: '#3a1a1a',
+    images: [
+      { url: 'https://images.unsplash.com/photo-1590559899731-a382839e5549?w=600&q=80', alt: 'Osaka dotonbori', caption: 'Dotonbori la nuit' },
+      { url: 'https://images.unsplash.com/photo-1589308078059-be1415eab4c3?w=600&q=80', alt: 'Takoyaki', caption: 'Takoyaki fumants' },
+    ]
+  },
+  {
+    city: 'Route Nakasendo', nameJP: '中山道', color: '#1a2a1a',
+    images: [
+      { url: 'https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=600&q=80', alt: 'Magome', caption: 'Ruelles pavées de Magome' },
+      { url: 'https://images.unsplash.com/photo-1578469645742-46cae010e5d6?w=600&q=80', alt: 'Nakasendo', caption: 'Sentier forestier Nakasendo' },
+    ]
+  },
+  {
+    city: 'Ambiances & Détails', nameJP: '細部', color: '#2a2a3a',
+    images: [
+      { url: 'https://images.unsplash.com/photo-1612178537253-bccd437b730e?w=600&q=80', alt: 'Japanese food', caption: 'Bento du konbini' },
+      { url: 'https://images.unsplash.com/photo-1536098561742-ca998e48cbcc?w=600&q=80', alt: 'Shrine', caption: 'Offrandes dans un sanctuaire' },
+      { url: 'https://images.unsplash.com/photo-1524413840807-0c3cb6fa808d?w=600&q=80', alt: 'Onsen', caption: 'Rotenburo en hiver' },
+      { url: 'https://images.unsplash.com/photo-1551641506-ee5bf4cb45f1?w=600&q=80', alt: 'Shinkansen', caption: 'Shinkansen — ponctualité légendaire' },
+    ]
+  },
+];
+
+var _moodFilter = 'all';
+var _moodLightbox = null;
+
+function renderMoodboard() {
+  var allCities = ['all'].concat(MOODBOARD_DATA.map(function(d){ return d.city; }));
+
+  var html = _newPageHeader('📸', 'Moodboard', 'インスピレーション', 'L\'ambiance du voyage — images et atmosphères');
+
+  // City filter
+  html += '<div class="mood-filters">';
+  allCities.forEach(function(c) {
+    html += '<button class="mood-filter-btn' + (_moodFilter===c?' active':'') + '" onclick="setMoodFilter(\'' + c.replace(/'/g,"\\'") + '\')">' + (c==='all'?'🗾 Tout':c) + '</button>';
+  });
+  html += '</div>';
+
+  // Masonry grid
+  html += '<div class="mood-grid">';
+  MOODBOARD_DATA.forEach(function(section) {
+    if (_moodFilter !== 'all' && _moodFilter !== section.city) return;
+
+    html += '<div class="mood-section">';
+    html += '<div class="mood-section-header" style="border-left:3px solid ' + section.color + '">';
+    html += '<span class="mood-section-city">' + section.city + '</span>';
+    html += '<span class="mood-section-jp">' + section.nameJP + '</span>';
+    html += '</div>';
+    html += '<div class="mood-images">';
+
+    section.images.forEach(function(img, idx) {
+      var imgId = 'moodimg_' + section.city.replace(/\s/g,'_') + '_' + idx;
+      html += '<div class="mood-img-wrap" onclick="openMoodLightbox(\'' + imgId + '\')">';
+      html += '<img class="mood-img img-loading" src="' + img.url + '" alt="' + img.alt + '" id="' + imgId + '" loading="lazy" onload="this.classList.remove(\'img-loading\')" data-full="' + img.url.replace('w=600','w=1200') + '" data-caption="' + img.caption + '">';
+      html += '<div class="mood-img-caption">' + img.caption + '</div>';
+      html += '</div>';
+    });
+
+    html += '</div></div>';
+  });
+  html += '</div>';
+
+  // Lightbox container
+  html += '<div id="mood-lightbox" class="mood-lightbox" onclick="closeMoodLightbox()" style="display:none">';
+  html += '<button class="mood-lb-close" onclick="closeMoodLightbox()">×</button>';
+  html += '<img class="mood-lb-img" id="mood-lb-img" src="" alt="">';
+  html += '<div class="mood-lb-caption" id="mood-lb-caption"></div>';
+  html += '</div>';
+
+  document.getElementById('page-container').innerHTML = html;
+}
+
+function setMoodFilter(city) {
+  _moodFilter = city;
+  renderMoodboard();
+}
+
+function openMoodLightbox(imgId) {
+  var img = document.getElementById(imgId);
+  if (!img) return;
+  var lb = document.getElementById('mood-lightbox');
+  var lbImg = document.getElementById('mood-lb-img');
+  var lbCap = document.getElementById('mood-lb-caption');
+  lbImg.src = img.dataset.full || img.src;
+  lbCap.textContent = img.dataset.caption || '';
+  lb.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+function closeMoodLightbox() {
+  var lb = document.getElementById('mood-lightbox');
+  if (lb) lb.style.display = 'none';
+  document.body.style.overflow = '';
 }

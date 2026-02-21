@@ -109,6 +109,9 @@ const Router = {
       case 'japon101':    renderJapon101(); break;
       case 'surprise':    renderSurprise(); break;
       case 'stats':       renderStats(); break;
+      case 'agenda':     renderAgenda(); break;
+      case 'moodboard':   renderMoodboard(); break;
+      case 'meteo':       renderMeteo(); break;
       default:           renderDashboard();
     }
 
