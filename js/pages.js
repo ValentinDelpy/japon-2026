@@ -171,7 +171,7 @@ function createMap(containerId, steps) {
     var marker = L.marker(coords,{icon:icon}).addTo(map);
     L.marker(coords,{icon:L.divIcon({className:'marker-label-wrapper',html:'<div class="marker-label">'+(g.city||g.lieu)+'</div>',iconSize:[100,20],iconAnchor:[-18,10]}),interactive:false}).addTo(map);
     var dest = findDestination(g.city || g.lieu);
-    var popup = '<div class="popup-card"><div class="popup-img" style="background-image:url(\''+dest.image+'\')"></div><div class="popup-body">';
+    var popup = '<div class="popup-card"><div class="popup-img" style="background-image:url(\''+dest.image+'\')" data-dest-key="'+(dest._destKey||'_default')+'"></div><div class="popup-body">';
     popup += '<div class="popup-title">'+(g.city||g.lieu);
     if (dest.nameJP) popup += ' <span class="popup-jp">'+dest.nameJP+'</span>';
     popup += '</div>';
@@ -241,7 +241,7 @@ function createDashboardMap(groups) {
     var acts = Array.isArray(g.activites) ? g.activites.filter(function(a){return a.trim();}) : [];
     var wx = g.startDate ? getWeatherForDate(g.city, g.startDate) : null;
     var popup = '<div class="popup-card">';
-    popup += '<div class="popup-img" style="background-image:url(\''+dest.image+'\');position:relative">';
+    popup += '<div class="popup-img" style="background-image:url(\''+dest.image+'\');position:relative" data-dest-key="'+(dest._destKey||'_default')+'">';
     popup += '<div style="position:absolute;bottom:0;left:0;right:0;padding:8px 10px;background:linear-gradient(transparent,rgba(0,0,0,0.65));color:#fff;font-family:\'Shippori Mincho\',serif;font-size:0.88rem;font-weight:700">'+g.city+(dest.nameJP ? ' <span style="font-size:0.7em;opacity:0.8">'+dest.nameJP+'</span>' : '')+'</div>';
     popup += '</div>';
     popup += '<div class="popup-body">';
@@ -279,16 +279,15 @@ function activateDashStop(idx) {
   var card = document.getElementById('dc-'+idx);
   if (card) {
     card.classList.add('active');
-    // Scroll within the stops-list container, not the whole page
+    // Center the card in the stops-list panel using getBoundingClientRect
     var list = document.getElementById('stops-list');
     if (list) {
-      var cardTop = card.offsetTop;
-      var listScrollTop = list.scrollTop;
-      var listH = list.clientHeight;
-      // Only scroll if card is out of view
-      if (cardTop < listScrollTop || cardTop + card.offsetHeight > listScrollTop + listH) {
-        list.scrollTo({ top: cardTop - 8, behavior: 'smooth' });
-      }
+      var listRect = list.getBoundingClientRect();
+      var cardRect = card.getBoundingClientRect();
+      // cardRect is relative to viewport; compute offset relative to list content
+      var cardOffsetInList = cardRect.top - listRect.top + list.scrollTop;
+      var scrollTarget = cardOffsetInList - (list.clientHeight / 2) + (card.offsetHeight / 2);
+      list.scrollTo({ top: Math.max(0, scrollTarget), behavior: 'smooth' });
     }
   }
   var lm = _dashState.markers[idx];
@@ -314,8 +313,14 @@ function toggleDashCard(idx, e) {
     activateDashStop(idx);
     setTimeout(function(){
       var list = document.getElementById('stops-list');
-      if (list) list.scrollTo({ top: card.offsetTop - 8, behavior: 'smooth' });
-    }, 60);
+      if (list && card) {
+        var listRect = list.getBoundingClientRect();
+        var cardRect = card.getBoundingClientRect();
+        var cardOffsetInList = cardRect.top - listRect.top + list.scrollTop;
+        var scrollTarget = cardOffsetInList - (list.clientHeight / 2) + (card.offsetHeight / 2);
+        list.scrollTo({ top: Math.max(0, scrollTarget), behavior: 'smooth' });
+      }
+    }, 80);
   } else {
     // Reset: deactivate card highlight and reset map to overview
     card.classList.remove('active');
@@ -384,7 +389,7 @@ function renderDashboard() {
 
   document.getElementById('page-container').innerHTML = html;
   buildDashboardCards(groups);
-  setTimeout(function(){ createDashboardMap(groups); }, 100);
+  setTimeout(function(){ createDashboardMap(groups); _repairBrokenImages(); }, 100);
 }
 
 function buildDashboardCards(groups) {
@@ -640,7 +645,8 @@ function renderGuides() {
     var pPers = parseBudget(g.prixPersonne);
 
     html += '<div class="guide-dest-card" onclick="openGuideDetail('+i+')" style="animation-delay:'+(i*0.06)+'s">';
-    html += '<div class="guide-dest-thumb" style="background-image:url(\''+dest.image+'\')">';
+    var destKey = dest._destKey || '_default';
+    html += '<div class="guide-dest-thumb" style="background-image:url(\''+dest.image+'\')" data-dest-key="'+destKey+'">';
     html += '<div class="guide-dest-num">'+(i+1)+'</div>';
     if (g.isSubDest) html += '<div class="guide-dest-sub-badge">Excursion</div>';
     html += '</div>';
@@ -668,6 +674,7 @@ function renderGuides() {
 
   html += '</div>';
   document.getElementById('page-container').innerHTML = html;
+  setTimeout(_repairBrokenImages, 200);
 }
 
 function openGuideDetail(idxOrName) {
@@ -697,7 +704,7 @@ function openGuideDetail(idxOrName) {
   overlay.onclick = function(e){ if(e.target===overlay) overlay.remove(); };
 
   var h = '<div class="guide-detail">';
-  h += '<div class="guide-detail-hero" style="background-image:url(\''+dest.image+'\')">';
+  h += '<div class="guide-detail-hero" style="background-image:url(\''+dest.image+'\')" data-dest-key="'+(dest._destKey||'_default')+'">';
   h += '<button class="guide-close" onclick="this.closest(\'.guide-detail-overlay\').remove()">×</button>';
   h += '<div class="guide-detail-hero-content">';
   var idx = (window._guideDests||[]).indexOf(g);
@@ -768,6 +775,7 @@ function openGuideDetail(idxOrName) {
   h += '</div></div>';
   overlay.innerHTML = h;
   document.body.appendChild(overlay);
+  setTimeout(_repairBrokenImages, 50);
 }
 
 // ═══ PRINT ═══

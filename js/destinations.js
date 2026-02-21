@@ -8,7 +8,7 @@ const DESTINATIONS_DB = {
   "tokyo": {
     name: "Tokyo",
     nameJP: "東京",
-    image: "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=800&q=80",
+    image: "https://commons.wikimedia.org/wiki/Special:FilePath/Skyscrapers_of_Shinjuku_2009_January.jpg?width=800",
     intro: "Mégalopole où tradition ancestrale et futurisme se côtoient dans un ballet permanent. Tokyo, c'est le vertige des sens : temples millénaires nichés entre des gratte-ciels, izakayas enfumés sous des néons clignotants, et le silence méditatif d'un jardin zen à deux pas du carrefour le plus traversé du monde.",
     highlights: [
       "Traverser le mythique carrefour de Shibuya au milieu de 3 000 piétons",
@@ -36,7 +36,7 @@ const DESTINATIONS_DB = {
   "kyoto": {
     name: "Kyoto",
     nameJP: "京都",
-    image: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=800&q=80",
+    image: "https://commons.wikimedia.org/wiki/Special:FilePath/Fushimi_Inari_Taisha_Kyoto.jpg?width=800",
     intro: "Ancienne capitale impériale, Kyoto est le cœur spirituel du Japon. Avec ses 2 000 temples et sanctuaires, ses geishas qui traversent furtivement les ruelles de Gion, et ses jardins zen d'une perfection surnaturelle, la ville est un portail vers le Japon éternel.",
     highlights: [
       "Traverser les 10 000 torii vermillon du Fushimi Inari Taisha au lever du soleil",
@@ -64,7 +64,7 @@ const DESTINATIONS_DB = {
   "osaka": {
     name: "Osaka",
     nameJP: "大阪",
-    image: "https://images.unsplash.com/photo-1590559899731-a382839e5549?w=800&q=80",
+    image: "https://commons.wikimedia.org/wiki/Special:FilePath/Dotonbori_Osaka_2012.jpg?width=800",
     intro: "Si Tokyo est la tête du Japon, Osaka est son estomac et son cœur. Capitale de la street-food japonaise, ville bruyante, joyeuse et décomplexée, Osaka est l'antithèse de la retenue nippone. Ici, on mange jusqu'à en tomber — c'est même le crédo local : kuidaore (食い倒れ), « se ruiner en mangeant ».",
     highlights: [
       "Dévorer des takoyaki (boulettes de poulpe) dans le quartier de Dotonbori",
@@ -92,7 +92,7 @@ const DESTINATIONS_DB = {
   "hiroshima": {
     name: "Hiroshima",
     nameJP: "広島",
-    image: "https://images.unsplash.com/photo-1599922407858-a3d0e1e6b7de?w=800&q=80",
+    image: "https://commons.wikimedia.org/wiki/Special:FilePath/Hiroshima_Peace_Memorial.jpg?width=800",
     intro: "Hiroshima est une leçon d'humanité. La ville, rasée le 6 août 1945, a renaît de ses cendres pour devenir un symbole mondial de paix. Aujourd'hui, c'est une cité vibrante et accueillante, connue pour ses okonomiyaki uniques et sa proximité avec la sublime île de Miyajima.",
     highlights: [
       "Se recueillir au Mémorial de la Paix et au Dôme de la Bombe A",
@@ -120,7 +120,7 @@ const DESTINATIONS_DB = {
   "nara": {
     name: "Nara",
     nameJP: "奈良",
-    image: "https://images.unsplash.com/photo-1624601573012-efb68f3f150d?w=800&q=80",
+    image: "https://commons.wikimedia.org/wiki/Special:FilePath/Sika_deer_bowing_in_Nara_Park.jpg?width=800",
     intro: "Nara, première capitale permanente du Japon (710-784), est une ville à taille humaine où plus de 1 000 cerfs sacrés se promènent librement dans les parcs et les rues. C'est un lieu enchanteur, plus intime que Kyoto, avec des trésors architecturaux parmi les plus anciens du pays.",
     highlights: [
       "Nourrir les cerfs sika qui s'inclinent poliment pour recevoir des crackers",
@@ -146,7 +146,7 @@ const DESTINATIONS_DB = {
   "hakone": {
     name: "Hakone",
     nameJP: "箱根",
-    image: "https://images.unsplash.com/photo-1528164344705-47542687000d?w=800&q=80",
+    image: "https://commons.wikimedia.org/wiki/Special:FilePath/Hakone_Ropeway.jpg?width=800",
     intro: "Station thermale nichée dans les montagnes à 1h30 de Tokyo, Hakone offre des panoramas spectaculaires sur le Mont Fuji, des sources chaudes fumantes, et un parcours touristique varié entre lac, volcan et musées. C'est l'escapade nature parfaite depuis la capitale.",
     highlights: [
       "Admirer le Mont Fuji se refléter dans le lac Ashi (par temps clair !)",
@@ -173,7 +173,7 @@ const DESTINATIONS_DB = {
   "nikko": {
     name: "Nikko",
     nameJP: "日光",
-    image: "https://images.unsplash.com/photo-1578469645742-46cae010e5d6?w=800&q=80",
+    image: "https://commons.wikimedia.org/wiki/Special:FilePath/Tosho-gu_Shrine_Nikko.jpg?width=800",
     intro: "Nikko est un joyau caché dans les montagnes au nord de Tokyo. Ses sanctuaires et temples, classés au patrimoine mondial de l'UNESCO, sont d'une splendeur baroque inouïe — un contraste saisissant avec la sobriété zen habituelle du Japon. Ajoutez-y des cascades, des lacs turquoise et des forêts de cèdres centenaires.",
     highlights: [
       "Admirer l'exubérance du Tosho-gu, le mausolée du shogun Tokugawa Ieyasu",
@@ -198,7 +198,7 @@ const DESTINATIONS_DB = {
   "kamakura": {
     name: "Kamakura",
     nameJP: "鎌倉",
-    image: "https://images.unsplash.com/photo-1578469550956-0e16b69c6a3d?w=800&q=80",
+    image: "https://commons.wikimedia.org/wiki/Special:FilePath/Kotoku-in_Kamakura.jpg?width=800",
     intro: "Ancienne capitale des shoguns, Kamakura est une ville balnéaire mystique à 1h de Tokyo. Son Grand Bouddha de bronze trône en plein air depuis 500 ans, tandis que des dizaines de temples se cachent dans les collines boisées. L'été, ses plages attirent surfeurs et baigneurs.",
     highlights: [
       "Se recueillir devant le Grand Bouddha (Daibutsu) de 13m de haut",
@@ -222,7 +222,7 @@ const DESTINATIONS_DB = {
   "kanazawa": {
     name: "Kanazawa",
     nameJP: "金沢",
-    image: "https://images.unsplash.com/photo-1567767292278-a4f21aa2d36e?w=800&q=80",
+    image: "https://commons.wikimedia.org/wiki/Special:FilePath/Kenroku-en_02.jpg?width=800",
     intro: "Kanazawa est le secret le mieux gardé du Japon. Épargnée par les bombardements de la Seconde Guerre mondiale, la ville a conservé ses quartiers de samouraïs et de geishas intacts. Son jardin Kenroku-en est considéré comme l'un des trois plus beaux jardins du Japon.",
     highlights: [
       "Déambuler dans le Kenroku-en, jardin parfait en toute saison",
@@ -248,7 +248,7 @@ const DESTINATIONS_DB = {
   "takayama": {
     name: "Takayama",
     nameJP: "高山",
-    image: "https://images.unsplash.com/photo-1580533089532-54e9b8f62997?w=800&q=80",
+    image: "https://commons.wikimedia.org/wiki/Special:FilePath/Takayama_Sanmachi_street.jpg?width=800",
     intro: "Perchée dans les Alpes japonaises, Takayama est une petite ville de montagne qui a préservé son atmosphère d'époque Edo. Ses ruelles de maisons en bois sombre, ses brasseries de saké et son marché du matin offrent un aperçu rare du Japon rural traditionnel.",
     highlights: [
       "Se promener dans Sanmachi Suji, les ruelles préservées de l'ère Edo",
@@ -274,7 +274,7 @@ const DESTINATIONS_DB = {
   "fuji": {
     name: "Mont Fuji",
     nameJP: "富士山",
-    image: "https://images.unsplash.com/photo-1490806843957-31f4c9a91c65?w=800&q=80",
+    image: "https://commons.wikimedia.org/wiki/Special:FilePath/Hakone_Ropeway.jpg?width=800",
     intro: "Le Mont Fuji, à 3 776 m, n'est pas seulement le point culminant du Japon — c'est son symbole spirituel absolu. Qu'on le contemple de loin ou qu'on l'escalade, le Fuji-san dégage une majesté sereine qui a inspiré artistes et poètes pendant des millénaires.",
     highlights: [
       "Admirer le Fuji depuis le lac Kawaguchiko au lever du soleil",
@@ -299,7 +299,7 @@ const DESTINATIONS_DB = {
   "miyajima": {
     name: "Miyajima",
     nameJP: "宮島",
-    image: "https://images.unsplash.com/photo-1505069446780-4ef442b5207f?w=800&q=80",
+    image: "https://commons.wikimedia.org/wiki/Special:FilePath/Miyajima_in_japan.jpg?width=800",
     intro: "L'île sacrée de Miyajima, avec son immense torii vermillon semblant flotter sur l'eau, est l'un des trois panoramas les plus célèbres du Japon. L'île entière est considérée comme divine, peuplée de cerfs amicaux et entourée de forêts anciennes.",
     highlights: [
       "Voir le torii flottant d'Itsukushima à marée haute puis marcher jusqu'à lui à marée basse",
@@ -323,7 +323,7 @@ const DESTINATIONS_DB = {
   "koyasan": {
     name: "Kōya-san",
     nameJP: "高野山",
-    image: "https://images.unsplash.com/photo-1545569341-9eb8b30979d9?w=800&q=80",
+    image: "https://commons.wikimedia.org/wiki/Special:FilePath/Okunoin_cemetery_Koyasan.jpg?width=800",
     intro: "Perché à 800m d'altitude au cœur d'une forêt de cèdres millénaires, le mont Kōya est le centre du bouddhisme Shingon fondé en 816. C'est ici que l'on vit l'expérience la plus profondément spirituelle du Japon : dormir dans un temple, méditer à l'aube, et marcher dans un cimetière de 200 000 tombes enveloppé de brume.",
     highlights: [
       "Dormir dans un temple (shukubo) et manger la cuisine végétarienne des moines",
@@ -348,7 +348,7 @@ const DESTINATIONS_DB = {
   "shirakawa": {
     name: "Shirakawa-go",
     nameJP: "白川郷",
-    image: "https://images.unsplash.com/photo-1611464908623-07f19927264e?w=800&q=80",
+    image: "https://commons.wikimedia.org/wiki/Special:FilePath/Shirakawa-go_05.jpg?width=800",
     intro: "Village médiéval classé au patrimoine mondial de l'UNESCO, Shirakawa-go est célèbre pour ses maisons gasshō-zukuri — des constructions au toit de chaume en pente très raide, conçues pour supporter le poids de l'immense neige hivernale. En décembre, recouvertes de neige, elles offrent l'un des panoramas les plus féeriques du Japon.",
     highlights: [
       "Se promener dans les ruelles enneigées en décembre (illuminations nocturnes certains week-ends)",
@@ -372,7 +372,7 @@ const DESTINATIONS_DB = {
   "magome": {
     name: "Magome",
     nameJP: "馬籠",
-    image: "https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=800&q=80",
+    image: "https://commons.wikimedia.org/wiki/Special:FilePath/Magome-juku.jpg?width=800",
     intro: "Magome est un ancien bourg-relais de la route du Nakasendo, la voie terrestre qui reliait Tokyo à Kyoto à l'époque des shoguns. Ses ruelles en pavés, ses maisons en bois à la façade noire et ses boutiques d'artisanat offrent un voyage dans le Japon médiéval. C'est aussi le point de départ de la randonnée vers Tsumago, l'une des plus belles balades du Japon.",
     highlights: [
       "Marcher sur l'ancienne route du Nakasendo entre Magome et Tsumago (8 km de forêt et rizières)",
@@ -395,7 +395,7 @@ const DESTINATIONS_DB = {
   // Fallback for unknown destinations
   "_default": {
     nameJP: "",
-    image: "https://images.unsplash.com/photo-1528164344705-47542687000d?w=800&q=80",
+    image: "https://commons.wikimedia.org/wiki/Special:FilePath/Skyscrapers_of_Shinjuku_2009_January.jpg?width=800",
     intro: "Une étape de votre voyage au Japon, à découvrir et explorer !",
     highlights: [
       "Flâner dans les rues et s'imprégner de l'ambiance locale",
@@ -415,7 +415,12 @@ const DESTINATIONS_DB = {
 
 // Helper to match a location name to the database
 function findDestination(locationName) {
-  if (!locationName) return DESTINATIONS_DB["_default"];
+  if (!locationName) {
+    var d = Object.assign({}, DESTINATIONS_DB["_default"]);
+    d._destKey = '_default';
+    d.image = getDestImage('_default');
+    return d;
+  }
   const normalized = locationName.toLowerCase()
     .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
     .replace(/[^a-z0-9\s]/g, "")
@@ -424,7 +429,10 @@ function findDestination(locationName) {
   for (const key of Object.keys(DESTINATIONS_DB)) {
     if (key === "_default") continue;
     if (normalized.includes(key) || key.includes(normalized.split(/\s/)[0])) {
-      return { ...DESTINATIONS_DB[key], name: DESTINATIONS_DB[key].name || locationName };
+      var r = Object.assign({}, DESTINATIONS_DB[key], { name: DESTINATIONS_DB[key].name || locationName });
+      r._destKey = key;
+      r.image = getDestImage(key);
+      return r;
     }
   }
   // Check alternate names
@@ -445,11 +453,17 @@ function findDestination(locationName) {
   };
   for (const [alias, target] of Object.entries(aliases)) {
     if (normalized.includes(alias)) {
-      return { ...DESTINATIONS_DB[target], name: DESTINATIONS_DB[target].name || locationName };
+      var r2 = Object.assign({}, DESTINATIONS_DB[target], { name: DESTINATIONS_DB[target].name || locationName });
+      r2._destKey = target;
+      r2.image = getDestImage(target);
+      return r2;
     }
   }
 
-  return { ...DESTINATIONS_DB["_default"], name: locationName };
+  var def = Object.assign({}, DESTINATIONS_DB["_default"], { name: locationName });
+  def._destKey = '_default';
+  def.image = getDestImage('_default');
+  return def;
 }
 
 // =============================================
@@ -510,6 +524,212 @@ function getCityWeatherKey(cityName) {
   }
   if (n.includes('aeroport') || n.includes('airport')) return null;
   return '_default';
+}
+
+// ── Robust Image System ──
+// Each destination has a chain of URLs to try in order.
+// If ALL fail, a beautiful CSS gradient is used as placeholder.
+
+// URL strategy: Special:FilePath = no hash needed (Wikimedia handles redirect)
+// Unsplash images.unsplash.com = reliable CDN, no auth required for background-image
+// Each destination has 5-6 URLs tried in order — first success wins.
+const W = 'https://commons.wikimedia.org/wiki/Special:FilePath/'; // Wikimedia redirect, no hash
+const U = 'https://images.unsplash.com/photo-';                   // Unsplash CDN
+
+const IMG_CHAIN = {
+  "tokyo": [
+    W+'Skyscrapers_of_Shinjuku_2009_January.jpg?width=800',
+    W+'Tokyo_skyscrapers_from_Shinjuku_%282009_January%29.jpg?width=800',
+    U+'1540959733332-eab4deabeeaf?w=800&q=80',
+    U+'1542051841857-5f90071e7989?w=800&q=80',
+    W+'View_of_Tokyo_from_the_Metropolitan_Government_Building.jpg?width=800',
+  ],
+  "kyoto": [
+    W+'Fushimi_Inari_Taisha_Kyoto.jpg?width=800',
+    W+'Torii_Gates_Fushimi_Inari_Shrine.jpg?width=800',
+    U+'1493976040374-85c8e12f0c0e?w=800&q=80',
+    W+'Kinkaku-ji_temple.jpg?width=800',
+    W+'Fushimi_Inari-taisha2.jpg?width=800',
+  ],
+  "osaka": [
+    W+'Dotonbori_Osaka_2012.jpg?width=800',
+    W+'Dotombori,_Namba,_Osaka,_Japan.jpg?width=800',
+    U+'1590559899731-a382839e5549?w=800&q=80',
+    W+'Osaka_Castle_in_november_2008.jpg?width=800',
+    W+'Namba_Osaka.jpg?width=800',
+  ],
+  "hiroshima": [
+    W+'Hiroshima_Peace_Memorial.jpg?width=800',
+    W+'Atomic_Bomb_Dome_Hiroshima.jpg?width=800',
+    U+'1599922407858-a3d0e1e6b7de?w=800&q=80',
+    W+'Hiroshima_Peace_Memorial_(Genbaku_Dome)_and_the_Motoyasu-gawa_river.jpg?width=800',
+    W+'Genbaku_dome_after_bombing.jpg?width=800',
+  ],
+  "nara": [
+    W+'Sika_deer_bowing_in_Nara_Park.jpg?width=800',
+    W+'Nara_Todaiji_Daibutsuden_Nov2007.jpg?width=800',
+    U+'1624601573012-efb68f3f150d?w=800&q=80',
+    W+'Todaiji18s3200.jpg?width=800',
+    W+'Nara_Deer_2013.jpg?width=800',
+    W+'Todai-ji_Nara_p1020730.jpg?width=800',
+  ],
+  "hakone": [
+    W+'Hakone_Ropeway.jpg?width=800',
+    W+'Lake_Ashi_Hakone.jpg?width=800',
+    U+'1528164344705-47542687000d?w=800&q=80',
+    W+'FujiFromHakone.jpg?width=800',
+    W+'Mount_Fuji_from_Hotel_Mt._Fuji_05bs4592.jpg?width=800',
+  ],
+  "nikko": [
+    W+'Tosho-gu_Shrine_Nikko.jpg?width=800',
+    W+'Nikko_Tosho-gu2.jpg?width=800',
+    U+'1578469645742-46cae010e5d6?w=800&q=80',
+    W+'Yomeimon_gate_Tosho-gu.jpg?width=800',
+    W+'Toshogu_yomeimon_gate_nikko.jpg?width=800',
+  ],
+  "kamakura": [
+    W+'Kotoku-in_Kamakura.jpg?width=800',
+    W+'Great_Buddha_Kamakura.jpg?width=800',
+    U+'1578469550956-0e16b69c6a3d?w=800&q=80',
+    W+'Kamakura_Budda_Daibutsu_front_1885.jpg?width=800',
+    W+'Japan0617.jpg?width=800',
+  ],
+  "kanazawa": [
+    W+'Kenroku-en_02.jpg?width=800',
+    W+'Kanazawa_Castle_2010.jpg?width=800',
+    U+'1567767292278-a4f21aa2d36e?w=800&q=80',
+    W+'Kenrokuen_garden_Kanazawa_01.jpg?width=800',
+    W+'Kenrokuen_in_winter.jpg?width=800',
+  ],
+  "takayama": [
+    W+'Takayama_Sanmachi_street.jpg?width=800',
+    W+'Hida_Folk_Village_2009.jpg?width=800',
+    U+'1580533089532-54e9b8f62997?w=800&q=80',
+    W+'Takayama_sanmachi_district.jpg?width=800',
+    W+'Sanmachi_Suji_Takayama.jpg?width=800',
+  ],
+  "shirakawa": [
+    W+'Shirakawa-go_05.jpg?width=800',
+    W+'Shirakawa-go_in_winter.jpg?width=800',
+    U+'1611464908623-07f19927264e?w=800&q=80',
+    W+'Ogimachi_Shirakawa-go.jpg?width=800',
+    W+'Shirakawa-go_village.jpg?width=800',
+    W+'Gassho_zukuri_farmhouse_Shirakawago.jpg?width=800',
+  ],
+  "miyajima": [
+    W+'Miyajima_in_japan.jpg?width=800',
+    W+'Itsukushima_torii_gate.jpg?width=800',
+    U+'1505069446780-4ef442b5207f?w=800&q=80',
+    W+'Miyajima_Island_Hiroshima_2019.jpg?width=800',
+    W+'Floating_Torii_gate_Miyajima.jpg?width=800',
+    W+'Itsukushima-jinja-torii.jpg?width=800',
+  ],
+  "koyasan": [
+    W+'Okunoin_cemetery_Koyasan.jpg?width=800',
+    W+'Koyasan_temple.jpg?width=800',
+    U+'1545569341-9eb8b30979d9?w=800&q=80',
+    W+'Kongobuji_Temple_Koyasan.jpg?width=800',
+    W+'Koya_san_okunoin.jpg?width=800',
+  ],
+  "magome": [
+    W+'Magome-juku.jpg?width=800',
+    W+'Magome_post_town.jpg?width=800',
+    U+'1528360983277-13d401cdc186?w=800&q=80',
+    W+'Magome,_Nagano.jpg?width=800',
+    W+'Magome_01.jpg?width=800',
+    W+'Nakasendo_Magome.jpg?width=800',
+  ],
+  "_default": [
+    W+'Skyscrapers_of_Shinjuku_2009_January.jpg?width=800',
+    U+'1540959733332-eab4deabeeaf?w=800&q=80',
+  ]
+};
+
+// Gradient placeholders per destination (used when all URLs fail)
+const IMG_GRADIENTS = {
+  "tokyo":     "linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #c73e1d 100%)",
+  "kyoto":     "linear-gradient(135deg, #2d1b69 0%, #6b4fa0 50%, #d4a843 100%)",
+  "osaka":     "linear-gradient(135deg, #1a3a4a 0%, #2a6478 50%, #e76f51 100%)",
+  "hiroshima": "linear-gradient(135deg, #1e3a5f 0%, #2a5298 50%, #40b5a6 100%)",
+  "nara":      "linear-gradient(135deg, #2d4a1e 0%, #4a7a32 50%, #789048 100%)",
+  "hakone":    "linear-gradient(135deg, #1a3a5c 0%, #2c5f8a 50%, #87ceeb 100%)",
+  "nikko":     "linear-gradient(135deg, #2d1b00 0%, #6b3f00 50%, #d4a843 100%)",
+  "kamakura":  "linear-gradient(135deg, #1a3a4a 0%, #006994 50%, #40b5a6 100%)",
+  "kanazawa":  "linear-gradient(135deg, #1e2d4a 0%, #2a4a6e 50%, #c47e7e 100%)",
+  "takayama":  "linear-gradient(135deg, #2d1a0e 0%, #5c3a1e 50%, #789048 100%)",
+  "shirakawa": "linear-gradient(135deg, #1a2d3a 0%, #2d4a5c 50%, #87ceeb 100%)",
+  "miyajima":  "linear-gradient(135deg, #2d0a0a 0%, #8b1a1a 50%, #c73e1d 100%)",
+  "koyasan":   "linear-gradient(135deg, #0a1a0a 0%, #1a3a1a 50%, #606c38 100%)",
+  "magome":    "linear-gradient(135deg, #1a1a0a 0%, #3a3a1a 50%, #789048 100%)",
+  "_default":  "linear-gradient(135deg, #264653 0%, #2a9d8f 100%)",
+};
+
+// Resolved image cache: destKey → working URL or null (null = use gradient)
+const _imgCache = {};
+const _imgLoading = {};
+
+// Normalise a city/dest name to a key for lookup
+function _destKey(name) {
+  if (!name) return '_default';
+  const n = String(name).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,'').trim();
+  const keys = Object.keys(IMG_CHAIN);
+  for (const k of keys) { if (k !== '_default' && (n.includes(k) || k.includes(n.substring(0,5)))) return k; }
+  return '_default';
+}
+
+// Try loading a chain of URLs; resolves with the first that works, or null
+function _tryImageChain(urls, idx) {
+  if (idx === undefined) idx = 0;
+  if (idx >= urls.length) return Promise.resolve(null);
+  return new Promise(function(resolve) {
+    var img = new Image();
+    var timer = setTimeout(function() {
+      img.onload = img.onerror = null;
+      img.src = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
+      _tryImageChain(urls, idx + 1).then(resolve);
+    }, 5000);
+    img.onload = function() { clearTimeout(timer); resolve(urls[idx]); };
+    img.onerror = function() { clearTimeout(timer); _tryImageChain(urls, idx + 1).then(resolve); };
+    img.src = urls[idx];
+  });
+}
+
+// Apply a resolved image (URL or null→gradient) to all matching elements
+function _applyImg(key, url) {
+  var style = url ? "url('" + url + "')" : IMG_GRADIENTS[key] || IMG_GRADIENTS['_default'];
+  document.querySelectorAll('[data-dest-key="'+key+'"]').forEach(function(el) {
+    el.style.backgroundImage = style;
+    if (!url) el.classList.add('img-fallback-gradient');
+  });
+}
+
+// Test + apply all images in the page
+function _repairBrokenImages() {
+  var pending = {};
+  document.querySelectorAll('[data-dest-key]').forEach(function(el) {
+    var key = el.getAttribute('data-dest-key');
+    if (_imgCache.hasOwnProperty(key)) {
+      _applyImg(key, _imgCache[key]);
+    } else if (!_imgLoading[key]) {
+      _imgLoading[key] = true;
+      pending[key] = true;
+    }
+  });
+  Object.keys(pending).forEach(function(key) {
+    var chain = IMG_CHAIN[key] || IMG_CHAIN['_default'];
+    _tryImageChain(chain).then(function(url) {
+      _imgCache[key] = url;
+      _applyImg(key, url);
+    });
+  });
+}
+
+// Return primary URL for initial render (repair will fix if broken)
+function getDestImage(destName) {
+  var key = _destKey(destName);
+  if (_imgCache.hasOwnProperty(key) && _imgCache[key]) return _imgCache[key];
+  var chain = IMG_CHAIN[key] || IMG_CHAIN['_default'];
+  return chain[0] || '';
 }
 
 function getWeatherForDate(cityName, dateObj) {

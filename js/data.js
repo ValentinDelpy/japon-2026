@@ -44,57 +44,90 @@ const DataService = {
     return { cols, rows };
   },
 
-  // ── Extract hyperlinks from HTML endpoints ──
-  // Google Sheets "Insert > Link" only shows in HTML renders, not JSON.
-  // We try 3 endpoints in order of reliability:
-  async fetchLinks(gid) {
-    const endpoints = [
-      // 1. pubhtml — most reliable since sheet is published to web
-      `https://docs.google.com/spreadsheets/d/e/${PUB_ID}/pubhtml?gid=${gid}&single=true`,
-      // 2. gviz HTML export
-      `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:html&gid=${gid}`,
-      // 3. full HTML export
-      `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=html&gid=${gid}`
-    ];
+  // ── Apps Script endpoint — reads RichText hyperlinks directly ──
+  APPS_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbzmwzyHKQK5e-1HPy33BMrsIuqf0_bGlOEyFWaSh-KS8_476zaY6l8A68V6Xj4Uv1SqQA/exec',
 
-    for (const url of endpoints) {
-      try {
-        const label = url.includes('pubhtml') ? 'pubhtml' : url.includes('gviz') ? 'gviz' : 'export';
-        console.log(`[Links] Trying ${label}…`);
-        const resp = await fetch(url, { cache: 'no-store' });
-        if (!resp.ok) { console.warn(`[Links] ${label}: HTTP ${resp.status}`); continue; }
-        const html = await resp.text();
-        if (html.includes('accounts.google.com') || html.includes('ServiceLogin')) {
-          console.warn(`[Links] ${label}: got login redirect`); continue;
+  // ── Fetch all hyperlinks ──
+  // Primary : Apps Script → JSON propre { "texte cellule": "url" }
+  // Fallback : scraping pubhtml (moins fiable, sans CORS garanti)
+  async fetchLinks() {
+    // 1. Apps Script — source autoritaire, lit le RichText directement
+    try {
+      console.log('[Links] Appel Apps Script…');
+      const resp = await fetch(this.APPS_SCRIPT_URL, { cache: 'no-store' });
+      if (resp.ok) {
+        const raw = await resp.text();
+        const jsonStr = raw.match(/\{.*\}/s)?.[0];
+        if (jsonStr) {
+          const data = JSON.parse(jsonStr);
+          const links = this._normaliseLinks(data);
+          const count = Object.keys(links).length;
+          if (count > 0) {
+            console.log(`[Links] ✅ ${count} liens via Apps Script :`, Object.keys(links).slice(0, 8));
+            return links;
+          }
+          console.warn('[Links] Apps Script OK mais 0 liens — vérifier le script.');
         }
+      } else {
+        console.warn('[Links] Apps Script HTTP', resp.status);
+      }
+    } catch (e) {
+      console.warn('[Links] Apps Script error:', e.message);
+    }
+
+    // 2. Fallback : pubhtml scraping
+    console.log('[Links] Fallback pubhtml…');
+    for (const url of [
+      `https://docs.google.com/spreadsheets/d/e/${PUB_ID}/pubhtml?gid=0&single=true`,
+      `https://docs.google.com/spreadsheets/d/e/${PUB_ID}/pubhtml`,
+    ]) {
+      try {
+        const resp = await fetch(url, { cache: 'no-store' });
+        if (!resp.ok) continue;
+        const html = await resp.text();
+        if (html.includes('ServiceLogin')) continue;
         const links = this._parseHtmlLinks(html);
-        const count = Object.keys(links).length / 2; // each key stored twice (original + lowercase)
-        if (count > 0) {
-          console.log(`[Links] ✅ ${count} links via ${label}:`, Object.keys(links).slice(0, 6));
+        if (Object.keys(links).length > 0) {
+          console.log(`[Links] ✅ ${Object.keys(links).length} liens via pubhtml`);
           return links;
         }
-        console.log(`[Links] ${label}: 0 links found`);
-      } catch (e) { console.warn('[Links] Error:', e.message); }
+      } catch (e) { console.warn('[Links] pubhtml error:', e.message); }
     }
-    console.warn('[Links] ⚠️ No links extracted. Check sheet sharing settings.');
+
+    console.warn('[Links] ⚠️ Aucun lien récupéré.');
     return {};
+  },
+
+  // Normalise { text: url } → ajoute variantes lowercase + espaces réduits
+  _normaliseLinks(data) {
+    const links = {};
+    for (const [rawText, url] of Object.entries(data)) {
+      if (!url || !String(url).startsWith('http')) continue;
+      const text = String(rawText).trim();
+      if (!text) continue;
+      links[text] = url;
+      links[text.toLowerCase()] = url;
+      const t2 = text.replace(/\s+/g, ' ');
+      if (t2 !== text) { links[t2] = url; links[t2.toLowerCase()] = url; }
+    }
+    return links;
   },
 
   _parseHtmlLinks(html) {
     const doc = new DOMParser().parseFromString(html, 'text/html');
-    const links = {};
+    const raw = {};
     doc.querySelectorAll('a[href]').forEach(a => {
       const text = (a.textContent || '').trim();
-      if (!text) return;
+      if (!text || text.length < 2) return;
       let href = a.getAttribute('href') || '';
-      // Unwrap Google redirect: /url?q=REAL_URL or ?q=REAL_URL
       const m = href.match(/[?&]q=([^&]+)/);
       if (m) try { href = decodeURIComponent(m[1]); } catch (e) {}
+      if (href.includes('google.com/url') || href.includes('google.com/aclk')) return;
       if (!href.startsWith('http')) return;
-      links[text] = href;
-      links[text.toLowerCase()] = href;
+      if (href.includes('docs.google.com')) return;
+      raw[text] = href;
     });
-    return links;
+    return this._normaliseLinks(raw);
   },
 
   // ── Load everything ──
@@ -114,7 +147,7 @@ const DataService = {
           console.log('Sheet gid=' + gid + ':', result.rows.length, 'rows, cols:', result.cols.join(', '));
           // Now fetch links (await so they're ready before render)
           try {
-            this.linkMap = await this.fetchLinks(gid);
+            this.linkMap = await this.fetchLinks();
           } catch (e) { console.warn('Link fetch failed:', e.message); }
           return;
         }
