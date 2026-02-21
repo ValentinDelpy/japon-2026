@@ -12,6 +12,7 @@
 </head>
 <body>
   <div id="mobile-overlay" class="mobile-overlay" onclick="closeMobileMenu()"></div>
+
   <nav id="sidebar" class="sidebar">
     <div class="sidebar-header">
       <span class="logo-kanji">日本</span>
@@ -21,6 +22,7 @@
       </div>
       <button class="mobile-close" onclick="closeMobileMenu()" aria-label="Fermer">&times;</button>
     </div>
+
     <ul class="nav-links">
       <li><a href="#/" data-page="dashboard" class="nav-link active">
         <span class="nav-icon">📊</span><span class="nav-label">Dashboard</span>
@@ -35,25 +37,38 @@
         <span class="nav-icon">🖨️</span><span class="nav-label">Impression</span>
       </a></li>
     </ul>
+
+    <!-- Countdown to departure -->
+    <div class="countdown-widget" id="countdown-widget">
+      <div class="countdown-days" id="countdown-days">—</div>
+      <div class="countdown-label">jours avant le départ</div>
+    </div>
+
     <div class="sidebar-footer">
       <div id="exchange-rate-widget" class="exchange-widget">
         <span class="exchange-label">1 € → ¥</span>
         <span id="exchange-rate-value" class="exchange-value">---</span>
       </div>
-      <div class="sidebar-meta">
+      <div class="sidebar-controls">
         <span id="last-sync" class="sync-time">Dernière sync: —</span>
-        <button onclick="refreshData()" class="refresh-btn" title="Rafraîchir">↻</button>
+        <button onclick="refreshData()" class="icon-btn refresh-btn" title="Rafraîchir les données">↻</button>
+        <button onclick="toggleTheme()" class="icon-btn theme-btn" id="theme-btn" title="Changer le thème">🌙</button>
       </div>
     </div>
   </nav>
+
   <main id="main-content" class="main-content">
     <header class="mobile-header">
       <button class="hamburger" onclick="openMobileMenu()" aria-label="Menu">
         <span></span><span></span><span></span>
       </button>
       <span class="mobile-title">⛩️ Little Domo</span>
-      <button onclick="refreshData()" class="refresh-btn-mobile" title="Rafraîchir">↻</button>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button onclick="toggleTheme()" style="background:none;border:none;font-size:1.1rem;cursor:pointer;padding:4px" id="theme-btn-mobile" title="Thème">🌙</button>
+        <button onclick="refreshData()" class="refresh-btn-mobile" title="Rafraîchir">↻</button>
+      </div>
     </header>
+
     <div id="page-container" class="page-container">
       <div class="loading-screen" id="loading-screen">
         <div class="loading-torii">⛩️</div>
@@ -62,7 +77,9 @@
       </div>
     </div>
   </main>
+
   <div id="print-view" class="print-view"></div>
+
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="js/destinations.js"></script>
   <script src="js/data.js"></script>

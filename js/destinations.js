@@ -614,6 +614,7 @@ function _applyImg(key, url) {
   var style = url ? "url('" + url + "')" : IMG_GRADIENTS[key] || IMG_GRADIENTS['_default'];
   document.querySelectorAll('[data-dest-key="'+key+'"]').forEach(function(el) {
     el.style.backgroundImage = style;
+    el.classList.remove('img-loading');  // remove shimmer once resolved
     if (!url) el.classList.add('img-fallback-gradient');
   });
 }

@@ -253,7 +253,7 @@ function createDashboardMap(groups) {
     popup += '</div>';
     popup += '<div class="popup-body">';
     if (g.startDate) popup += '<div class="popup-dates">📅 '+formatDateRange(g)+' · '+nightsLabel(g)+'</div>';
-    if (g.logement) popup += '<div class="popup-detail">🏨 <a href="'+getLodgeLink(g.logement)+'" target="_blank" class="cell-link">'+g.logement+'</a></div>';
+    if (g.logement) { var _lh=getLodgeLink(g.logement); popup += '<div class="popup-detail">🏨 '+(_lh?'<a href="'+_lh+'" target="_blank" class="cell-link">'+g.logement+'</a>':g.logement)+'</div>'; }
     if (g.dureeTrajet) popup += '<div class="popup-detail">🚄 '+g.dureeTrajet+(parseBudget(g.prixTrajet)?' · '+formatEURint(parseBudget(g.prixTrajet))+'/pers':'')+'</div>';
     if (acts.length) popup += '<div class="popup-detail popup-activities">📍 '+acts.slice(0,3).join(' · ')+'</div>';
     if (wx) popup += '<div class="popup-detail">'+wx.icon+' '+wx.high+'°C / '+wx.low+'°C</div>';
@@ -389,7 +389,7 @@ function renderDashboard() {
     html += '<td class="text-sm">'+formatBool(g.reserve)+(g.billetsRes ? ' · 🎫 '+formatBool(g.billetsRes) : '')+'</td></tr>';
   });
   var totB=0,totT=0; groups.forEach(function(g){totB+=parseBudget(g.prix);totT+=parseBudget(g.prixTrajet);});
-  html += '<tr style="font-weight:700;background:var(--paper-warm)"><td colspan="3">TOTAL</td><td class="amount">'+formatEURint(totB)+'</td><td class="amount">'+formatEURint(totT)+'</td><td></td></tr>';
+  html += '<tr style="font-weight:700;background:var(--surface2)"><td colspan="3">TOTAL</td><td class="amount">'+formatEURint(totB)+'</td><td class="amount">'+formatEURint(totT)+'</td><td></td></tr>';
   html += '</tbody></table></div></div>';
   html += '<div class="budget-summary"><h3>Répartition par ville</h3>'+generateBudgetBars(groups)+'</div>';
   html += '</div></div>';
@@ -653,7 +653,7 @@ function renderGuides() {
 
     html += '<div class="guide-dest-card" onclick="openGuideDetail('+i+')" style="animation-delay:'+(i*0.06)+'s">';
     var destKey = dest._destKey || '_default';
-    html += '<div class="guide-dest-thumb" style="background-image:url(\''+dest.image+'\')" data-dest-key="'+destKey+'">';
+    html += '<div class="guide-dest-thumb img-loading" style="background-image:url(\''+dest.image+'\')" data-dest-key="'+destKey+'">';
     html += '<div class="guide-dest-num">'+(i+1)+'</div>';
     if (g.isSubDest) html += '<div class="guide-dest-sub-badge">Excursion</div>';
     html += '</div>';
@@ -711,7 +711,7 @@ function openGuideDetail(idxOrName) {
   overlay.onclick = function(e){ if(e.target===overlay) overlay.remove(); };
 
   var h = '<div class="guide-detail">';
-  h += '<div class="guide-detail-hero" style="background-image:url(\''+dest.image+'\')" data-dest-key="'+(dest._destKey||'_default')+'">';
+  h += '<div class="guide-detail-hero img-loading" style="background-image:url(\''+dest.image+'\')" data-dest-key="'+(dest._destKey||'_default')+'">';
   h += '<button class="guide-close" onclick="this.closest(\'.guide-detail-overlay\').remove()">×</button>';
   h += '<div class="guide-detail-hero-content">';
   var idx = (window._guideDests||[]).indexOf(g);

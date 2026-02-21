@@ -1,8 +1,63 @@
 // =============================================
-// APP — Router, Initialization, Mobile Menu
+// APP — Router, Theme, Countdown, Init
 // =============================================
 
-// ─── Router ───
+// ─── THEME MANAGEMENT ───
+const ThemeManager = {
+  STORAGE_KEY: 'ldva-theme',
+
+  init() {
+    const saved = localStorage.getItem(this.STORAGE_KEY);
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const theme = saved || (prefersDark ? 'dark' : 'light');
+    this.apply(theme, false);
+  },
+
+  get current() {
+    return document.documentElement.getAttribute('data-theme') || 'light';
+  },
+
+  apply(theme, animate = true) {
+    if (animate) document.documentElement.style.transition = 'none';
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem(this.STORAGE_KEY, theme);
+    const icon = theme === 'dark' ? '☀️' : '🌙';
+    const title = theme === 'dark' ? 'Passer en mode clair' : 'Passer en mode sombre';
+    document.querySelectorAll('#theme-btn, #theme-btn-mobile').forEach(btn => {
+      btn.textContent = icon;
+      btn.title = title;
+    });
+    if (animate) requestAnimationFrame(() => { document.documentElement.style.transition = ''; });
+  },
+
+  toggle() {
+    this.apply(this.current === 'dark' ? 'light' : 'dark');
+  }
+};
+
+function toggleTheme() { ThemeManager.toggle(); }
+
+// ─── COUNTDOWN ───
+function updateCountdown() {
+  const departure = new Date('2026-11-18T00:00:00');
+  const now = new Date();
+  const diff = Math.ceil((departure - now) / (1000 * 60 * 60 * 24));
+  const el = document.getElementById('countdown-days');
+  const widget = document.getElementById('countdown-widget');
+  if (!el || !widget) return;
+  if (diff > 0) {
+    el.textContent = diff;
+    widget.style.display = '';
+  } else if (diff === 0) {
+    el.textContent = '✈️';
+    el.style.fontSize = '1.6rem';
+    widget.querySelector('.countdown-label').textContent = "C'est le grand départ !";
+  } else {
+    widget.style.display = 'none'; // voyage en cours ou terminé
+  }
+}
+
+// ─── ROUTER ───
 const Router = {
   currentPage: null,
 
@@ -15,7 +70,6 @@ const Router = {
     const hash = window.location.hash || '#/';
     const path = hash.replace('#/', '').split('/')[0] || 'dashboard';
 
-    // Update active nav
     document.querySelectorAll('.nav-link').forEach(link => {
       link.classList.toggle('active', link.dataset.page === path);
     });
@@ -23,32 +77,20 @@ const Router = {
     this.currentPage = path;
 
     switch (path) {
-      case 'dashboard':
-        renderDashboard();
-        break;
-      case 'itinerary':
-        renderItinerary();
-        break;
-      case 'guides':
-        renderGuides();
-        break;
-      case 'print':
-        renderPrint();
-        break;
-      default:
-        renderDashboard();
+      case 'dashboard':  renderDashboard(); break;
+      case 'itinerary':  renderItinerary(); break;
+      case 'guides':     renderGuides(); break;
+      case 'print':      renderPrint(); break;
+      default:           renderDashboard();
     }
 
-    // Close mobile menu on navigate
     closeMobileMenu();
-
-    // Scroll to top
     document.querySelector('.page-container')?.scrollTo(0, 0);
     window.scrollTo(0, 0);
   }
 };
 
-// ─── Mobile Menu ───
+// ─── MOBILE MENU ───
 function openMobileMenu() {
   document.getElementById('sidebar').classList.add('open');
   document.getElementById('mobile-overlay').classList.add('active');
@@ -61,13 +103,16 @@ function closeMobileMenu() {
   document.body.style.overflow = '';
 }
 
-// ─── Data Refresh ───
+// ─── DATA REFRESH ───
 async function refreshData() {
+  const btn = document.querySelector('.refresh-btn');
+  if (btn) { btn.style.animation = 'spin 0.6s linear'; setTimeout(() => btn.style.animation = '', 700); }
+
   const container = document.getElementById('page-container');
   container.innerHTML = `
     <div class="loading-screen">
       <div class="loading-torii">⛩️</div>
-      <p class="loading-text">Synchronisation avec le spreadsheet...</p>
+      <p class="loading-text">Synchronisation avec le spreadsheet…</p>
       <div class="loading-bar"><div class="loading-bar-fill"></div></div>
     </div>
   `;
@@ -82,30 +127,52 @@ function updateExchangeWidget() {
   if (el && DataService.exchangeRate) {
     el.textContent = DataService.exchangeRate.toFixed(2);
   }
-
   const syncEl = document.getElementById('last-sync');
   if (syncEl && DataService.lastSync) {
     const t = DataService.lastSync;
-    syncEl.textContent = `Sync: ${t.getHours().toString().padStart(2, '0')}:${t.getMinutes().toString().padStart(2, '0')}`;
+    syncEl.textContent = `${t.getHours().toString().padStart(2,'0')}:${t.getMinutes().toString().padStart(2,'0')}`;
   }
 }
 
-// ─── Keyboard shortcuts ───
+// ─── KEYBOARD SHORTCUTS ───
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
-    // Close guide detail if open
     const overlay = document.querySelector('.guide-detail-overlay');
     if (overlay) overlay.remove();
     closeMobileMenu();
   }
+  // t = toggle theme
+  if (e.key === 't' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+    const tag = document.activeElement?.tagName?.toLowerCase();
+    if (tag !== 'input' && tag !== 'textarea') toggleTheme();
+  }
 });
 
-// ─── Initialization ───
+// ─── ROBUST IMAGE REPAIR — handles popup images too ───
+// Intercept Leaflet popup openings to repair images inside them
+function patchLeafletPopups() {
+  const orig = L.Popup.prototype.openOn;
+  L.Popup.prototype.openOn = function(map) {
+    const result = orig.call(this, map);
+    setTimeout(() => _repairBrokenImages(), 50);
+    return result;
+  };
+}
+
+// ─── INITIALIZATION ───
 async function initApp() {
-  console.log('🏯 Little Domo Very Arigato — Initializing...');
+  console.log('🏯 Little Domo Very Arigato V10 — Initializing…');
+
+  // Theme must be applied first to avoid flash
+  ThemeManager.init();
+  updateCountdown();
 
   await DataService.loadAllData();
   updateExchangeWidget();
+
+  // Patch Leaflet popup to auto-repair images
+  if (typeof L !== 'undefined') patchLeafletPopups();
+
   Router.init();
 
   console.log('✅ App ready!',
@@ -113,45 +180,24 @@ async function initApp() {
     `Rate: ${DataService.exchangeRate}`
   );
 
-  // Auto-refresh every 10 minutes
+  // Auto-refresh exchange rate every 10 minutes (lightweight)
   setInterval(async () => {
     await DataService.fetchExchangeRate();
     updateExchangeWidget();
-  }, 600000);
+  }, 600_000);
+
+  // Auto-refresh all data every 5 minutes (only when tab is visible)
+  setInterval(async () => {
+    if (!document.hidden) {
+      await DataService.loadAllData();
+      updateExchangeWidget();
+      Router.route();
+      console.log('Data auto-refreshed at', new Date().toLocaleTimeString());
+    }
+  }, 300_000);
+
+  // Update countdown every hour
+  setInterval(updateCountdown, 3_600_000);
 }
 
-// Start
 document.addEventListener('DOMContentLoaded', initApp);
-
-// ─── Auto-refresh data every 5 minutes ───
-setInterval(async function() {
-  if (!document.hidden) {
-    await DataService.loadAllData();
-    updateExchangeWidget();
-    Router.route();
-    console.log('Data auto-refreshed at', new Date().toLocaleTimeString());
-  }
-}, 5 * 60 * 1000);
-
-// ─── Fix broken background images ───
-function fixBrokenBgImages() {
-  document.querySelectorAll('[style*="background-image"]').forEach(function(el) {
-    var style = el.getAttribute('style') || '';
-    var match = style.match(/url\(['"]?([^'")\s]+)['"]?\)/);
-    if (!match) return;
-    var url = match[1];
-    var img = new Image();
-    img.onerror = function() {
-      // Replace with a nice Japanese-themed gradient
-      el.style.backgroundImage = 'linear-gradient(135deg, #c73e1d22 0%, #26465322 50%, #2a9d8f22 100%), linear-gradient(180deg, #f5efe8 0%, #e8ddd0 100%)';
-    };
-    img.src = url;
-  });
-}
-// Run on DOM changes to catch dynamically added elements
-var _bgObserver = new MutationObserver(function(mutations) {
-  mutations.forEach(function(m) {
-    if (m.addedNodes.length) fixBrokenBgImages();
-  });
-});
-_bgObserver.observe(document.body, {childList: true, subtree: true});
