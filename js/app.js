@@ -96,11 +96,19 @@ const Router = {
     this.currentPage = path;
 
     switch (path) {
-      case 'dashboard':  renderDashboard(); break;
-      case 'itinerary':  renderItinerary(); break;
-      case 'guides':     renderGuides(); break;
-      case 'timeline':  renderTimeline(); break;
-      case 'print':      renderPrint(); break;
+      case 'dashboard':   renderDashboard(); break;
+      case 'itinerary':   renderItinerary(); break;
+      case 'guides':      renderGuides(); break;
+      case 'timeline':    renderTimeline(); break;
+      case 'print':       renderPrint(); break;
+      case 'restos':      renderRestos(); break;
+      case 'packing':     renderPacking(); break;
+      case 'checklist':   renderChecklist(); break;
+      case 'logistique':  renderLogistique(); break;
+      case 'phrasebook':  renderPhrasebook(); break;
+      case 'japon101':    renderJapon101(); break;
+      case 'surprise':    renderSurprise(); break;
+      case 'stats':       renderStats(); break;
       default:           renderDashboard();
     }
 

@@ -24,18 +24,49 @@
     </div>
 
     <ul class="nav-links">
+      <li class="nav-group-label">Voyage</li>
       <li><a href="#/" data-page="dashboard" class="nav-link active">
         <span class="nav-icon">📊</span><span class="nav-label">Dashboard</span>
       </a></li>
       <li><a href="#/itinerary" data-page="itinerary" class="nav-link">
         <span class="nav-icon">🗺️</span><span class="nav-label">Itinéraire</span>
       </a></li>
-      <li><a href="#/guides" data-page="guides" class="nav-link">
-        <span class="nav-icon">📖</span><span class="nav-label">Fiches Voyage</span>
-      </a></li>
       <li><a href="#/timeline" data-page="timeline" class="nav-link">
         <span class="nav-icon">📅</span><span class="nav-label">Timeline</span>
       </a></li>
+      <li><a href="#/guides" data-page="guides" class="nav-link">
+        <span class="nav-icon">📖</span><span class="nav-label">Fiches Voyage</span>
+      </a></li>
+      <li><a href="#/stats" data-page="stats" class="nav-link">
+        <span class="nav-icon">📊</span><span class="nav-label">Statistiques</span>
+      </a></li>
+
+      <li class="nav-group-label">Préparation</li>
+      <li><a href="#/packing" data-page="packing" class="nav-link">
+        <span class="nav-icon">🎒</span><span class="nav-label">Packing List</span>
+      </a></li>
+      <li><a href="#/checklist" data-page="checklist" class="nav-link">
+        <span class="nav-icon">✅</span><span class="nav-label">Check-list départ</span>
+      </a></li>
+      <li><a href="#/logistique" data-page="logistique" class="nav-link">
+        <span class="nav-icon">🗺️</span><span class="nav-label">Logistique Japon</span>
+      </a></li>
+
+      <li class="nav-group-label">Sur place</li>
+      <li><a href="#/restos" data-page="restos" class="nav-link">
+        <span class="nav-icon">🍜</span><span class="nav-label">Restos & Souvenirs</span>
+      </a></li>
+      <li><a href="#/phrasebook" data-page="phrasebook" class="nav-link">
+        <span class="nav-icon">🗣️</span><span class="nav-label">Phrasebook</span>
+      </a></li>
+      <li><a href="#/japon101" data-page="japon101" class="nav-link">
+        <span class="nav-icon">🇯🇵</span><span class="nav-label">Japon 101</span>
+      </a></li>
+      <li><a href="#/surprise" data-page="surprise" class="nav-link">
+        <span class="nav-icon">🎲</span><span class="nav-label">Surprise-moi !</span>
+      </a></li>
+
+      <li class="nav-group-label nav-group-label-faded">Outils</li>
       <li><a href="#/print" data-page="print" class="nav-link">
         <span class="nav-icon">🖨️</span><span class="nav-label">Impression</span>
       </a></li>
@@ -92,9 +123,10 @@
   <div id="print-view" class="print-view"></div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="js/destinations.js"></script>
   <script src="js/data.js"></script>
+  <script src="js/destinations.js"></script>
   <script src="js/pages.js"></script>
+  <script src="js/pages-new.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

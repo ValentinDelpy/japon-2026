@@ -897,8 +897,9 @@ function getGroupTripState(g) {
 // ─── BARRE DE PROGRESSION ───
 function buildProgressStrip(groups) {
   var total = groups.length;
-  var resChecked = groups.filter(function(g){ return ChecklistStore.isChecked(g.city,'logement') || /oui|true/i.test(g.reserve||''); }).length;
-  var bilChecked = groups.filter(function(g){ return ChecklistStore.isChecked(g.city,'billets') || /oui|true/i.test(g.billetsRes||''); }).length;
+  // Source of truth = spreadsheet columns only (no manual toggles)
+  var resChecked = groups.filter(function(g){ return /oui|true/i.test(g.reserve||''); }).length;
+  var bilChecked = groups.filter(function(g){ return /oui|true/i.test(g.billetsRes||''); }).length;
 
   var totalBudget = 0, totalTrajet = 0;
   groups.forEach(function(g){ totalBudget += parseBudget(g.prix); totalTrajet += parseBudget(g.prixTrajet); });
@@ -912,7 +913,6 @@ function buildProgressStrip(groups) {
   if (phase === 'before') {
     var msLeft = TRIP_START - new Date();
     var daysLeft = Math.max(0, Math.ceil(msLeft / 86400000));
-    var totalDays = Math.ceil((TRIP_START - new Date('2025-01-01')) / 86400000);
     progressLabel = daysLeft + ' jours avant départ';
     progressPct = Math.round((1 - daysLeft / 365) * 100);
     progressColor = 'blush';
@@ -1005,24 +1005,11 @@ renderDashboard = function() {
     var inner = card.querySelector('.card-body-inner');
     if (!inner) return;
 
-    var resChecked  = ChecklistStore.isChecked(g.city, 'logement');
-    var bilChecked  = ChecklistStore.isChecked(g.city, 'billets');
-
     var badge = state === 'current'
       ? '<div style="margin-bottom:8px"><span class="trip-current-badge">📍 Vous êtes ici</span></div>'
       : '';
 
-    var cityEsc = g.city.replace(/'/g, "\\'");
-    var cl = '<div class="checklist-row">' +
-      '<button class="check-toggle ct-logement' + (resChecked ? ' checked' : '') +
-        '" onclick="toggleCheck(\'' + cityEsc + '\',\'logement\',this);event.stopPropagation()" title="Marquer logement réservé">' +
-        '<span class="ct-box">' + (resChecked ? '✅' : '☐') + '</span>Logement</button>' +
-      '<button class="check-toggle ct-billets' + (bilChecked ? ' checked' : '') +
-        '" onclick="toggleCheck(\'' + cityEsc + '\',\'billets\',this);event.stopPropagation()" title="Marquer billets achetés">' +
-        '<span class="ct-box">' + (bilChecked ? '✅' : '☐') + '</span>Billets</button>' +
-    '</div>';
-
-    inner.insertAdjacentHTML('afterbegin', badge + cl);
+    if (badge) inner.insertAdjacentHTML('afterbegin', badge);
 
     // Note button + display
     var cityEscN = g.city.replace(/'/g, "\\'");
