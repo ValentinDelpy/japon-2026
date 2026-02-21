@@ -540,24 +540,101 @@ const U = 'https://images.unsplash.com/photo-';                   // Unsplash CD
 const _U = 'https://images.unsplash.com/photo-';
 const _S = '?w=800&q=80&auto=format&fit=crop';
 const _W = 'https://commons.wikimedia.org/wiki/Special:FilePath/';
+// Pexels CDN (stable, no auth needed for specific IDs)
+const _P = 'https://images.pexels.com/photos/';
+const _PS = '/pexels-photo-';
+const _PE = '.jpeg?auto=compress&cs=tinysrgb&w=800';
 
 const IMG_CHAIN = {
-  // Each destination: [primary, alt1, alt2, wikimedia_fallback]
-  "tokyo":     [_U+'1540959733332-eab4deabeeaf'+_S, _U+'1542051841857-5f90071e7989'+_S, _U+'1513407030348-c983a97b98d8'+_S, _W+'Skyscrapers_of_Shinjuku_2009_January.jpg?width=800'],
-  "kyoto":     [_U+'1493976040374-85c8e12f0c0e'+_S, _U+'1534271291059-a2657dc59d39'+_S, _U+'1524413840837-e60f85ebef20'+_S, _W+'Fushimi_Inari-taisha2.jpg?width=800'],
-  "osaka":     [_U+'1590559899731-a382839e5549'+_S, _U+'1506905925346-21bda4f565b9'+_S, _U+'1548191194-b5d9d0a31e91'+_S, _W+'Osaka_Castle_in_november_2008.jpg?width=800'],
-  "hiroshima": [_U+'1599922407858-a3d0e1e6b7de'+_S, _U+'1610634780695-8e5a44c06ba5'+_S, _W+'Atomic_Bomb_Dome_Hiroshima.jpg?width=800'],
-  "nara":      [_U+'1624601573012-efb68f3f150d'+_S, _U+'1590422749897-47036da0a56e'+_S, _U+'1609252925564-47e7d2c0bd14'+_S, _W+'Nara_Todaiji_Daibutsuden_Nov2007.jpg?width=800'],
-  "hakone":    [_U+'1528164344705-47542687000d'+_S, _U+'1551632811-89700e9cbf62'+_S, _U+'1612736831923-b3da79a6f49d'+_S, _W+'FujiFromHakone.jpg?width=800'],
-  "nikko":     [_U+'1578469645742-46cae010e5d6'+_S, _U+'1587595433636-c7dee0a03dac'+_S, _W+'Nikko_Tosho-gu2.jpg?width=800'],
-  "kamakura":  [_U+'1578469550956-0e16b69c6a3d'+_S, _U+'1524413840837-e60f85ebef20'+_S, _W+'Kotoku-in_Kamakura.jpg?width=800'],
-  "kanazawa":  [_U+'1567767292278-a4f21aa2d36e'+_S, _U+'1590422749897-47036da0a56e'+_S, _W+'Kenroku-en_02.jpg?width=800'],
-  "takayama":  [_U+'1580533089532-54e9b8f62997'+_S, _U+'1572879502423-4c12a99c9ba2'+_S, _W+'Hida_Folk_Village_2009.jpg?width=800'],
-  "shirakawa": [_U+'1611464908623-07f19927264e'+_S, _U+'1504432842725-2a5c0aeed1e4'+_S, _W+'Ogimachi_Shirakawa-go.jpg?width=800'],
-  "miyajima":  [_U+'1505069446780-4ef442b5207f'+_S, _U+'1609252925564-47e7d2c0bd14'+_S, _W+'Miyajima_in_japan.jpg?width=800'],
-  "koyasan":   [_U+'1545569341-9eb8b30979d9'+_S, _U+'1534271291059-a2657dc59d39'+_S, _W+'Okunoin_cemetery_Koyasan.jpg?width=800'],
-  "magome":    [_U+'1528360983277-13d401cdc186'+_S, _U+'1572879502423-4c12a99c9ba2'+_S, _W+'Magome-juku.jpg?width=800'],
-  "_default":  [_U+'1540959733332-eab4deabeeaf'+_S, _U+'1551632811-89700e9cbf62'+_S]
+  // Wikimedia first (reliable, public domain), then Unsplash, then Pexels
+  "tokyo":     [
+    _W+'Shinjuku_night_view_from_Hyatt.jpg?width=800',
+    _W+'Tokyo_Skytree_2012.JPG?width=800',
+    _U+'1540959733332-eab4deabeeaf'+_S,
+    _U+'1542051841857-5f90071e7989'+_S
+  ],
+  "kyoto":     [
+    _W+'Fushimi_Inari-taisha_2.jpg?width=800',
+    _W+'Kinkaku-ji_the_Golden_Pavilion_-_Kyoto_Japan.jpg?width=800',
+    _U+'1493976040374-85c8e12f0c0e'+_S,
+    _U+'1534271291059-a2657dc59d39'+_S
+  ],
+  "osaka":     [
+    _W+'Osaka_Castle_in_November_2022.jpg?width=800',
+    _W+'Dotonbori_Glico_Man_sign.jpg?width=800',
+    _U+'1590559899731-a382839e5549'+_S,
+    _U+'1506905925346-21bda4f565b9'+_S
+  ],
+  "hiroshima": [
+    _W+'Atomic_Bomb_Dome_Hiroshima.jpg?width=800',
+    _W+'Hiroshima_Peace_Memorial_and_Motoyasu_River_5.jpg?width=800',
+    _U+'1599922407858-a3d0e1e6b7de'+_S,
+    _U+'1610634780695-8e5a44c06ba5'+_S
+  ],
+  "nara":      [
+    _W+'Nara_Todaiji_Daibutsuden_Nov2007.jpg?width=800',
+    _W+'Nara_deer_in_Nara_Park_2.jpg?width=800',
+    _U+'1624601573012-efb68f3f150d'+_S,
+    _U+'1590422749897-47036da0a56e'+_S
+  ],
+  "hakone":    [
+    _W+'FujiFromHakone.jpg?width=800',
+    _W+'Hakone_Checkpoint_(Hakone_Sekisho)_12.jpg?width=800',
+    _U+'1528164344705-47542687000d'+_S,
+    _U+'1551632811-89700e9cbf62'+_S
+  ],
+  "nikko":     [
+    _W+'Yomeimon_at_Nikko_Toshogu.jpg?width=800',
+    _W+'Nikko_Tosho-gu2.jpg?width=800',
+    _U+'1578469645742-46cae010e5d6'+_S,
+    _U+'1587595433636-c7dee0a03dac'+_S
+  ],
+  "kamakura":  [
+    _W+'Kotoku-in_Kamakura.jpg?width=800',
+    _W+'Engaku-ji_Kamakura_2009.jpg?width=800',
+    _U+'1578469550956-0e16b69c6a3d'+_S,
+    _U+'1524413840837-e60f85ebef20'+_S
+  ],
+  "kanazawa":  [
+    _W+'Kenroku-en_02.jpg?width=800',
+    _W+'Higashi_Chaya_District_Kanazawa.jpg?width=800',
+    _U+'1567767292278-a4f21aa2d36e'+_S
+  ],
+  "takayama":  [
+    _W+'Hida_Folk_Village_2009.jpg?width=800',
+    _W+'Takayama_Sanmachi_suji_1.jpg?width=800',
+    _U+'1580533089532-54e9b8f62997'+_S,
+    _U+'1572879502423-4c12a99c9ba2'+_S
+  ],
+  "shirakawa": [
+    _W+'Shirakawa-go_2010.jpg?width=800',
+    _W+'Ogimachi_Shirakawa-go.jpg?width=800',
+    _U+'1611464908623-07f19927264e'+_S,
+    _U+'1504432842725-2a5c0aeed1e4'+_S
+  ],
+  "miyajima":  [
+    _W+'Miyajima_in_japan.jpg?width=800',
+    _W+'Itsukushima_shrine_torii_gate.jpg?width=800',
+    _U+'1505069446780-4ef442b5207f'+_S,
+    _U+'1609252925564-47e7d2c0bd14'+_S
+  ],
+  "koyasan":   [
+    _W+'Okunoin_cemetery_Koyasan.jpg?width=800',
+    _W+'Kongobuji_temple_main_hall.jpg?width=800',
+    _U+'1545569341-9eb8b30979d9'+_S,
+    _U+'1534271291059-a2657dc59d39'+_S
+  ],
+  "magome":    [
+    _W+'Magome-juku.jpg?width=800',
+    _W+'Nakasendo_trail_through_Magome.jpg?width=800',
+    _U+'1528360983277-13d401cdc186'+_S,
+    _U+'1572879502423-4c12a99c9ba2'+_S
+  ],
+  "_default":  [
+    _W+'Japan_landscape.jpg?width=800',
+    _U+'1540959733332-eab4deabeeaf'+_S,
+    _U+'1551632811-89700e9cbf62'+_S
+  ]
 };
 
 // Gradient placeholders per destination (used when all URLs fail)
@@ -625,16 +702,22 @@ function _repairBrokenImages() {
   document.querySelectorAll('[data-dest-key]').forEach(function(el) {
     var key = el.getAttribute('data-dest-key');
     if (_imgCache.hasOwnProperty(key)) {
+      // Already resolved (url or null) — just apply
       _applyImg(key, _imgCache[key]);
     } else if (!_imgLoading[key]) {
+      // Not yet started
       _imgLoading[key] = true;
       pending[key] = true;
     }
+    // If _imgLoading[key] is true but _imgCache has no entry yet, the chain
+    // is in-flight: when it resolves it will call _applyImg which queries
+    // the DOM at that moment — the current element will be found then.
   });
   Object.keys(pending).forEach(function(key) {
     var chain = IMG_CHAIN[key] || IMG_CHAIN['_default'];
     _tryImageChain(chain).then(function(url) {
       _imgCache[key] = url;
+      _imgLoading[key] = false; // allow future retries if page changes
       _applyImg(key, url);
     });
   });

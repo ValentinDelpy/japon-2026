@@ -838,3 +838,402 @@ function buildCalendarData(groups) {
 }
 function fmtDs(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 function togglePrintFullscreen(){document.body.classList.toggle('print-preview-mode');}
+
+// ═══════════════════════════════════════════════════════════
+// V11 — NOUVELLES FONCTIONNALITÉS
+// ═══════════════════════════════════════════════════════════
+
+// ─── CHECKLIST STORE ───
+var ChecklistStore = {
+  KEY: 'ldva-checklist-v2',
+  get: function() {
+    try { return JSON.parse(localStorage.getItem(this.KEY) || '{}'); } catch(e) { return {}; }
+  },
+  isChecked: function(city, type) {
+    return !!(this.get()[city] || {})[type];
+  },
+  toggle: function(city, type) {
+    var d = this.get();
+    if (!d[city]) d[city] = {};
+    d[city][type] = !d[city][type];
+    localStorage.setItem(this.KEY, JSON.stringify(d));
+    return d[city][type];
+  }
+};
+
+function toggleCheck(city, type, btn) {
+  var checked = ChecklistStore.toggle(city, type);
+  btn.classList.toggle('checked', checked);
+  btn.querySelector('.ct-box').textContent = checked ? '✅' : '☐';
+  // Also refresh dashboard progress strip if visible
+  refreshProgressStrip();
+}
+
+// ─── TRIP STATUS ───
+var TRIP_START = new Date('2026-11-18');
+var TRIP_END   = new Date('2026-12-05');
+
+function getTripPhase() {
+  var now = new Date(); now.setHours(0,0,0,0);
+  var s = new Date(TRIP_START); s.setHours(0,0,0,0);
+  var e = new Date(TRIP_END); e.setHours(0,0,0,0);
+  if (now < s) return 'before';
+  if (now > e) return 'after';
+  return 'during';
+}
+
+function getGroupTripState(g) {
+  var now = new Date(); now.setHours(0,0,0,0);
+  var start = g.startDate ? new Date(g.startDate) : null;
+  var end   = g.endDate   ? new Date(g.endDate)   : start;
+  if (start) start.setHours(0,0,0,0);
+  if (end)   end.setHours(0,0,0,0);
+  if (!start) return 'future';
+  if (now > end) return 'past';
+  if (now >= start && now <= end) return 'current';
+  return 'future';
+}
+
+// ─── BARRE DE PROGRESSION ───
+function buildProgressStrip(groups) {
+  var total = groups.length;
+  var resChecked = groups.filter(function(g){ return ChecklistStore.isChecked(g.city,'logement') || /oui|true/i.test(g.reserve||''); }).length;
+  var bilChecked = groups.filter(function(g){ return ChecklistStore.isChecked(g.city,'billets') || /oui|true/i.test(g.billetsRes||''); }).length;
+
+  var totalBudget = 0, totalTrajet = 0;
+  groups.forEach(function(g){ totalBudget += parseBudget(g.prix); totalTrajet += parseBudget(g.prixTrajet); });
+  var grand = totalBudget + totalTrajet;
+
+  var resPct  = total ? Math.round(resChecked / total * 100) : 0;
+  var bilPct  = total ? Math.round(bilChecked / total * 100) : 0;
+
+  var phase = getTripPhase();
+  var progressLabel, progressPct, progressColor;
+  if (phase === 'before') {
+    var msLeft = TRIP_START - new Date();
+    var daysLeft = Math.max(0, Math.ceil(msLeft / 86400000));
+    var totalDays = Math.ceil((TRIP_START - new Date('2025-01-01')) / 86400000);
+    progressLabel = daysLeft + ' jours avant départ';
+    progressPct = Math.round((1 - daysLeft / 365) * 100);
+    progressColor = 'blush';
+  } else if (phase === 'during') {
+    var elapsed = Math.floor((new Date() - TRIP_START) / 86400000) + 1;
+    var tripLen  = Math.ceil((TRIP_END - TRIP_START) / 86400000);
+    progressLabel = 'Jour ' + elapsed + ' / ' + tripLen;
+    progressPct = Math.round(elapsed / tripLen * 100);
+    progressColor = 'sage';
+  } else {
+    progressLabel = 'Voyage terminé 🎌';
+    progressPct = 100;
+    progressColor = 'amber';
+  }
+
+  return '<div class="progress-strip" id="progress-strip">' +
+    '<div class="prog-item">' +
+      '<div class="prog-header"><span class="prog-label">Logements réservés</span><span class="prog-value" style="color:var(--sage)">' + resChecked + '/' + total + '</span></div>' +
+      '<div class="prog-track"><div class="prog-fill prog-fill-sage" style="width:' + resPct + '%"></div></div>' +
+    '</div>' +
+    '<div class="prog-item">' +
+      '<div class="prog-header"><span class="prog-label">Billets achetés</span><span class="prog-value" style="color:var(--sky)">' + bilChecked + '/' + total + '</span></div>' +
+      '<div class="prog-track"><div class="prog-fill prog-fill-sky" style="width:' + bilPct + '%"></div></div>' +
+    '</div>' +
+    '<div class="prog-item">' +
+      '<div class="prog-header"><span class="prog-label">Budget total</span><span class="prog-value" style="color:var(--amber)">' + formatEURint(grand) + '</span></div>' +
+      '<div class="prog-track"><div class="prog-fill prog-fill-amber" style="width:75%"></div></div>' +
+    '</div>' +
+    '<div class="prog-item">' +
+      '<div class="prog-header"><span class="prog-label">' + progressLabel + '</span><span class="prog-value" style="color:var(--' + progressColor + ')">' + Math.min(progressPct, 100) + '%</span></div>' +
+      '<div class="prog-track"><div class="prog-fill prog-fill-' + progressColor + '" style="width:' + Math.min(progressPct, 100) + '%"></div></div>' +
+    '</div>' +
+  '</div>';
+}
+
+function refreshProgressStrip() {
+  var groups = getTravelGroups();
+  var strip = document.getElementById('progress-strip');
+  if (strip) strip.outerHTML = buildProgressStrip(groups);
+}
+
+// ─── TRIP STATUS BANNER ───
+function buildTripBanner(groups) {
+  var phase = getTripPhase();
+  if (phase === 'before') {
+    var days = Math.ceil((TRIP_START - new Date()) / 86400000);
+    return '<div class="trip-status-banner tsb-before"><span class="tsb-icon">✈️</span><div class="tsb-text"><strong>Voyage à venir</strong>Départ dans <strong>' + days + ' jours</strong> · Toulouse → Tokyo</div></div>';
+  }
+  if (phase === 'during') {
+    // find current city
+    var cur = null;
+    groups.forEach(function(g){
+      if (getGroupTripState(g) === 'current') cur = g;
+    });
+    var loc = cur ? ' · Actuellement à <strong>' + cur.city + '</strong>' : '';
+    var day = Math.floor((new Date() - TRIP_START) / 86400000) + 1;
+    var len = Math.ceil((TRIP_END - TRIP_START) / 86400000);
+    return '<div class="trip-status-banner tsb-during"><span class="tsb-icon">📍</span><div class="tsb-text"><strong>Voyage en cours — Jour ' + day + '/' + len + '</strong>' + loc + '</div></div>';
+  }
+  return '<div class="trip-status-banner tsb-after"><span class="tsb-icon">🎌</span><div class="tsb-text"><strong>Voyage terminé</strong>Retour de Tokyo — よかった旅！</div></div>';
+}
+
+// ─── OVERRIDE renderDashboard to inject progress + banner ───
+var _origRenderDashboard = renderDashboard;
+renderDashboard = function() {
+  _origRenderDashboard();
+  var groups = getTravelGroups();
+
+  // Inject trip status banner + progress strip before stats-row
+  var statsRow = document.querySelector('.stats-row');
+  if (statsRow) {
+    var banner = document.createElement('div');
+    banner.innerHTML = buildTripBanner(groups);
+    statsRow.parentNode.insertBefore(banner.firstChild, statsRow);
+
+    var prog = document.createElement('div');
+    prog.innerHTML = buildProgressStrip(groups);
+    statsRow.parentNode.insertBefore(prog.firstChild, statsRow);
+  }
+
+  // Add trip state classes + checklist to cards
+  groups.forEach(function(g, i) {
+    var card = document.getElementById('dc-' + i);
+    if (!card) return;
+    var state = getGroupTripState(g);
+    if (state === 'past')    card.classList.add('trip-past');
+    if (state === 'current') card.classList.add('trip-current');
+
+    // Add checklist row to card body inner
+    var inner = card.querySelector('.card-body-inner');
+    if (!inner) return;
+
+    var resChecked  = ChecklistStore.isChecked(g.city, 'logement');
+    var bilChecked  = ChecklistStore.isChecked(g.city, 'billets');
+
+    var badge = state === 'current'
+      ? '<div style="margin-bottom:8px"><span class="trip-current-badge">📍 Vous êtes ici</span></div>'
+      : '';
+
+    var cityEsc = g.city.replace(/'/g, "\\'");
+    var cl = '<div class="checklist-row">' +
+      '<button class="check-toggle ct-logement' + (resChecked ? ' checked' : '') +
+        '" onclick="toggleCheck(\'' + cityEsc + '\',\'logement\',this);event.stopPropagation()" title="Marquer logement réservé">' +
+        '<span class="ct-box">' + (resChecked ? '✅' : '☐') + '</span>Logement</button>' +
+      '<button class="check-toggle ct-billets' + (bilChecked ? ' checked' : '') +
+        '" onclick="toggleCheck(\'' + cityEsc + '\',\'billets\',this);event.stopPropagation()" title="Marquer billets achetés">' +
+        '<span class="ct-box">' + (bilChecked ? '✅' : '☐') + '</span>Billets</button>' +
+    '</div>';
+
+    inner.insertAdjacentHTML('afterbegin', badge + cl);
+  });
+};
+
+// ─── TIMELINE ───
+function renderTimeline() {
+  var groups = getTravelGroups();
+  var allGroups = DataService.getGroups(); // includes airports
+  var phase = getTripPhase();
+
+  var html = '<div class="page-header">' +
+    '<h1>Timeline <span class="jp-accent" style="opacity:.3;font-size:.6em">旅の時間</span></h1>' +
+    '<p class="subtitle">Vue chronologique jour par jour</p></div>';
+
+  html += buildTripBanner(groups);
+
+  // Build a day-by-day list from first departure to return
+  var allDates = [];
+  var dateMap = {}; // dateStr -> group info
+  allGroups.forEach(function(g) {
+    if (!g.dates) return;
+    g.dates.forEach(function(d) {
+      var ds = fmtDs(d);
+      if (!dateMap[ds]) dateMap[ds] = [];
+      dateMap[ds].push(g);
+    });
+  });
+
+  // Get range
+  var rawDates = Object.keys(dateMap).sort();
+  if (!rawDates.length) {
+    document.getElementById('page-container').innerHTML = html + '<p class="text-muted">Aucune donnée disponible.</p>';
+    return;
+  }
+
+  var months = ['jan.','fév.','mars','avr.','mai','juin','juil.','août','sep.','oct.','nov.','déc.'];
+  var monthsFull = ['Novembre','Décembre','Janvier','Février'];
+  var days = ['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'];
+
+  html += '<div class="timeline-page"><div class="timeline-wrapper"><div class="timeline-spine"></div>';
+
+  var lastMonth = null;
+  var now = new Date(); now.setHours(0,0,0,0);
+  var stopIdx = 0;
+
+  rawDates.forEach(function(ds, di) {
+    var parts = ds.split('-');
+    var d = new Date(+parts[0], +parts[1]-1, +parts[2]);
+    var monthKey = parts[0] + '-' + parts[1];
+    var gList = dateMap[ds] || [];
+    // pick primary group (non-airport)
+    var g = gList.find(function(x){ return !/aéroport|airport/i.test(x.city||''); }) || gList[0];
+    if (!g) return;
+
+    var isAirport = /aéroport|airport/i.test(g.city||'');
+    var dayDate = new Date(d); dayDate.setHours(0,0,0,0);
+    var isPast    = dayDate < now;
+    var isCurrent = dayDate.getTime() === now.getTime();
+    var dest = findDestination(g.city);
+    var wx = getWeatherForDate(g.city, d);
+
+    // Month divider
+    if (monthKey !== lastMonth) {
+      lastMonth = monthKey;
+      var mn = d.toLocaleString('fr-FR', {month:'long', year:'numeric'});
+      html += '<div class="tl-month-divider">' + mn.charAt(0).toUpperCase() + mn.slice(1) + '</div>';
+    }
+
+    var stateClass = isPast ? 'tl-past' : (isCurrent ? 'tl-current' : '');
+    var dotColor = STOP_COLORS[stopIdx % STOP_COLORS.length];
+    if (!isAirport) stopIdx++;
+
+    var acts = Array.isArray(g.activites) ? g.activites.filter(function(a){return a&&a.trim();}) : [];
+    var dateLabel = days[d.getDay()] + ' ' + d.getDate() + ' ' + months[d.getMonth()];
+
+    html += '<div class="tl-day' + (isAirport?' tl-transit':'') + '" style="animation-delay:' + (di*.04) + 's">';
+    html += '<div class="tl-dot' + (isCurrent?' dot-current':'') + '" style="background:' + dotColor + '">' + (isAirport?'✈':'') + '</div>';
+    html += '<div class="tl-card ' + stateClass + '">';
+    html += '<div class="tl-card-head">';
+    html += '<div><div class="tl-city">' + g.city + (dest.nameJP ? '<span class="tl-jp">' + dest.nameJP + '</span>' : '') + '</div></div>';
+    html += '<div class="tl-date">' + dateLabel + '</div>';
+    html += '</div>';
+
+    // Badges
+    var badges = '';
+    if (isCurrent) badges += '<span class="trip-current-badge">📍 Aujourd\'hui</span>';
+    if (wx) badges += '<span class="tl-badge tl-badge-wx">' + wx.icon + ' ' + wx.high + '°/' + wx.low + '°</span>';
+    if (g.dureeTrajet && d.getTime() === g.startDate.getTime()) badges += '<span class="tl-badge tl-badge-move">🚄 ' + g.dureeTrajet + '</span>';
+    if (g.reserve && /oui|true/i.test(g.reserve)) badges += '<span class="tl-badge tl-badge-res">✅</span>';
+    if (badges) html += '<div class="tl-badges">' + badges + '</div>';
+
+    // Activities for this day
+    if (acts.length) {
+      html += '<div class="tl-acts">📍 <span>' + acts.join(' · ') + '</span></div>';
+    }
+
+    // Lodge (show only on first day of a stay)
+    if (g.logement && g.startDate && d.getTime() === g.startDate.getTime()) {
+      var lh = getLodgeLink(g.logement);
+      html += '<div class="tl-lodge">🏨 ' + (lh ? '<a href="' + lh + '" target="_blank" class="cell-link">' + g.logement + '</a>' : g.logement);
+      if (g.prix) html += ' <span style="opacity:.6;font-family:\'Space Mono\',monospace;font-size:.66rem">' + formatEURint(parseBudget(g.prix)) + '</span>';
+      html += '</div>';
+    }
+
+    html += '</div></div>';
+  });
+
+  html += '</div></div>';
+  document.getElementById('page-container').innerHTML = html;
+}
+
+// ─── WIKIMEDIA GALLERY ───
+var _wikiCache = {};
+
+var WIKI_QUERIES = {
+  'tokyo':     'Tokyo Japan landmark',
+  'kyoto':     'Kyoto Japan temple',
+  'osaka':     'Osaka Japan cityscape',
+  'hiroshima': 'Hiroshima Peace Memorial Japan',
+  'nara':      'Nara Japan deer temple',
+  'hakone':    'Hakone Japan Fuji',
+  'kanazawa':  'Kanazawa Japan Kenroku-en',
+  'takayama':  'Takayama Japan old town',
+  'shirakawa': 'Shirakawa-go Japan gassho',
+  'magome':    'Magome Japan Nakasendo',
+  'miyajima':  'Miyajima Japan torii gate',
+  'koyasan':   'Koyasan Japan Buddhist temple',
+  'nikko':     'Nikko Tosho-gu Japan',
+  'kamakura':  'Kamakura Japan Buddha',
+  '_default':  'Japan landscape traditional'
+};
+
+function fetchWikiGallery(destKey) {
+  if (_wikiCache[destKey]) return Promise.resolve(_wikiCache[destKey]);
+  var q = WIKI_QUERIES[destKey] || WIKI_QUERIES['_default'];
+  // Use Wikimedia search API — namespace 6 = Files
+  var url = 'https://commons.wikimedia.org/w/api.php?action=query' +
+    '&generator=search&gsrsearch=' + encodeURIComponent('File:' + q) +
+    '&gsrnamespace=6&gsrlimit=9' +
+    '&prop=imageinfo&iiprop=url|mime|thumburl&iiurlwidth=420' +
+    '&format=json&origin=*';
+  return fetch(url)
+    .then(function(r){ return r.json(); })
+    .then(function(data) {
+      var pages = data.query && data.query.pages ? Object.values(data.query.pages) : [];
+      var imgs = pages
+        .filter(function(p){ return p.imageinfo && p.imageinfo[0] && /jpeg|jpg|png|webp/i.test(p.imageinfo[0].mime||''); })
+        .map(function(p){ return { thumb: p.imageinfo[0].thumburl, full: p.imageinfo[0].url }; })
+        .filter(function(i){ return i.thumb && i.full; })
+        .slice(0, 6);
+      _wikiCache[destKey] = imgs;
+      return imgs;
+    })
+    .catch(function(){ return []; });
+}
+
+function injectWikiGallery(destKey) {
+  var container = document.getElementById('gd-gallery-' + destKey);
+  if (!container) return;
+  fetchWikiGallery(destKey).then(function(imgs) {
+    if (!imgs.length) { container.parentElement.style.display = 'none'; return; }
+    container.innerHTML = imgs.map(function(img) {
+      return '<div class="gd-gallery-img" style="background-image:url(\'' + img.thumb + '\')" ' +
+        'onclick="openLightbox(\'' + img.full.replace(/'/g,"\\'") + '\')" title="Voir en grand"></div>';
+    }).join('');
+  });
+}
+
+function openLightbox(url) {
+  var lb = document.createElement('div');
+  lb.className = 'gd-lightbox';
+  lb.innerHTML = '<button class="gd-lightbox-close" onclick="this.parentElement.remove()">×</button>' +
+    '<img src="' + url + '" alt="Photo">';
+  lb.onclick = function(e){ if(e.target===lb) lb.remove(); };
+  document.documentElement.appendChild(lb);
+}
+
+// ─── PATCH openGuideDetail to add gallery section ───
+var _origOpenGuideDetail = openGuideDetail;
+openGuideDetail = function(idxOrName) {
+  _origOpenGuideDetail(idxOrName);
+  // Find the guide-detail that was just opened
+  setTimeout(function() {
+    var detail = document.querySelector('.guide-detail-body');
+    if (!detail) return;
+
+    // Find the dest key from the hero
+    var hero = document.querySelector('.guide-detail-hero[data-dest-key]');
+    var destKey = hero ? hero.getAttribute('data-dest-key') : '_default';
+    if (!destKey || destKey === '_default') return;
+
+    // Inject gallery section before "À ne pas manquer"
+    var gallerySection = document.createElement('div');
+    gallerySection.className = 'gd-section';
+    gallerySection.id = 'gd-gallery-section-' + destKey;
+    gallerySection.innerHTML =
+      '<div class="gd-section-title">PHOTOS (Commons)</div>' +
+      '<div class="gd-gallery" id="gd-gallery-' + destKey + '">' +
+        [1,2,3,4,5,6].map(function(){ return '<div class="gd-gallery-img loading"></div>'; }).join('') +
+      '</div>';
+
+    // Insert before first .gd-section that has "À NE PAS MANQUER"
+    var sections = detail.querySelectorAll('.gd-section');
+    var inserted = false;
+    sections.forEach(function(s) {
+      if (!inserted && s.querySelector('.gd-section-title') && /NE PAS|À NE/i.test(s.querySelector('.gd-section-title').textContent)) {
+        detail.insertBefore(gallerySection, s);
+        inserted = true;
+      }
+    });
+    if (!inserted) detail.appendChild(gallerySection);
+
+    injectWikiGallery(destKey);
+  }, 60);
+};

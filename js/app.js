@@ -18,16 +18,30 @@ const ThemeManager = {
   },
 
   apply(theme, animate = true) {
-    if (animate) document.documentElement.style.transition = 'none';
-    document.documentElement.setAttribute('data-theme', theme);
+    // On initial load (animate=false): suppress transition to avoid flash
+    // On toggle click (animate=true): let CSS transitions run naturally
+    if (!animate) {
+      document.documentElement.style.transition = 'none';
+      document.documentElement.setAttribute('data-theme', theme);
+      requestAnimationFrame(() => { document.documentElement.style.transition = ''; });
+    } else {
+      document.documentElement.setAttribute('data-theme', theme);
+    }
     localStorage.setItem(this.STORAGE_KEY, theme);
-    const icon = theme === 'dark' ? '☀️' : '🌙';
-    const title = theme === 'dark' ? 'Passer en mode clair' : 'Passer en mode sombre';
+    this._updateButtons(theme);
+  },
+
+  _updateButtons(theme) {
+    const isDark = theme === 'dark';
+    const icon  = isDark ? '☀️' : '🌙';
+    const label = isDark ? 'Mode clair' : 'Mode sombre';
     document.querySelectorAll('#theme-btn, #theme-btn-mobile').forEach(btn => {
-      btn.textContent = icon;
-      btn.title = title;
+      btn.title = label;
+      const iconSpan  = btn.querySelector('.theme-icon');
+      const labelSpan = btn.querySelector('.theme-label');
+      if (iconSpan)  iconSpan.textContent  = icon;
+      if (labelSpan) labelSpan.textContent = label;
     });
-    if (animate) requestAnimationFrame(() => { document.documentElement.style.transition = ''; });
   },
 
   toggle() {
@@ -80,6 +94,7 @@ const Router = {
       case 'dashboard':  renderDashboard(); break;
       case 'itinerary':  renderItinerary(); break;
       case 'guides':     renderGuides(); break;
+      case 'timeline':  renderTimeline(); break;
       case 'print':      renderPrint(); break;
       default:           renderDashboard();
     }
