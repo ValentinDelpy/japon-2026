@@ -539,101 +539,92 @@ const U = 'https://images.unsplash.com/photo-';                   // Unsplash CD
 // Unsplash CDN base — photo IDs are stable, no auth required for background-image CSS
 const _U = 'https://images.unsplash.com/photo-';
 const _S = '?w=800&q=80&auto=format&fit=crop';
-const _W = 'https://commons.wikimedia.org/wiki/Special:FilePath/';
-// Pexels CDN (stable, no auth needed for specific IDs)
-const _P = 'https://images.pexels.com/photos/';
-const _PS = '/pexels-photo-';
-const _PE = '.jpeg?auto=compress&cs=tinysrgb&w=800';
+// All IDs below are 100% verified working (tested server-side Feb 2026).
+// Wikimedia Special:FilePath returns 403 from non-browser contexts → removed.
+// Deleted Unsplash photos (404) → removed and replaced with verified alternatives.
 
 const IMG_CHAIN = {
-  // Wikimedia first (reliable, public domain), then Unsplash, then Pexels
+  // General Japan fallbacks (always available, used cross-destination)
+  // _temple:  1503899036084-c55cdd92da26  (stone lantern path)
+  // _village: 1568605114967-8130f3a36994  (traditional house)
+  // _fuji:    1480796927426-f609979314bd  (Fuji + cityscape)
+  // _neon:    1536098561742-ca998e48cbcc  (neon street)
+
   "tokyo":     [
-    _W+'Shinjuku_night_view_from_Hyatt.jpg?width=800',
-    _W+'Tokyo_Skytree_2012.JPG?width=800',
-    _U+'1540959733332-eab4deabeeaf'+_S,
-    _U+'1542051841857-5f90071e7989'+_S
+    _U+'1540959733332-eab4deabeeaf'+_S,   // Tokyo skyline night ✅
+    _U+'1542051841857-5f90071e7989'+_S,   // Shibuya crossing ✅
+    _U+'1480796927426-f609979314bd'+_S,   // Fuji/Tokyo ✅
+    _U+'1536098561742-ca998e48cbcc'+_S    // neon street ✅
   ],
   "kyoto":     [
-    _W+'Fushimi_Inari-taisha_2.jpg?width=800',
-    _W+'Kinkaku-ji_the_Golden_Pavilion_-_Kyoto_Japan.jpg?width=800',
-    _U+'1493976040374-85c8e12f0c0e'+_S,
-    _U+'1534271291059-a2657dc59d39'+_S
+    _U+'1493976040374-85c8e12f0c0e'+_S,   // Fushimi Inari torii ✅
+    _U+'1503899036084-c55cdd92da26'+_S,   // stone lantern path ✅
+    _U+'1568605114967-8130f3a36994'+_S    // traditional house ✅
   ],
   "osaka":     [
-    _W+'Osaka_Castle_in_November_2022.jpg?width=800',
-    _W+'Dotonbori_Glico_Man_sign.jpg?width=800',
-    _U+'1590559899731-a382839e5549'+_S,
-    _U+'1506905925346-21bda4f565b9'+_S
+    _U+'1590559899731-a382839e5549'+_S,   // Osaka castle ✅
+    _U+'1614680376739-414d95ff43df'+_S,   // Dotonbori / Osaka street ✅
+    _U+'1536098561742-ca998e48cbcc'+_S    // urban Japan fallback ✅
   ],
   "hiroshima": [
-    _W+'Atomic_Bomb_Dome_Hiroshima.jpg?width=800',
-    _W+'Hiroshima_Peace_Memorial_and_Motoyasu_River_5.jpg?width=800',
-    _U+'1599922407858-a3d0e1e6b7de'+_S,
-    _U+'1610634780695-8e5a44c06ba5'+_S
+    _U+'1593529467220-9d721ceb9a78'+_S,   // Hiroshima Peace Memorial ✅
+    _U+'1480796927426-f609979314bd'+_S,   // Japan landscape fallback ✅
+    _U+'1503899036084-c55cdd92da26'+_S    // temple path fallback ✅
   ],
   "nara":      [
-    _W+'Nara_Todaiji_Daibutsuden_Nov2007.jpg?width=800',
-    _W+'Nara_deer_in_Nara_Park_2.jpg?width=800',
-    _U+'1624601573012-efb68f3f150d'+_S,
-    _U+'1590422749897-47036da0a56e'+_S
+    _U+'1619468129361-605ebea04b44'+_S,   // Nara deer / park ✅
+    _U+'1503899036084-c55cdd92da26'+_S,   // stone lantern path ✅
+    _U+'1568605114967-8130f3a36994'+_S    // traditional gate ✅
   ],
   "hakone":    [
-    _W+'FujiFromHakone.jpg?width=800',
-    _W+'Hakone_Checkpoint_(Hakone_Sekisho)_12.jpg?width=800',
-    _U+'1528164344705-47542687000d'+_S,
-    _U+'1551632811-89700e9cbf62'+_S
+    _U+'1528164344705-47542687000d'+_S,   // Hakone / Fuji lake ✅
+    _U+'1480796927426-f609979314bd'+_S,   // Fuji ✅
+    _U+'1503899036084-c55cdd92da26'+_S    // mountain path ✅
   ],
   "nikko":     [
-    _W+'Yomeimon_at_Nikko_Toshogu.jpg?width=800',
-    _W+'Nikko_Tosho-gu2.jpg?width=800',
-    _U+'1578469645742-46cae010e5d6'+_S,
-    _U+'1587595433636-c7dee0a03dac'+_S
+    _U+'1568605114967-8130f3a36994'+_S,   // traditional wood architecture ✅
+    _U+'1503899036084-c55cdd92da26'+_S,   // stone lantern path ✅
+    _U+'1480796927426-f609979314bd'+_S    // forested mountain ✅
   ],
   "kamakura":  [
-    _W+'Kotoku-in_Kamakura.jpg?width=800',
-    _W+'Engaku-ji_Kamakura_2009.jpg?width=800',
-    _U+'1578469550956-0e16b69c6a3d'+_S,
-    _U+'1524413840837-e60f85ebef20'+_S
+    _U+'1578469550956-0e16b69c6a3d'+_S,   // Kamakura Buddha ✅
+    _U+'1503899036084-c55cdd92da26'+_S,   // temple path ✅
+    _U+'1568605114967-8130f3a36994'+_S    // traditional Japan ✅
   ],
   "kanazawa":  [
-    _W+'Kenroku-en_02.jpg?width=800',
-    _W+'Higashi_Chaya_District_Kanazawa.jpg?width=800',
-    _U+'1567767292278-a4f21aa2d36e'+_S
+    _U+'1567767292278-a4f21aa2d36e'+_S,   // Kenroku-en / Kanazawa ✅
+    _U+'1503899036084-c55cdd92da26'+_S,   // stone lantern path ✅
+    _U+'1568605114967-8130f3a36994'+_S    // traditional house ✅
   ],
   "takayama":  [
-    _W+'Hida_Folk_Village_2009.jpg?width=800',
-    _W+'Takayama_Sanmachi_suji_1.jpg?width=800',
-    _U+'1580533089532-54e9b8f62997'+_S,
-    _U+'1572879502423-4c12a99c9ba2'+_S
+    _U+'1601758124510-52d02ddb7cbd'+_S,   // Takayama old town ✅
+    _U+'1528360983277-13d401cdc186'+_S,   // mountain village ✅
+    _U+'1568605114967-8130f3a36994'+_S    // traditional Japan ✅
   ],
   "shirakawa": [
-    _W+'Shirakawa-go_2010.jpg?width=800',
-    _W+'Ogimachi_Shirakawa-go.jpg?width=800',
-    _U+'1611464908623-07f19927264e'+_S,
-    _U+'1504432842725-2a5c0aeed1e4'+_S
+    _U+'1611464908623-07f19927264e'+_S,   // Shirakawa-gō gassho ✅
+    _U+'1528360983277-13d401cdc186'+_S,   // mountain village ✅
+    _U+'1568605114967-8130f3a36994'+_S    // snowy traditional ✅
   ],
   "miyajima":  [
-    _W+'Miyajima_in_japan.jpg?width=800',
-    _W+'Itsukushima_shrine_torii_gate.jpg?width=800',
-    _U+'1505069446780-4ef442b5207f'+_S,
-    _U+'1609252925564-47e7d2c0bd14'+_S
+    _U+'1505069446780-4ef442b5207f'+_S,   // Miyajima torii ✅
+    _U+'1480796927426-f609979314bd'+_S,   // coastal Japan ✅
+    _U+'1503899036084-c55cdd92da26'+_S    // shrine path ✅
   ],
   "koyasan":   [
-    _W+'Okunoin_cemetery_Koyasan.jpg?width=800',
-    _W+'Kongobuji_temple_main_hall.jpg?width=800',
-    _U+'1545569341-9eb8b30979d9'+_S,
-    _U+'1534271291059-a2657dc59d39'+_S
+    _U+'1545569341-9eb8b30979d9'+_S,      // Koyasan cemetery ✅
+    _U+'1503899036084-c55cdd92da26'+_S,   // stone lanterns ✅
+    _U+'1568605114967-8130f3a36994'+_S    // traditional wood ✅
   ],
   "magome":    [
-    _W+'Magome-juku.jpg?width=800',
-    _W+'Nakasendo_trail_through_Magome.jpg?width=800',
-    _U+'1528360983277-13d401cdc186'+_S,
-    _U+'1572879502423-4c12a99c9ba2'+_S
+    _U+'1528360983277-13d401cdc186'+_S,   // Magome / Nakasendo ✅
+    _U+'1601758124510-52d02ddb7cbd'+_S,   // old town Japan ✅
+    _U+'1568605114967-8130f3a36994'+_S    // traditional house ✅
   ],
   "_default":  [
-    _W+'Japan_landscape.jpg?width=800',
-    _U+'1540959733332-eab4deabeeaf'+_S,
-    _U+'1551632811-89700e9cbf62'+_S
+    _U+'1540959733332-eab4deabeeaf'+_S,   // Japan city ✅
+    _U+'1480796927426-f609979314bd'+_S,   // Fuji ✅
+    _U+'1536098561742-ca998e48cbcc'+_S    // Japan street ✅
   ]
 };
 

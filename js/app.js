@@ -176,7 +176,13 @@ function patchLeafletPopups() {
 
 // ─── INITIALIZATION ───
 async function initApp() {
-  console.log('🏯 Little Domo Very Arigato V10 — Initializing…');
+  console.log('🏯 Little Domo Very Arigato V13 — Initializing…');
+  // Bust image cache on new version deploy
+  var _imgVer = 'ldva-img-v13';
+  if (localStorage.getItem('ldva-img-ver') !== _imgVer) {
+    Object.keys(localStorage).filter(function(k){ return k.startsWith('ldva-img'); }).forEach(function(k){ localStorage.removeItem(k); });
+    localStorage.setItem('ldva-img-ver', _imgVer);
+  }
 
   // Theme must be applied first to avoid flash
   ThemeManager.init();

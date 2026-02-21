@@ -1023,6 +1023,21 @@ renderDashboard = function() {
     '</div>';
 
     inner.insertAdjacentHTML('afterbegin', badge + cl);
+
+    // Note button + display
+    var cityEscN = g.city.replace(/'/g, "\\'");
+    var existingNote = NotesStore.get(g.city);
+    var noteHtml = '<div class="note-row">' +
+      '<button class="note-edit-btn' + (existingNote ? ' has-note' : '') + '" ' +
+        'onclick="openNoteEditor(\'' + cityEscN + '\', this);event.stopPropagation()" ' +
+        'title="' + (existingNote ? 'Modifier la note' : 'Ajouter une note') + '">' +
+        '📝 Note' +
+      '</button>' +
+      '<span class="note-display" data-note-city="' + cityEscN + '" style="' + (existingNote ? '' : 'display:none') + '">' +
+        (existingNote ? '📝 ' + existingNote : '') +
+      '</span>' +
+    '</div>';
+    inner.insertAdjacentHTML('beforeend', noteHtml);
   });
 };
 
@@ -1237,3 +1252,63 @@ openGuideDetail = function(idxOrName) {
     injectWikiGallery(destKey);
   }, 60);
 };
+
+// ─── NOTES ÉDITABLES ───
+var NotesStore = {
+  KEY: 'ldva-notes-v1',
+  get: function(city) {
+    try { return (JSON.parse(localStorage.getItem(this.KEY) || '{}'))[city] || ''; } catch(e) { return ''; }
+  },
+  set: function(city, text) {
+    try {
+      var d = JSON.parse(localStorage.getItem(this.KEY) || '{}');
+      if (text.trim()) d[city] = text.trim(); else delete d[city];
+      localStorage.setItem(this.KEY, JSON.stringify(d));
+    } catch(e) {}
+  }
+};
+
+function openNoteEditor(city, btnEl) {
+  // Toggle inline note editor
+  var card = btnEl.closest('.stop-card') || btnEl.closest('.tl-card') || btnEl.closest('.summary-card');
+  var existing = card.querySelector('.note-editor-block');
+  if (existing) { existing.remove(); return; }
+
+  var current = NotesStore.get(city);
+  var block = document.createElement('div');
+  block.className = 'note-editor-block';
+  block.innerHTML =
+    '<div class="note-editor-label">Note personnelle</div>' +
+    '<textarea class="note-editor-ta" placeholder="Ajouter une note pour ' + city + '…" rows="3">' + current + '</textarea>' +
+    '<div class="note-editor-actions">' +
+      '<button class="note-btn note-save" onclick="saveNote(\'' + city.replace(/'/g,"\\'") + '\', this)">Enregistrer</button>' +
+      '<button class="note-btn note-cancel" onclick="this.closest(\'.note-editor-block\').remove()">Annuler</button>' +
+    '</div>';
+
+  // Insert after checklist-row or at end of card-body-inner
+  var inner = card.querySelector('.card-body-inner') || card;
+  inner.appendChild(block);
+  block.querySelector('textarea').focus();
+}
+
+function saveNote(city, btnEl) {
+  var block = btnEl.closest('.note-editor-block');
+  var ta = block.querySelector('textarea');
+  NotesStore.set(city, ta.value);
+  block.remove();
+  // Update note display on card if it exists
+  _refreshNoteDisplay(city);
+}
+
+function _refreshNoteDisplay(city) {
+  // find note-display elements for this city and update them
+  document.querySelectorAll('[data-note-city="' + city + '"]').forEach(function(el) {
+    var note = NotesStore.get(city);
+    el.textContent = note ? '📝 ' + note : '';
+    el.style.display = note ? '' : 'none';
+    var btn = el.previousElementSibling;
+    if (btn && btn.classList.contains('note-edit-btn')) {
+      btn.classList.toggle('has-note', !!note);
+    }
+  });
+}

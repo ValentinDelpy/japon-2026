@@ -3,46 +3,47 @@
    Dark / Light mode via [data-theme] on <html>
    ════════════════════════════════════════════════ */
 
-/* ─── LIGHT MODE TOKENS ─── */
+/* ─── LIGHT MODE TOKENS — Clair & Aéré ─── */
 :root {
-  --bg: #f0ede8;
-  --surface: #faf8f5;
-  --surface2: #f4f1ec;
-  --border: #e2ddd6;
-  --border2: #cdc7be;
+  --bg: #f3f4f7;          /* gris-bleu très clair, plus neutre que le beige */
+  --surface: #ffffff;      /* blanc pur pour les cartes */
+  --surface2: #f0f1f5;     /* très légèrement teinté pour les zones secondaires */
+  --border: #e4e6ec;       /* bordures claires */
+  --border2: #cdd0da;      /* bordures un peu plus marquées */
 
-  --sage: #7a9e8e;
-  --sage-l: #e8f0ec;
-  --sage-d: #4d7a6a;
-  --blush: #c47e7e;
-  --blush-l: #f5e8e8;
-  --blush-d: #a45e5e;
-  --sky: #7a9bb5;
-  --sky-l: #e8eff5;
-  --amber: #b8924a;
-  --amber-l: #f5eedf;
-  --amber-d: #8a6c2a;
-  --lavender: #9a8ab5;
-  --lavender-l: #f0edf7;
+  --sage: #5c8f7d;         /* un peu plus saturé en light mode */
+  --sage-l: #e7f2ed;
+  --sage-d: #3d6b5a;
+  --blush: #c06070;
+  --blush-l: #faedef;
+  --blush-d: #994d5d;
+  --sky: #5b8fb5;
+  --sky-l: #e6eff7;
+  --amber: #a87d3a;
+  --amber-l: #fdf0de;
+  --amber-d: #7a5a20;
+  --lavender: #8a7ab5;
+  --lavender-l: #eeecf7;
 
-  --ink: #2a2520;
-  --ink2: #5a524a;
-  --ink3: #8a8078;
-  --snow: #fdfcfa;
+  --ink: #1e1e2a;          /* texte principal : presque noir, légèrement bleuté */
+  --ink2: #4a4a5c;         /* texte secondaire */
+  --ink3: #8a8a9e;         /* texte désactivé / labels */
+  --snow: #ffffff;
   --white: #ffffff;
-  --paper-warm: #f7f4ef;
+  --paper-warm: #f8f8fa;
 
-  --shadow-xs: 0 1px 2px rgba(42,37,32,.04);
-  --shadow-sm: 0 1px 4px rgba(42,37,32,.07), 0 0 1px rgba(42,37,32,.04);
-  --shadow-md: 0 4px 16px rgba(42,37,32,.09);
-  --shadow-lg: 0 12px 36px rgba(42,37,32,.13);
-  --shadow-xl: 0 24px 60px rgba(42,37,32,.18);
+  --shadow-xs: 0 1px 2px rgba(30,30,42,.04);
+  --shadow-sm: 0 1px 4px rgba(30,30,42,.07), 0 0 1px rgba(30,30,42,.03);
+  --shadow-md: 0 4px 16px rgba(30,30,42,.08);
+  --shadow-lg: 0 12px 36px rgba(30,30,42,.11);
+  --shadow-xl: 0 24px 60px rgba(30,30,42,.16);
 
-  --sidebar-bg: #1e1b17;
+  /* sidebar reste sombre en mode clair */
+  --sidebar-bg: #1a1b2e;
   --sidebar-border: rgba(255,255,255,.06);
-  --sidebar-text: rgba(255,255,255,.45);
+  --sidebar-text: rgba(255,255,255,.42);
   --sidebar-text-active: #fff;
-  --sidebar-active-bg: rgba(255,255,255,.08);
+  --sidebar-active-bg: rgba(255,255,255,.09);
   --sidebar-hover-bg: rgba(255,255,255,.05);
 
   --r-sm: 8px; --r-md: 12px; --r-lg: 18px; --r-xl: 24px;
@@ -98,10 +99,14 @@ body {
   font-size: 15px;
   -webkit-font-smoothing: antialiased;
   transition: background .3s var(--ease), color .3s var(--ease);
+  /* Light mode : légère vignette colorée dans les coins */
+  background-image:
+    radial-gradient(ellipse at 0% 0%, rgba(92,143,125,.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 100% 100%, rgba(91,143,181,.05) 0%, transparent 50%);
 }
 [data-theme="dark"] body {
-  background-image: radial-gradient(ellipse at 20% 0%, rgba(122,158,142,.06) 0%, transparent 60%),
-                    radial-gradient(ellipse at 80% 100%, rgba(196,126,126,.05) 0%, transparent 60%);
+  background-image: radial-gradient(ellipse at 20% 0%, rgba(92,143,125,.07) 0%, transparent 60%),
+                    radial-gradient(ellipse at 80% 100%, rgba(192,96,112,.06) 0%, transparent 60%);
 }
 
 h1, h2, h3 { font-family: 'Shippori Mincho', serif; font-weight: 700; line-height: 1.25; }
@@ -814,4 +819,57 @@ a:hover { color: var(--blush); }
 @media (max-width: 480px) {
   .progress-strip { grid-template-columns: 1fr 1fr; gap: 12px; }
   .gd-gallery { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ────────────────────────────────────────
+   V13 — NOTES ÉDITABLES
+   ──────────────────────────────────────── */
+.note-row {
+  display: flex; align-items: flex-start; gap: 8px; flex-wrap: wrap;
+  padding: 6px 0 2px; border-top: 1px solid var(--border); margin-top: 6px;
+}
+.note-edit-btn {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 9px; border-radius: 20px; cursor: pointer;
+  font-size: .65rem; font-weight: 600; border: 1.5px dashed var(--border2);
+  color: var(--ink3); background: none; transition: all var(--t) var(--ease);
+  font-family: 'Outfit', sans-serif; white-space: nowrap;
+}
+.note-edit-btn:hover { border-color: var(--amber); color: var(--amber); background: var(--amber-l); }
+.note-edit-btn.has-note { border-style: solid; border-color: var(--amber); color: var(--amber); background: var(--amber-l); }
+.note-display {
+  font-size: .72rem; color: var(--ink3); font-style: italic; line-height: 1.5;
+  flex: 1; padding-top: 3px;
+}
+.note-editor-block {
+  margin-top: 8px; padding: 10px 12px;
+  background: var(--amber-l); border: 1px solid rgba(168,125,58,.2);
+  border-radius: var(--r-sm); animation: fadeInUp .2s ease;
+}
+.note-editor-label { font-size: .6rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--amber); margin-bottom: 6px; }
+.note-editor-ta {
+  width: 100%; border: 1px solid var(--border2); border-radius: var(--r-sm);
+  padding: 8px 10px; font-family: 'Outfit', sans-serif; font-size: .8rem;
+  color: var(--ink); background: var(--surface); resize: vertical; min-height: 64px;
+  transition: border-color var(--t);
+}
+.note-editor-ta:focus { outline: none; border-color: var(--amber); }
+.note-editor-actions { display: flex; gap: 6px; margin-top: 6px; justify-content: flex-end; }
+.note-btn { padding: 5px 12px; border-radius: var(--r-sm); border: none; cursor: pointer; font-size: .72rem; font-weight: 600; font-family: 'Outfit', sans-serif; transition: all var(--t); }
+.note-save { background: var(--amber); color: #fff; }
+.note-save:hover { background: var(--amber-d); }
+.note-cancel { background: var(--surface2); color: var(--ink3); border: 1px solid var(--border); }
+.note-cancel:hover { background: var(--border); }
+
+/* ─── LIGHT THEME stat-card adjustments ─── */
+/* Cards on a light bg need a subtle box-shadow rather than just border */
+.stat-card {
+  box-shadow: var(--shadow-sm);
+}
+.stop-card {
+  box-shadow: var(--shadow-xs);
+}
+/* Page container gets a max-width card-like feel */
+.page-container {
+  background: transparent;
 }
