@@ -11,9 +11,9 @@ const DataService = {
   linkMap: {},   // "cellValue" → href
 
   // ── Fetch sheet JSON ──
-  async fetchSheet(gid) {
-    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=${gid}`;
-    const resp = await fetch(url);
+  async fetchSheet(gid, bust='') {
+    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=${gid}${bust}`;
+    const resp = await fetch(url, {cache: 'no-store'});
     const text = await resp.text();
     const jsonStr = text.match(/\{.*\}/s);
     if (!jsonStr) throw new Error('Parse error');
@@ -44,10 +44,10 @@ const DataService = {
   },
 
   // ── Fetch HTML export to extract hyperlinks (value-keyed) ──
-  async fetchSheetHtmlLinks(gid) {
+  async fetchSheetHtmlLinks(gid, bust='') {
     try {
-      const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:html&gid=${gid}`;
-      const resp = await fetch(url);
+      const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:html&gid=${gid}${bust}`;
+      const resp = await fetch(url, {cache: 'no-store'});
       const html = await resp.text();
       const parser = new DOMParser();
       const doc = parser.parseFromString(html, 'text/html');
@@ -77,17 +77,19 @@ const DataService = {
   },
 
   async tryFetchSheets() {
+    const bust = '&_=' + Date.now(); // cache-busting
     for (const gid of ['2038497907', '0']) {
       try {
-        const result = await this.fetchSheet(gid);
+        const result = await this.fetchSheet(gid, bust);
         if (result && result.rows.length > 0) {
           this.rawData = result;
           console.log('Loaded sheet gid=' + gid, result.rows.length, 'rows, cols:', result.cols.join(', '));
-          // Async hyperlink fetch
-          this.fetchSheetHtmlLinks(gid).then(lm => {
+          // AWAIT the link extraction so it's ready before render
+          try {
+            const lm = await this.fetchSheetHtmlLinks(gid, bust);
             this.linkMap = lm;
-            console.log('Links loaded:', Object.keys(lm).length, 'entries');
-          });
+            console.log('Links loaded:', Object.keys(lm).length, 'entries:', Object.keys(lm).slice(0,5));
+          } catch(le) { console.warn('Links fetch failed:', le.message); }
           return;
         }
       } catch(e) { console.warn('gid=' + gid + ' failed:', e.message); }

@@ -122,3 +122,36 @@ async function initApp() {
 
 // Start
 document.addEventListener('DOMContentLoaded', initApp);
+
+// ─── Auto-refresh data every 5 minutes ───
+setInterval(async function() {
+  if (!document.hidden) {
+    await DataService.loadAllData();
+    updateExchangeWidget();
+    Router.route();
+    console.log('Data auto-refreshed at', new Date().toLocaleTimeString());
+  }
+}, 5 * 60 * 1000);
+
+// ─── Fix broken background images ───
+function fixBrokenBgImages() {
+  document.querySelectorAll('[style*="background-image"]').forEach(function(el) {
+    var style = el.getAttribute('style') || '';
+    var match = style.match(/url\(['"]?([^'")\s]+)['"]?\)/);
+    if (!match) return;
+    var url = match[1];
+    var img = new Image();
+    img.onerror = function() {
+      // Replace with a nice Japanese-themed gradient
+      el.style.backgroundImage = 'linear-gradient(135deg, #c73e1d22 0%, #26465322 50%, #2a9d8f22 100%), linear-gradient(180deg, #f5efe8 0%, #e8ddd0 100%)';
+    };
+    img.src = url;
+  });
+}
+// Run on DOM changes to catch dynamically added elements
+var _bgObserver = new MutationObserver(function(mutations) {
+  mutations.forEach(function(m) {
+    if (m.addedNodes.length) fixBrokenBgImages();
+  });
+});
+_bgObserver.observe(document.body, {childList: true, subtree: true});

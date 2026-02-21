@@ -344,6 +344,54 @@ const DESTINATIONS_DB = {
     tips: "Réservez votre shukubo à l'avance. L'Okunoin est magique à la tombée de la nuit avec les lanternes. Prenez le funiculaire depuis Gokurakubashi."
   },
 
+  // ---- SHIRAKAWA-GO ----
+  "shirakawa": {
+    name: "Shirakawa-go",
+    nameJP: "白川郷",
+    image: "https://images.unsplash.com/photo-1611464908623-07f19927264e?w=800&q=80",
+    intro: "Village médiéval classé au patrimoine mondial de l'UNESCO, Shirakawa-go est célèbre pour ses maisons gasshō-zukuri — des constructions au toit de chaume en pente très raide, conçues pour supporter le poids de l'immense neige hivernale. En décembre, recouvertes de neige, elles offrent l'un des panoramas les plus féeriques du Japon.",
+    highlights: [
+      "Se promener dans les ruelles enneigées en décembre (illuminations nocturnes certains week-ends)",
+      "Monter au belvédère de Shiroyama pour la vue panoramique sur tout le village",
+      "Visiter l'intérieur d'une maison gasshō-zukuri au musée en plein air de Kanda-ke",
+      "Déguster le sarubobo (poupée porte-bonheur local) et les produits du terroir montagnard"
+    ],
+    funFacts: [
+      "Les maisons gasshō-zukuri ont des toits inclinés à 60° qui rappellent des mains jointes en prière — c'est ce que signifie gasshō en japonais.",
+      "Ces toits peuvent supporter jusqu'à 2 mètres de neige et doivent être entièrement refaits tous les 30 à 40 ans, une opération collective appelée yui-nō.",
+      "Le village est inscrit au patrimoine mondial de l'UNESCO depuis 1995."
+    ],
+    restaurants: [
+      { name: "Doburoku Matsuri no Yakata", type: "Izakaya local", desc: "Spécialité locale : le doburoku, une sorte de saké artisanal légèrement brouillé, servi avec des plats du terroir.", price: "¥1,200" },
+      { name: "Café des gastronames", type: "Café", desc: "Café chaleureux dans une maison gasshō-zukuri rénovée. Parfait pour se réchauffer avec un café et un gâteau maison.", price: "¥600" }
+    ],
+    tips: "Depuis Takayama, bus direct Nohi en 50 minutes. Le village se visite facilement en demi-journée. En hiver, certains week-ends de décembre il y a des illuminations nocturnes — vérifiez le programme exact avant de partir."
+  },
+
+  // ---- MAGOME ----
+  "magome": {
+    name: "Magome",
+    nameJP: "馬籠",
+    image: "https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=800&q=80",
+    intro: "Magome est un ancien bourg-relais de la route du Nakasendo, la voie terrestre qui reliait Tokyo à Kyoto à l'époque des shoguns. Ses ruelles en pavés, ses maisons en bois à la façade noire et ses boutiques d'artisanat offrent un voyage dans le Japon médiéval. C'est aussi le point de départ de la randonnée vers Tsumago, l'une des plus belles balades du Japon.",
+    highlights: [
+      "Marcher sur l'ancienne route du Nakasendo entre Magome et Tsumago (8 km de forêt et rizières)",
+      "Explorer les ruelles pavées bordées de boutiques d'artisanat traditionnel",
+      "Goûter les oyaki (galettes fourrées vapeur) et les senbei (crackers de riz) locaux",
+      "Visiter le musée commémoratif de Shimazaki Toson, le grand écrivain né ici"
+    ],
+    funFacts: [
+      "La route du Nakasendo était l'une des cinq routes officielles de l'ère Edo, utilisée notamment par les daimyō lors de leurs processions obligatoires vers Edo (Tokyo).",
+      "Le service de bagagerie entre Magome et Tsumago permet aux randonneurs d'envoyer leurs sacs à l'avance — un service typiquement japonais de confort extrême.",
+      "Magome et Tsumago sont deux des rares post-towns (juku) du Nakasendo à avoir conservé leur apparence d'époque intacte."
+    ],
+    restaurants: [
+      { name: "Magome-chaya", type: "Auberge-restaurant", desc: "Cuisine locale du terroir montagnard : soba, sanglier et légumes de montagne.", price: "¥1,500" },
+      { name: "Café Furusato", type: "Café", desc: "Petit café accueillant en milieu de randonnée. L'endroit parfait pour souffler sur un ginkgo mochi chaud.", price: "¥500" }
+    ],
+    tips: "Prenez le bus depuis Nagoya (1h30) ou Nagiso. La randonnée Magome-Tsumago prend 2h30 et est classée niveau facile. Un service de taxi bagages permet d'envoyer vos sacs au ryokan de Tsumago. Réservez à l'avance en décembre."
+  },
+
   // Fallback for unknown destinations
   "_default": {
     nameJP: "",
@@ -389,7 +437,8 @@ function findDestination(locationName) {
     "dotonbori": "osaka", "namba": "osaka", "umeda": "osaka",
     "enoshima": "kamakura",
     "chuzenji": "nikko",
-    "shirakawa": "takayama", "shirakawago": "takayama", "shirakawa-go": "takayama",
+    "shirakawa go": "shirakawa", "shirakawago": "shirakawa", "shirakawa-go": "shirakawa",
+    "tsumago": "magome",
     "owakudani": "hakone", "ashi": "hakone",
     "hida": "takayama",
     "kenrokuen": "kanazawa"
@@ -435,6 +484,10 @@ const WEATHER_CLIMATE = {
   magome: {
     11: {high:7,low:1,rain:40,icon:'⛅',desc:'Décembre dans la vallée de Kiso est froid et magique. Le chemin de Nakasendo reliant Magome à Tsumago se couvre parfois de neige — une expérience de marche hors du temps dans un Japon médiéval intact.'}
   },
+  shirakawa: {
+    10: {high:9,low:2,rain:35,icon:'🌨️',desc:'Novembre-décembre à Shirakawa-go : la neige commence à tomber et le village se transforme en carte postale féerique. Les premières chutes de neige couvrent les toits gasshō-zukuri pour les plus beaux panoramas.'},
+    11: {high:4,low:-3,rain:50,icon:'❄️',desc:'Décembre à Shirakawa-go est véritablement hivernal. Le village sous la neige est classé au patrimoine mondial — une vision magique inégalée. Habillez-vous chaudement et comptez une demi-journée pour en profiter pleinement.'}
+  },
   nara: {
     10: {high:16,low:9,rain:11,icon:'🌤️',desc:'Novembre à Nara : les cerfs se promènent parmi les arbres aux couleurs de feu autour du Todai-ji. C\'est l\'une des visions les plus iconiques du Japon automnal.'},
     11: {high:12,low:4,rain:9,icon:'☀️',desc:'Décembre à Nara : le parc est calme, les cerfs ont l\'air frigorifiés mais sont toujours aussi accueillants. Le temple Todai-ji sous un ciel hivernal a une beauté austère saisissante.'}
@@ -451,7 +504,7 @@ function getCityWeatherKey(cityName) {
   const n = cityName.toLowerCase()
     .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
     .replace(/[^a-z0-9\s]/g,'').trim();
-  const known = ['tokyo','kanazawa','takayama','kyoto','hiroshima','osaka','magome','nara','hakone','nikko','kamakura','miyajima','koyasan'];
+  const known = ['tokyo','kanazawa','takayama','kyoto','hiroshima','osaka','magome','nara','hakone','nikko','kamakura','miyajima','koyasan','shirakawa'];
   for (const k of known) {
     if (n.includes(k) || k.includes(n.split(/\s/)[0])) return k;
   }
