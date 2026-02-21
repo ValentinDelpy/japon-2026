@@ -69,26 +69,46 @@ function linkify(text) {
 }
 function getLodgeLink(text) {
   if (!text) return null;
-  var s = String(text).trim();
-  // Try exact match
-  var href = DataService.linkMap[s];
-  if (href) return href;
-  // Try partial match (first 30 chars, case-insensitive)
-  var lower = s.toLowerCase();
-  for (var k in DataService.linkMap) {
-    if (k.toLowerCase() === lower || lower.includes(k.toLowerCase().substring(0,20))) {
-      return DataService.linkMap[k];
+  const s = String(text).trim();
+  const lm = DataService.linkMap;
+  if (!lm || Object.keys(lm).length === 0) return null;
+
+  // 1. Exact match
+  if (lm[s]) return lm[s];
+
+  // 2. Case-insensitive exact
+  const sl = s.toLowerCase();
+  if (lm[sl]) return lm[sl];
+
+  // 3. Fuzzy: find a key that starts with the same 15+ chars (handles truncation)
+  const prefix = sl.substring(0, Math.min(15, sl.length));
+  for (const k in lm) {
+    const kl = k.toLowerCase();
+    if (kl.startsWith(prefix) || prefix.startsWith(kl.substring(0, Math.min(15, kl.length)))) {
+      return lm[k];
     }
   }
+
+  // 4. Word overlap: check if 2+ significant words match
+  const words = sl.split(/\s+/).filter(w => w.length > 3);
+  if (words.length >= 1) {
+    for (const k in lm) {
+      const kl = k.toLowerCase();
+      const matchCount = words.filter(w => kl.includes(w)).length;
+      if (matchCount >= Math.min(2, words.length)) return lm[k];
+    }
+  }
+
   return null;
 }
 
 function renderLodgeLink(text, badgeHtml, priceHtml) {
   if (!text) return '';
-  var href = getLodgeLink(text);
-  var tag = href ? 'a href="'+href+'" target="_blank"' : 'div';
-  var closetag = href ? 'a' : 'div';
-  return '<'+tag+' class="lodge-option main-opt" onclick="event.stopPropagation()">'+badgeHtml+'<span class="lodge-name">'+text+'</span>'+(priceHtml||'')+'<span class="lodge-arrow">→</span></'+closetag+'>';
+  const href = getLodgeLink(text);
+  if (href) {
+    return `<a class="lodge-option main-opt" href="${href}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${badgeHtml}<span class="lodge-name">${text}</span>${priceHtml||''}<span class="lodge-arrow">→</span></a>`;
+  }
+  return `<div class="lodge-option main-opt no-link">${badgeHtml}<span class="lodge-name">${text}</span>${priceHtml||''}<span class="lodge-arrow" style="opacity:0.25">→</span></div>`;
 }
 
 function getTravelGroups() {
@@ -237,7 +257,20 @@ function activateDashStop(idx) {
   }
   _dashState.activeIdx = idx;
   var card = document.getElementById('dc-'+idx);
-  if (card) { card.classList.add('active'); card.scrollIntoView({behavior:'smooth',block:'nearest'}); }
+  if (card) {
+    card.classList.add('active');
+    // Scroll within the stops-list container, not the whole page
+    var list = document.getElementById('stops-list');
+    if (list) {
+      var cardTop = card.offsetTop;
+      var listScrollTop = list.scrollTop;
+      var listH = list.clientHeight;
+      // Only scroll if card is out of view
+      if (cardTop < listScrollTop || cardTop + card.offsetHeight > listScrollTop + listH) {
+        list.scrollTo({ top: cardTop - 8, behavior: 'smooth' });
+      }
+    }
+  }
   var lm = _dashState.markers[idx];
   if (lm) {
     lm.marker.setIcon(makeStopIcon(idx+1, lm.color, true));
@@ -259,7 +292,10 @@ function toggleDashCard(idx, e) {
   _dashState.expandedIdx = wasExpanded ? null : idx;
   if (!wasExpanded) {
     activateDashStop(idx);
-    setTimeout(function(){ card.scrollIntoView({behavior:'smooth',block:'start'}); }, 60);
+    setTimeout(function(){
+      var list = document.getElementById('stops-list');
+      if (list) list.scrollTo({ top: card.offsetTop - 8, behavior: 'smooth' });
+    }, 60);
   } else {
     // Reset: deactivate card highlight and reset map to overview
     card.classList.remove('active');
@@ -307,7 +343,7 @@ function renderDashboard() {
 
   html += '<div class="dashboard-grid dash-split">';
   html += '<div class="map-container"><div class="map-title-bar">🗾 Carte de l\'itinéraire</div><div id="dashboard-map"></div></div>';
-  html += '<div class="stops-panel"><div class="map-title-bar flex-between"><span>📍 Étapes</span><small style="opacity:0.55;font-weight:400;font-size:0.72rem">Cliquer pour déplier</small></div><div class="stops-list" id="stops-list"></div></div>';
+  html += '<div class="stops-panel"><div class="stops-panel-header"><span class="stops-panel-title">Étapes <span class="stops-count">'+groups.length+'</span></span><span class="stops-panel-hint">cliquer pour détailler</span></div><div class="stops-list" id="stops-list"></div></div>';
   html += '</div>';
 
   html += '<div class="budget-section mt-3"><div class="budget-grid">';
@@ -358,9 +394,10 @@ function buildDashboardCards(groups) {
       parseBudget(g.prix) ? '<span class="lodge-price">'+formatEURint(parseBudget(g.prix))+'</span>' : null) : '';
 
     var altHref = getLodgeLink(g.altLogement);
-    var altTag = altHref ? 'a href="'+altHref+'" target="_blank"' : 'div';
-    var altCloseTag = altHref ? 'a' : 'div';
-    var altOpt = g.altLogement ? '<'+altTag+' class="lodge-option alt-opt" onclick="event.stopPropagation()"><span class="lodge-badge badge-alt">Alt.</span><span class="lodge-name">'+g.altLogement+'</span><span class="lodge-arrow">→</span></'+altCloseTag+'>' : '';
+    var altOpt = g.altLogement ? (altHref
+      ? `<a class="lodge-option alt-opt" href="${altHref}" target="_blank" rel="noopener" onclick="event.stopPropagation()"><span class="lodge-badge badge-alt">Alt.</span><span class="lodge-name">${g.altLogement}</span><span class="lodge-arrow">→</span></a>`
+      : `<div class="lodge-option alt-opt no-link"><span class="lodge-badge badge-alt">Alt.</span><span class="lodge-name">${g.altLogement}</span><span class="lodge-arrow" style="opacity:0.25">→</span></div>`
+    ) : '';
 
     var resLine = '';
     if (g.reserve) {

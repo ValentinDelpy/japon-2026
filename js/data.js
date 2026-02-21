@@ -43,29 +43,49 @@ const DataService = {
     return { cols, rows };
   },
 
-  // ── Fetch HTML export to extract hyperlinks (value-keyed) ──
+  // ── Fetch hyperlinks from sheet — tries multiple endpoints ──
+  // ── Fetch hyperlinks from gviz HTML export ──
+  // Works for publicly shared sheets (same auth model as the JSON endpoint).
+  // Google renders HYPERLINK() formulas and inserted links as <a href="https://www.google.com/url?q=REAL_URL">
   async fetchSheetHtmlLinks(gid, bust='') {
+    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:html&gid=${gid}${bust}`;
     try {
-      const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:html&gid=${gid}${bust}`;
-      const resp = await fetch(url, {cache: 'no-store'});
+      // No mode:'cors' — use browser default to avoid strict preflight blocks
+      const resp = await fetch(url, { cache: 'no-store' });
+      if (!resp.ok) {
+        console.warn(`[Links] HTTP ${resp.status} — is sheet publicly shared?`);
+        return {};
+      }
       const html = await resp.text();
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(html, 'text/html');
-      const links = {};
-      doc.querySelectorAll('a[href]').forEach(function(a) {
-        const text = a.textContent.trim();
-        let href = a.getAttribute('href') || '';
-        const gMatch = href.match(/[?&]q=([^&]+)/);
-        if (gMatch) { try { href = decodeURIComponent(gMatch[1]); } catch(e) {} }
-        if (text && href && !href.startsWith('#')) {
-          links[text] = href;
-        }
-      });
+      if (html.includes('accounts.google.com') || html.includes('ServiceLogin')) {
+        console.warn('[Links] Redirected to Google login — sheet must be set to Anyone with link can view');
+        return {};
+      }
+      const links = this._parseHtmlLinks(html);
+      console.log(`[Links] ${Object.keys(links).length} hyperlinks extracted:`, Object.keys(links).slice(0, 6));
       return links;
     } catch(e) {
-      console.warn('HTML links fetch failed:', e.message);
+      console.warn('[Links] Failed:', e.message);
       return {};
     }
+  },
+
+  _parseHtmlLinks(html) {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+    const links = {};
+    doc.querySelectorAll('a[href]').forEach(a => {
+      const text = a.textContent.trim();
+      if (!text) return;
+      let href = a.getAttribute('href') || '';
+      // Unwrap Google redirect wrapper
+      const m = href.match(/[?&]q=([^&]+)/);
+      if (m) { try { href = decodeURIComponent(m[1]); } catch(e) {} }
+      if (!href.startsWith('http')) return;
+      links[text] = href;
+      links[text.toLowerCase()] = href;
+    });
+    return links;
   },
 
   // ── Load everything ──
