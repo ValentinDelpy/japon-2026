@@ -35,78 +35,94 @@ var SOUVENIRS_DATA = {
   tokyo: {
     nameJP: '東京',
     items: [
-      { name: 'Kit Kat saveurs japonaises', cat: 'Foodie', desc: 'Matcha, sakura, wasabi, sake... introuvables en Europe.', price: '¥500–800', icon: '🍫' },
-      { name: 'Capsule toy (gachapon)', cat: 'Gadget', desc: 'Distribués partout dans Akihabara, objets insolites garantis.', price: '¥200–500', icon: '🎰' },
-      { name: 'Furoshiki (carré de tissu)', cat: 'Textile', desc: 'Tissu traditionnel multifonction, emballage zéro déchet.', price: '¥800–2,500', icon: '🎁' },
-      { name: 'Figurines / mangas Akihabara', cat: 'Pop Culture', desc: 'Quarter de l\'électronique, paradis des collectors.', price: '¥500–10,000+', icon: '🤖' },
+      { name: 'Kit Kat saveurs japonaises', cat: 'Foodie', desc: 'Matcha, sakura, wasabi, sake, melon... Achetez des boîtes cadeaux dans les supermarchés ou convenience stores.', price: '¥500–1,200', icon: '🍫' },
+      { name: 'Capsule toy (gachapon)', cat: 'Gadget', desc: 'Distributeurs partout dans Akihabara et les centres commerciaux. Objets insolites, figurines, mini-reproductions de plats japonais.', price: '¥200–500', icon: '🎰' },
+      { name: 'Furoshiki (carré de tissu)', cat: 'Textile', desc: 'Tissu multifonction pour emballer, transporter, décorer. Trouvez-en dans les grands magasins (Tokyu, Isetan).', price: '¥800–3,500', icon: '🎁' },
+      { name: 'Figurines / mangas Akihabara', cat: 'Pop Culture', desc: 'Quartier de l\'électronique et de l\'anime. Les échoppes Don Quijote débordent de merch officiel. Vérifiez les authentiques.', price: '¥500–10,000+', icon: '🤖' },
+      { name: 'Papeterie japonaise (Tokyu Hands)', cat: 'Papeterie', desc: 'Stylos, masking tapes, carnets Hobonichi, agendas... La papeterie japonaise est un art. Tokyu Hands est LA référence.', price: '¥300–3,000', icon: '✏️' },
+      { name: 'Cosmétiques japonais', cat: 'Beauté', desc: 'SK-II, Shiseido, Hada Labo, Kose... moins chers qu\'en Europe. Les pharmacies Matsumoto Kiyoshi sont incontournables.', price: '¥500–5,000', icon: '🧴' },
     ]
   },
   kyoto: {
     nameJP: '京都',
     items: [
-      { name: 'Thé matcha haut de gamme', cat: 'Foodie', desc: 'Uji (Kyoto) est la capitale mondiale du matcha. Achetez en vrac.', price: '¥1,500–5,000', icon: '🍵' },
-      { name: 'Éventail (sensu)', cat: 'Artisanat', desc: 'Éventails peints à la main, spécialité millénaire de Kyoto.', price: '¥1,000–8,000', icon: '🪭' },
-      { name: 'Wagashi (confiseries)', cat: 'Foodie', desc: 'Mochi, daifuku, yokan... achetés dans une confiserie traditionnelle.', price: '¥200–500', icon: '🍡' },
-      { name: 'Noren (rideau de porte)', cat: 'Décoration', desc: 'Tissu imprimé à accrocher à une porte ou une fenêtre.', price: '¥2,000–8,000', icon: '🎏' },
+      { name: 'Thé matcha haut de gamme', cat: 'Foodie', desc: 'Uji (Kyoto) = capitale mondiale du matcha. Achetez en vrac chez Ippodo ou Marukyu-Koyamaen. Goûtez avant d\'acheter.', price: '¥1,500–6,000', icon: '🍵' },
+      { name: 'Éventail (sensu) peint à la main', cat: 'Artisanat', desc: 'Éventails en bambou et papier washi peints à la main, spécialité millénaire. Les boutiques de Gion en vendent de toutes gammes.', price: '¥1,500–12,000', icon: '🪭' },
+      { name: 'Wagashi (confiseries)', cat: 'Foodie', desc: 'Mochi, daifuku, yokan, higashi... Les pâtisseries japonaises sont comestibles et contemplatives. Achetez dans une confiserie traditionnelle.', price: '¥200–600', icon: '🍡' },
+      { name: 'Noren (rideau de porte)', cat: 'Décoration', desc: 'Tissu imprimé suspendu à l\'entrée des boutiques et maisons. Certains artisans vendent des pièces uniques dans Higashiyama.', price: '¥2,500–10,000', icon: '🎏' },
+      { name: 'Yukata ou kimono simple', cat: 'Textile', desc: 'Les secondhand shops de Kyoto (Kokoroya, etc.) vendent des kimono vintage abordables. Un souvenir textile spectaculaire.', price: '¥2,000–15,000', icon: '👘' },
     ]
   },
   osaka: {
     nameJP: '大阪',
     items: [
-      { name: 'Bâtons de Pocky / Pretz rares', cat: 'Foodie', desc: 'Saveurs régionales introuvables, parfait comme cadeau.', price: '¥300–600', icon: '🍬' },
-      { name: 'Sauce takoyaki maison', cat: 'Foodie', desc: 'Spécialité d\'Osaka, bouteille de sauce originale pour reproduire à la maison.', price: '¥400–800', icon: '🐙' },
+      { name: 'Bâtons de Pocky / Pretz saveurs rares', cat: 'Foodie', desc: 'Saveurs régionales (takoyaki, okonomiyaki, mentai...) introuvables en Europe. Les supermarchés en regorgent.', price: '¥300–600', icon: '🍬' },
+      { name: 'Sauce takoyaki originale', cat: 'Foodie', desc: 'Sauce Otafuku, aonori, katsuobushi en paquet — pour reproduire le takoyaki à la maison. Disponible dans tout konbini.', price: '¥400–900', icon: '🐙' },
+      { name: 'Assaisonnements et épices japonaises', cat: 'Foodie', desc: 'Miso en différentes variétés, dashi, ponzu, shichimi togarashi... Les épiceries de Kuromon Market sont idéales.', price: '¥300–1,500', icon: '🧂' },
+      { name: 'Peluches et dérivés Universal Studios', cat: 'Pop Culture', desc: 'Si vous visitez USJ : les exclusivités Nintendo, Minions, Harry Potter ne se trouvent qu\'ici.', price: '¥1,500–5,000', icon: '🎮' },
     ]
   },
   hiroshima: {
     nameJP: '広島',
     items: [
-      { name: 'Origami en papier washi', cat: 'Artisanat', desc: 'Papier japonais traditionnel, idéal pour plier des grues de la paix.', price: '¥500–2,000', icon: '🕊️' },
-      { name: 'Momiji manju', cat: 'Foodie', desc: 'Gâteau en forme de feuille d\'érable fourré de pâte de haricot rouge. Spécialité de Miyajima.', price: '¥200–500', icon: '🍁' },
+      { name: 'Momiji manju', cat: 'Foodie', desc: 'Gâteau en forme de feuille d\'érable fourré pâte de haricot, crème ou chocolat. Spécialité absolue de Miyajima — mangez-les chauds.', price: '¥150–400', icon: '🍁' },
+      { name: 'Origami et papier washi', cat: 'Artisanat', desc: 'Papier japonais traditionnel teinté. Idéal pour plier des grues de la paix comme au Mémorial (1 000 grues = un vœu exaucé).', price: '¥500–2,500', icon: '🕊️' },
+      { name: 'Spatule en bois (shamoji) de Miyajima', cat: 'Artisanat', desc: 'La shamoji artisanale de Miyajima est un symbole de fortune. La plus grande du monde mesure 7,7m.', price: '¥800–3,000', icon: '🥄' },
+      { name: 'Sauce aux huîtres de Miyajima', cat: 'Foodie', desc: 'Sauce aux huîtres de la mer intérieure de Seto, ramenée en bouteille. Introuvable en France.', price: '¥600–1,200', icon: '🦪' },
     ]
   },
   nara: {
     nameJP: '奈良',
     items: [
-      { name: 'Encens (senko)', cat: 'Artisanat', desc: 'Nara est réputée pour sa production artisanale d\'encens bouddhiste.', price: '¥800–3,000', icon: '🕯️' },
-      { name: 'Crackers pour cerfs (shika senbei)', cat: 'Fun', desc: 'À acheter sur place pour nourrir les cerfs sacrés.', price: '¥200', icon: '🦌' },
+      { name: 'Encens (senko) artisanal', cat: 'Artisanat', desc: 'Nara est l\'un des principaux centres de production d\'encens bouddhiste du Japon. Parfums de bois, de temples, de montagne.', price: '¥800–4,000', icon: '🕯️' },
+      { name: 'Crackers pour cerfs (shika senbei)', cat: 'Fun', desc: 'À acheter sur place pour nourrir les cerfs sacrés. Attention : les cerfs mordent si vous en avez et ne donnez pas !', price: '¥200', icon: '🦌' },
+      { name: 'Figurines de cerfs (shika)', cat: 'Artisanat', desc: 'Statuettes en bois, céramique ou tissu. Les cerfs de Nara sont classés trésor national — ramenez-en un en souvenir.', price: '¥500–3,000', icon: '🫎' },
     ]
   },
   kanazawa: {
     nameJP: '金沢',
     items: [
-      { name: 'Céramique Kutani', cat: 'Artisanat', desc: 'Porcelaine colorée vive, spécialité de la région de Kanazawa depuis 1655.', price: '¥2,000–20,000', icon: '🏺' },
-      { name: 'Feuilles d\'or (kinpaku)', cat: 'Artisanat', desc: 'Kanazawa produit 99% de l\'or en feuilles du Japon. Soins de beauté ou alimentaire.', price: '¥1,000–5,000', icon: '✨' },
+      { name: 'Céramique Kutani', cat: 'Artisanat', desc: 'Porcelaine aux couleurs vives (rouge, bleu, vert, noir, jaune) — spécialité de la région depuis 1655. Assiettes, tasses, vases.', price: '¥2,000–20,000', icon: '🏺' },
+      { name: 'Feuilles d\'or comestibles (kinpaku)', cat: 'Artisanat', desc: 'Kanazawa produit 99% de l\'or en feuilles du Japon. À rapporter en kit (pour garnir sushis ou cocktails) ou en cosmétique.', price: '¥1,000–6,000', icon: '✨' },
+      { name: 'Soie et textiles de Kaga', cat: 'Textile', desc: 'Tissus et soieries teints selon la technique Kaga-yuzen — motifs naturels d\'une finesse incroyable.', price: '¥3,000–30,000', icon: '🧵' },
+      { name: 'Miso de Kanazawa (Jibu-ni)', cat: 'Foodie', desc: 'Miso spécial et sauce pour le jibu-ni, ragoût de canard typique. Disponible dans les épiceries du marché Omi-cho.', price: '¥600–1,500', icon: '🍲' },
     ]
   },
   takayama: {
     nameJP: '高山',
     items: [
-      { name: 'Saké local (Hida no Shizuku)', cat: 'Foodie', desc: 'Takayama possède 6 brasseries centenaires alignées dans la vieille ville.', price: '¥800–3,000', icon: '🍶' },
-      { name: 'Poupée Sarubobo', cat: 'Artisanat', desc: 'Talisman rouge en tissu, symbole de chance et fertilité de la région Hida.', price: '¥500–2,000', icon: '🪆' },
+      { name: 'Saké local (brasseries de Sanmachi)', cat: 'Foodie', desc: 'Takayama aligne 6 brasseries centenaires dans ses ruelles historiques. Dégustations gratuites et bouteilles à rapporter.', price: '¥800–3,500', icon: '🍶' },
+      { name: 'Poupée Sarubobo', cat: 'Artisanat', desc: 'Talisman rouge sans visage (pour que chacun y projette ses émotions), symbole de la région Hida. Porte-bonheur et amulette.', price: '¥500–2,500', icon: '🪆' },
+      { name: 'Miso de Hida', cat: 'Foodie', desc: 'Miso rouge foncé de la région, fermenté longtemps dans l\'air des montagnes. Saveur intense et umami profond.', price: '¥600–1,500', icon: '🫙' },
+      { name: 'Artisanat en bois de Hida', cat: 'Artisanat', desc: 'Les charpentiers de Hida étaient exonérés d\'impôts pour leur talent. Petits objets sculptés, cuillères, boîtes en bois de cèdre.', price: '¥800–5,000', icon: '🪵' },
     ]
   },
   hakone: {
     nameJP: '箱根',
     items: [
-      { name: 'Marqueterie Hakone (yosegi-zaiku)', cat: 'Artisanat', desc: 'Art du bois marqueté géométrique, unique à Hakone.', price: '¥1,500–10,000', icon: '🪵' },
+      { name: 'Marqueterie Hakone (yosegi-zaiku)', cat: 'Artisanat', desc: 'Art géométrique du bois marqueté multicolore, unique à Hakone. Boîtes à secret, dessous de verre, cadres.', price: '¥1,500–15,000', icon: '🪵' },
+      { name: 'Œufs noirs d\'Owakudani', cat: 'Fun/Foodie', desc: 'À déguster sur place uniquement — ils noircissent au soufre volcanique. Vendus en sachets de 5 (= 35 ans de vie en plus !)', price: '¥500 (5 œufs)', icon: '🥚' },
     ]
   },
   miyajima: {
     nameJP: '宮島',
     items: [
-      { name: 'Spatule en bois (shamoji)', cat: 'Artisanat', desc: 'Miyajima est réputée pour ses shamoji artisanaux — la plus grande mesure 7m.', price: '¥500–2,000', icon: '🥄' },
+      { name: 'Spatule shamoji artisanale', cat: 'Artisanat', desc: 'Miyajima = capitale de la shamoji. Les ateliers locaux fabriquent ces spatules en bois dans toutes les tailles depuis des siècles.', price: '¥600–4,000', icon: '🥄' },
+      { name: 'Momiji manju (version chaude)', cat: 'Foodie', desc: 'Idem Hiroshima, mais achetez-les directement devant les fours à Miyajima — une autre dimension de fraîcheur.', price: '¥120–200/pièce', icon: '🍁' },
     ]
   },
   koyasan: {
     nameJP: '高野山',
     items: [
-      { name: 'Chapelet bouddhiste (juzu)', cat: 'Artisanat', desc: 'Perles en bois ou en verre bénies dans un temple. Souvenir spirituel.', price: '¥1,000–5,000', icon: '📿' },
+      { name: 'Chapelet bouddhiste (juzu)', cat: 'Artisanat', desc: 'Perles en bois de santal, cristal ou verre bénies dans les temples. Le souvenir spirituel par excellence du mont Kōya.', price: '¥1,500–8,000', icon: '📿' },
+      { name: 'Encens de temple', cat: 'Artisanat', desc: 'Encens Koyasan fabriqué dans la tradition shingon depuis des siècles. Odeur unique de cèdre et de résine de montagne.', price: '¥1,000–4,000', icon: '🕯️' },
     ]
   },
   magome: {
     nameJP: '馬籠',
     items: [
-      { name: 'Soba fait main (mizosoba)', cat: 'Foodie', desc: 'Miso de soba artisanal local, à ramener en paquet sec.', price: '¥600–1,200', icon: '🍜' },
+      { name: 'Soba artisanal de la région', cat: 'Foodie', desc: 'Paquets de soba du terroir montagnard à cuire à la maison. Vendus dans les boutiques des ruelles pavées de Magome.', price: '¥600–1,500', icon: '🍜' },
+      { name: 'Objets en bois de la route Nakasendo', cat: 'Artisanat', desc: 'Petits objets artisanaux rappelant les voyageurs d\'époque Edo : bâtons de marche, porte-clés, signets sculptés.', price: '¥500–2,500', icon: '🪵' },
     ]
   },
 };
@@ -195,10 +211,15 @@ function _renderRestoContent(visitedKeys) {
         dest.restaurants.map(function(r) {
           var typeColor = _typeColor(r.type);
           return '<div class="resto-card" data-type="' + r.type + '">' +
-            '<div class="resto-type-badge" style="background:' + typeColor.bg + ';color:' + typeColor.fg + '">' + r.type + '</div>' +
+            '<div class="resto-card-top">' +
+              '<div class="resto-type-badge" style="background:' + typeColor.bg + ';color:' + typeColor.fg + '">' + r.type + '</div>' +
+              (r.tip ? '<div class="resto-tip-badge">' + r.tip + '</div>' : '') +
+            '</div>' +
             '<div class="resto-name">' + r.name + '</div>' +
             '<div class="resto-desc">' + r.desc + '</div>' +
-            '<div class="resto-price">💴 ' + r.price + '</div>' +
+            '<div class="resto-footer">' +
+              '<div class="resto-price">💴 ' + r.price + '</div>' +
+            '</div>' +
           '</div>';
         }).join('') +
         '</div></div>';
@@ -284,7 +305,7 @@ var PACKING_CATEGORIES = [
       { id: 'passport', label: 'Passeport (valide ≥6 mois)', required: true },
       { id: 'passcopy', label: 'Photocopie du passeport (séparée)' },
       { id: 'insurance', label: 'Attestation assurance voyage' },
-      { id: 'jrpass', label: 'JR Pass (reçu + bon d\'échange)', required: true },
+      { id: 'jrpass', label: '⚠️ JR Pass : à calculer selon votre itinéraire — peut ne pas être rentable (voir Logistique)' },
       { id: 'visa', label: 'Vérif. exemption de visa (passeport FR ✅)' },
       { id: 'hotels', label: 'Confirmation des hébergements (imprimée ou offline)' },
       { id: 'cb', label: 'Carte bancaire Visa/Mastercard (pas AmEx)' },
@@ -425,7 +446,7 @@ var CHECKLIST_DATA = [
   {
     phase: 'Maintenant · J-270+', icon: '📋', color: '#9070b0',
     tasks: [
-      { id: 'jrpass_cmd', label: 'Commander le JR Pass (livraison 7–14 j, à recevoir avant le départ)', link: 'https://www.japan-rail-pass.fr/', important: true },
+      { id: 'jrpass_cmd', label: '⚠️ Calculer si le JR Pass est rentable pour votre itinéraire AVANT de commander (voir Logistique Japon)', link: 'https://www.japan-rail-pass.fr/', important: true },
       { id: 'assurance', label: 'Souscrire une assurance voyage (remboursement médical au Japon)' },
       { id: 'budget_jpy', label: 'Commencer à économiser des ¥ (1€ ≈ 160¥)' },
       { id: 'vaccins', label: 'Vérifier que les vaccins sont à jour (aucun obligatoire pour le Japon)' },
@@ -457,7 +478,7 @@ var CHECKLIST_DATA = [
       { id: 'docs_scan', label: 'Scanner passeport + billets + confirmations dans le cloud' },
       { id: 'prevenir_banque', label: 'Prévenir la banque du voyage au Japon (éviter blocage CB)' },
       { id: 'cash_euro', label: 'Préparer quelques € en cash pour les imprévus' },
-      { id: 'jrpass_check', label: 'Vérifier la réception du JR Pass et des bons d\'échange' },
+      { id: 'jrpass_check', label: 'Si JR Pass commandé : vérifier la réception du bon d\'échange' },
     ]
   },
   {
@@ -472,7 +493,7 @@ var CHECKLIST_DATA = [
   {
     phase: 'À l\'aéroport & à l\'arrivée', icon: '✈️', color: '#c73e1d',
     tasks: [
-      { id: 'jrpass_exchange', label: 'Échanger le bon JR Pass au guichet JR (Narita ou Haneda)', important: true },
+      { id: 'jrpass_exchange', label: 'Si JR Pass : échanger le bon au guichet JR (Narita ou Haneda)', important: false },
       { id: 'suica_load', label: 'Charger la carte Suica / Pasmo aux automates IC Card' },
       { id: 'sim_activate', label: 'Activer la SIM ou récupérer le Pocket WiFi' },
       { id: 'yens_withdraw', label: 'Retirer des ¥ à l\'ATM Seven Bank de l\'aéroport' },
@@ -545,14 +566,14 @@ function renderLogistique() {
 
   var sections = [
     {
-      icon: '🚄', title: 'JR Pass',
-      color: '#2a7090',
+      icon: '🚄', title: 'JR Pass — À calculer !',
+      color: '#c73e1d',
       content: [
-        '<strong>À acheter absolument avant le départ</strong> — le JR Pass s\'achète uniquement hors du Japon (sauf exception récente à prix majoré).',
-        'Le <strong>JR Pass 21 jours</strong> coûte environ 700€/personne et couvre tous les Shinkansen (sauf Nozomi et Mizuho), les trains locaux JR, et certains bus.',
-        'À l\'aéroport d\'arrivée, <strong>échangez votre bon papier contre le vrai pass</strong> au guichet "JR East Travel Service Center".',
-        'Choisissez votre date d\'activation avec soin — une fois activé, il expire 21 jours plus tard.',
-        '⚠️ Le Shinkansen <strong>Nozomi</strong> (le plus rapide Tokyo–Osaka) n\'est PAS inclus. Prenez le Hikari ou le Sakura.',
+        '⚠️ <strong>Pour votre itinéraire, le JR Pass 21 jours (~616€/pers) coûte ~157€ DE PLUS que les billets à l\'unité (~459€/pers estimés)</strong> — soit ~628€ en trop pour 4 personnes.',
+        '<strong>Cumul des trajets :</strong> Tokyo→Kanazawa (~90€) · Kanazawa→Takayama (~30€) · Takayama→Kyoto (~65€) · Kyoto→Nara A/R (~9€) · Kyoto→Hiroshima (~70€) · Hiroshima→Osaka (~65€) · Osaka→Magome (~50€) · Magome→Tokyo (~80€) = <strong>~459€/pers.</strong>',
+        '👉 <strong>Recommandation : achetez les tickets séparément</strong>, en gare ou via <strong>Eki-net</strong> (réservation en ligne JR). Économie : ~628€ pour le groupe.',
+        'Le prix du JR Pass a <strong>fortement augmenté en octobre 2023</strong> (+65%). Méfiez-vous des articles de blog citant d\'anciens tarifs.',
+        'Si vous optez quand même pour le pass : il ne couvre <strong>pas le Nozomi</strong>, s\'achète <strong>uniquement hors Japon</strong>, et s\'active le premier jour d\'utilisation.',
       ]
     },
     {
@@ -877,7 +898,7 @@ function renderJapon101() {
           '<span class="j101-q-text">' + item.q + '</span>' +
           '<span class="j101-chevron">' + (open ? '▲' : '▼') + '</span>' +
         '</div>' +
-        '<div class="j101-a">' + item.a + '</div>' +
+        '<div class="j101-a"><div class="j101-a-inner">' + item.a + '</div></div>' +
       '</div>';
     });
     html += '</div></div>';
@@ -892,7 +913,18 @@ function toggleJ101(id, el) {
   el.classList.toggle('j101-open', _j101Open[id]);
   el.querySelector('.j101-chevron').textContent = _j101Open[id] ? '▲' : '▼';
   var answerEl = el.querySelector('.j101-a');
-  answerEl.style.maxHeight = _j101Open[id] ? answerEl.scrollHeight + 'px' : '0';
+  if (_j101Open[id]) {
+    // Set to scrollHeight so the transition has an end value
+    answerEl.style.maxHeight = answerEl.scrollHeight + 'px';
+  } else {
+    // First pin at current height, then animate to 0
+    answerEl.style.maxHeight = answerEl.scrollHeight + 'px';
+    requestAnimationFrame(function() {
+      requestAnimationFrame(function() {
+        answerEl.style.maxHeight = '0';
+      });
+    });
+  }
 }
 
 
@@ -907,7 +939,7 @@ function renderSurprise() {
   var cities = ['all'];
   groups.forEach(function(g) { if (g.city && !cities.includes(g.city)) cities.push(g.city); });
 
-  var html = _newPageHeader('🎲', 'Surprise-moi !', 'サプライズ', 'Laissez le hasard choisir votre prochaine activité');
+  var html = _newPageHeader('🎲', 'Surprise !', 'サプライズ', 'Laissez le hasard choisir votre prochaine activité');
 
   html += '<div class="surprise-controls">' +
     '<div class="surprise-filter-group">' +
@@ -1129,7 +1161,7 @@ function renderStats() {
   var funs = [
     { icon: '✈️', text: 'Distance Toulouse → Tokyo', val: '9 700 km', sub: 'environ 13h de vol' },
     { icon: '🍜', text: 'Restaurants dans vos fiches', val: restoCount + ' adresses', sub: cities.length + ' villes couvertes' },
-    { icon: '🚄', text: 'Trajets en Shinkansen', val: shinkansen + ' trajets', sub: 'couvert par le JR Pass' },
+    { icon: '🚄', text: 'Trajets en train/Shinkansen', val: shinkansen + ' trajets', sub: '⚠️ Comparer avec JR Pass avant achat' },
     { icon: '📸', text: 'Destinations UNESCO', val: '5', sub: 'Kyoto, Hiroshima, Nara, Miyajima, Shirakawa-gō' },
     { icon: '🌡️', text: 'Températures en novembre', val: '5–18°C', sub: 'du nord au sud du Japon' },
     { icon: '💴', text: 'Dépense quotidienne estimée', val: '¥10,000–15,000', sub: 'soit 65–100€/personne/jour' },

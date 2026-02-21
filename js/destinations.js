@@ -24,10 +24,13 @@ const DESTINATIONS_DB = {
       "Il existe des cafés où vous pouvez caresser des hérissons, des hiboux, des chèvres, et même des serpents."
     ],
     restaurants: [
-      { name: "Ichiran Ramen", type: "Ramen", desc: "Ramen tonkotsu dans des box individuels. Une expérience unique et des nouilles parfaites.", price: "¥1,000" },
-      { name: "Tsukiji Sushidai", type: "Sushi", desc: "Omakase de poissons ultra-frais directement du marché. File d'attente légendaire mais ça vaut chaque minute.", price: "¥4,000" },
-      { name: "Gonpachi (Roppongi)", type: "Izakaya", desc: "Le restaurant qui a inspiré le décor de Kill Bill. Ambiance théâtrale, yakitori et soba excellents.", price: "¥3,500" },
-      { name: "Afuri", type: "Ramen", desc: "Ramen yuzu shio léger et rafraîchissant, alternative parfaite aux bouillons lourds.", price: "¥1,200" }
+      { name: "Ichiran Ramen", type: "Ramen", desc: "Ramen tonkotsu en box individuel : zéro contact, concentration maximale sur le bol. Une institution.", price: "¥1,000", tip: "🌟 Incontournable" },
+      { name: "Afuri Harajuku", type: "Ramen", desc: "Ramen yuzu shio léger et délicat — l'alternative parfaite aux bouillons lourds. Ultra-populaire, attendez-vous à une queue.", price: "¥1,200" },
+      { name: "Tsukiji Sushidai", type: "Sushi", desc: "Omakase de poissons ultra-frais tirés du marché de Tsukiji. File légendaire (2h+) mais chaque yen est justifié.", price: "¥4,000", tip: "⏰ Arriver avant 7h" },
+      { name: "Gonpachi Nishi-Azabu", type: "Izakaya", desc: "Le restaurant qui a inspiré le décor de Kill Bill. Ambiance théâtrale sur 3 niveaux, yakitori et soba excellents.", price: "¥3,500" },
+      { name: "Katsukura (Shinjuku)", type: "Tonkatsu", desc: "Tonkatsu à la chapelure Panko, fondant et croustillant. Le set menu comprend riz illimité et soupe miso.", price: "¥1,800", tip: "💡 Moulu votre propre sésame en table" },
+      { name: "Ginza Kyubey", type: "Sushi", desc: "Institution du sushi depuis 1936 — niveau haut, atmosphère épurée. À réserver pour un dîner mémorable.", price: "¥15,000+", tip: "📅 Réservation indispensable" },
+      { name: "Konbini (7-Eleven, Lawson)", type: "Konbini", desc: "Ne jamais sous-estimer ! Onigiri, bento chauds, ramen cup de qualité, gyoza… tout à ¥200-600. Incontournable pour le petit-déj ou le snack.", price: "¥200-600", tip: "🏪 La vraie cuisine de rue japonaise" }
     ],
     tips: "Procurez-vous une carte Suica/Pasmo dès votre arrivée pour les transports. Les konbini (7-Eleven, Lawson, FamilyMart) sont vos meilleurs amis pour manger bien et pas cher."
   },
@@ -52,10 +55,12 @@ const DESTINATIONS_DB = {
       "Il y a plus de 1 600 temples bouddhistes et 400 sanctuaires shinto dans la ville."
     ],
     restaurants: [
-      { name: "Nishiki Market", type: "Marché", desc: "Le « garde-manger de Kyoto » : 400m de stands proposant pickles, mochi, dashimaki tamago et spécialités locales.", price: "¥500-2,000" },
-      { name: "Gion Kappa", type: "Kaiseki", desc: "Cuisine kaiseki abordable dans le quartier des geishas. Présentation artistique, saveurs subtiles.", price: "¥5,000" },
-      { name: "Menbakaichidai", type: "Ramen", desc: "Le fire ramen : le chef enflamme littéralement votre bol devant vous. Spectacle et saveur.", price: "¥900" },
-      { name: "Musubi Café", type: "Végétarien", desc: "Cuisine shojin-ryori (bouddhiste végétarienne) dans un cadre zen et épuré.", price: "¥1,500" }
+      { name: "Nishiki Market", type: "Marché", desc: "Le « garde-manger de Kyoto » : 400m de stands avec pickles, mochi, dashimaki tamago, yugao... Parfait pour grignoter en marchant.", price: "¥200-1,500", tip: "🌟 Passage obligé" },
+      { name: "Menbakaichidai", type: "Ramen", desc: "Le « fire ramen » : le chef enflamme votre bol devant vous. Spectacle garanti — et les ramen sont vraiment bons.", price: "¥900", tip: "🔥 Expérience unique" },
+      { name: "Gion Kappa", type: "Kaiseki", desc: "Kaiseki abordable dans le quartier des geishas. Présentation soignée, 7-8 plats, une vraie initiation à la haute cuisine de Kyoto.", price: "¥5,000" },
+      { name: "Musubi Café", type: "Végétarien", desc: "Shojin-ryori (cuisine bouddhiste) dans un cadre zen immaculé. Idéal après une journée de temples.", price: "¥1,500" },
+      { name: "Ippudo Ramen (Kawaramachi)", type: "Ramen", desc: "Ramen hakata-style de la chaîne culte — bouillon tonkotsu crémeux et nouilles fermes. Fiable et délicieux.", price: "¥1,100" },
+      { name: "Tsujiri Tearoom (Gion)", type: "Matcha", desc: "Maison de thé fondée en 1860. Parfait pour un parfait matcha ou une glace après Fushimi Inari.", price: "¥800", tip: "🍵 Terrasse avec vue sur canal" }
     ],
     tips: "Louez un vélo ! Kyoto est assez plate et se explore merveilleusement à bicyclette. Évitez les temples les plus populaires en milieu de journée."
   },
@@ -80,10 +85,12 @@ const DESTINATIONS_DB = {
       "La ville possède plus de restaurants par habitant que n'importe quelle autre ville japonaise."
     ],
     restaurants: [
-      { name: "Takoyaki Wanaka", type: "Takoyaki", desc: "Les meilleures boulettes de poulpe d'Osaka : croustillantes dehors, fondantes dedans.", price: "¥600" },
-      { name: "Mizuno", type: "Okonomiyaki", desc: "Okonomiyaki classique d'Osaka, préparé devant vous sur la plaque chauffante.", price: "¥1,200" },
-      { name: "Daruma Kushikatsu", type: "Kushikatsu", desc: "Brochettes panées et frites. Règle absolue : on ne trempe qu'UNE FOIS dans la sauce commune.", price: "¥800" },
-      { name: "Rikuro Ojisan", type: "Pâtisserie", desc: "Cheesecake japonais soufflé et jiggly. La file d'attente est un spectacle en soi.", price: "¥800" }
+      { name: "Takoyaki Wanaka (Namba)", type: "Takoyaki", desc: "Les boulettes de poulpe de référence : croustillantes dehors, crémeuses dedans, garnies de bonite séchée qui « danse ».", price: "¥600", tip: "🌟 Incontournable Osaka" },
+      { name: "Mizuno (Dotonbori)", type: "Okonomiyaki", desc: "Okonomiyaki style Osaka (mélangé) préparé devant vous sur la plaque. Institution depuis 1945, files d'attente normales.", price: "¥1,200", tip: "⏰ Attente ~30 min aux repas" },
+      { name: "Daruma Kushikatsu (Shinsekai)", type: "Kushikatsu", desc: "Brochettes panées frites dans l'huile, trempées UNE SEULE FOIS dans la sauce commune — règle absolue. Ambiance populaire.", price: "¥800-1,500" },
+      { name: "Rikuro Ojisan (Namba)", type: "Pâtisserie", desc: "Cheesecake japonais soufflé, jiggly, fondant et légèrement sucré. Sortis du four toutes les 15 min, mangez-le chaud.", price: "¥850", tip: "🍰 Achetez entier à partager" },
+      { name: "Kuromon Market", type: "Marché", desc: "Le marché des cuisiniers d'Osaka : viande de Wagyu grillée sur place, fruits de mer frais, street food. Ouvert le matin.", price: "¥500-2,000", tip: "🐟 Ouvert 9h-18h" },
+      { name: "Kinryu Ramen (Dotonbori)", type: "Ramen", desc: "Ramen pas cher sous le dragon géant, ouvert toute la nuit. Culte pour les noctambules.", price: "¥750", tip: "🌙 Ouvert 24h/24" }
     ],
     tips: "Dotonbori est magique la nuit avec ses néons. Pour l'okonomiyaki, essayez le style « Osaka » (mixé) plutôt que le style « Hiroshima » (en couches)."
   },
@@ -108,12 +115,13 @@ const DESTINATIONS_DB = {
       "L'île de Miyajima est considérée si sacrée que pendant des siècles, aucune naissance ni aucun décès n'y était autorisé."
     ],
     restaurants: [
-      { name: "Nagataya", type: "Okonomiyaki", desc: "Institution locale depuis 1950. Le okonomiyaki Hiroshima-style y est parfait : nouilles croustillantes, chou fondant.", price: "¥1,000" },
-      { name: "Hassei", type: "Tsukemen", desc: "Tsukemen (ramen trempé) aux saveurs intenses. Les locaux font la queue.", price: "¥950" },
-      { name: "Kakiya (Miyajima)", type: "Huîtres", desc: "Huîtres de Miyajima grillées, frites ou crues. Le terroir marin à son meilleur.", price: "¥1,500" },
-      { name: "Okonomi-mura", type: "Okonomiyaki", desc: "Un bâtiment entier de 3 étages dédié à l'okonomiyaki. 25 stands au choix.", price: "¥900" }
+      { name: "Nagataya", type: "Okonomiyaki", desc: "Institution depuis 1950. L'okonomiyaki Hiroshima-style — couches de chou, nouilles yaki-soba, œuf — y est magistral.", price: "¥1,000", tip: "🌟 La référence locale" },
+      { name: "Okonomi-mura", type: "Okonomiyaki", desc: "Un bâtiment de 3 étages avec 25 stands d'okonomiyaki différents. Parfait pour comparer les styles et les garnitures.", price: "¥900", tip: "🏢 Stands au 2e et 3e étage" },
+      { name: "Kakiya (Miyajima)", type: "Huîtres", desc: "Huîtres de Miyajima grillées sur place, frites (kaki-furai) ou crues. La mer intérieure de Seto produit les meilleures huîtres du Japon.", price: "¥1,500", tip: "🦪 Spécialité de saison (oct-mars)" },
+      { name: "Hassei", type: "Tsukemen", desc: "Tsukemen aux saveurs intenses : nouilles fermes trempées dans un bouillon concentré épais. Les locaux font souvent la queue.", price: "¥950" },
+      { name: "Manten Sushi (Hondori)", type: "Sushi", desc: "Sushis de qualité à prix raisonnable en plein centre. Poissons frais de la mer intérieure.", price: "¥2,500" }
     ],
-    tips: "Prenez le JR Pass pour le ferry vers Miyajima (gratuit avec le pass). Arrivez tôt le matin pour voir le torii à marée basse — on peut marcher jusqu'à lui."
+    tips: "⚠️ Le ferry vers Miyajima (~¥360) n'est pas couvert par le JR Pass ordinaire (uniquement avec le JR West pass régional). Arrivez tôt le matin pour voir le torii à marée basse. Arrivez tôt le matin pour voir le torii à marée basse — on peut marcher jusqu'à lui."
   },
 
   // ---- NARA ----
@@ -135,9 +143,10 @@ const DESTINATIONS_DB = {
       "Un pilier du Todai-ji possède un trou de la taille de la narine du Bouddha. S'y faufiler garantirait l'illumination."
     ],
     restaurants: [
-      { name: "Kakinoha Sushi Tanaka", type: "Sushi", desc: "Spécialité de Nara : sushi pressé enveloppé dans des feuilles de kaki.", price: "¥1,200" },
-      { name: "Mellow Café", type: "Café", desc: "Café cozy avec vue sur le parc aux cerfs. Parfait pour une pause matcha latte.", price: "¥600" },
-      { name: "Edogawa", type: "Unagi", desc: "Anguille grillée (unagi) servie sur un lit de riz, une spécialité à ne pas manquer.", price: "¥2,500" }
+      { name: "Kakinoha Sushi Tanaka", type: "Sushi", desc: "Sushis pressés enveloppés dans des feuilles de kaki (persimmon) — la feuille parfume discrètement le riz. Spécialité introuvable ailleurs.", price: "¥1,200", tip: "🌟 Exclusivité de Nara" },
+      { name: "Edogawa", type: "Unagi", desc: "Anguille grillée (unagi) sur lit de riz avec sauce tare caramélisée. Une spécialité estivale réputée pour donner de l'énergie.", price: "¥2,500" },
+      { name: "Nakatanidou", type: "Mochi", desc: "Boutique célèbre pour ses employés qui pilent le mochi à grande vitesse devant les clients. Show et yomogi mochi chauds.", price: "¥200-500", tip: "📸 Le show est la vraie attraction" },
+      { name: "Mellow Café", type: "Café", desc: "Café cosy avec vue sur le parc aux cerfs. Matcha latte et gâteaux japonais. Pause idéale en milieu de journée.", price: "¥700" }
     ],
     tips: "Nara se visite facilement comme excursion d'une journée depuis Kyoto ou Osaka (45 min en train). Attention : les cerfs peuvent mordre si vous agitez un cracker devant eux sans le leur donner !"
   },
@@ -237,9 +246,11 @@ const DESTINATIONS_DB = {
       "Le Kenroku-en change radicalement d'apparence avec chaque saison, ce qui lui vaut le nom de « jardin des six attributs sublimes »."
     ],
     restaurants: [
-      { name: "Omi-cho Market", type: "Marché", desc: "Fruits de mer de la mer du Japon : crabe des neiges, uni (oursin), buri (sériole). Fraîcheur incomparable.", price: "¥1,500-3,000" },
-      { name: "Kinjohro", type: "Kaiseki", desc: "Cuisine kaiseki raffinée de Kaga dans un ryokan historique. Réservation obligatoire.", price: "¥8,000" },
-      { name: "Hakuichi Gold Leaf Soft Cream", type: "Dessert", desc: "Glace à la vanille recouverte d'une feuille d'or entière. Le selfie obligatoire de Kanazawa.", price: "¥900" }
+      { name: "Omi-cho Market", type: "Marché", desc: "Fruits de mer de la mer du Japon : crabe des neiges (kani), oursin (uni), sériole (buri). Mange-les sur le pouce ou dans les petits restaurants du marché.", price: "¥1,500-3,000", tip: "🌟 Arriver le matin, avant 11h" },
+      { name: "Hakuichi Gold Leaf Soft Cream", type: "Dessert", desc: "Glace à la vanille couverte d'une feuille d'or comestible entière — le selfie incontournable de Kanazawa.", price: "¥900", tip: "📸 Photo garantie" },
+      { name: "Kinjohro", type: "Kaiseki", desc: "Cuisine kaiseki de Kaga dans un ryokan du 16e siècle. Un des meilleurs kaiseki du Japon hors Kyoto.", price: "¥12,000+", tip: "📅 Réservation très à l'avance" },
+      { name: "Myoryuji (quartier Higashi Chaya)", type: "Matcha", desc: "Dans le quartier des geishas, de nombreux salons de thé servent matchas et wagashi. Atmosphère incomparable.", price: "¥700-1,500" },
+      { name: "Sushi Ippei", type: "Sushi", desc: "Sushis de la mer du Japon à prix raisonnable : plie, kanburi (sériole d'hiver), crabe. Frais du matin.", price: "¥2,000" }
     ],
     tips: "Le bus circulaire Kanazawa Loop dessert tous les sites majeurs. La ville est particulièrement belle en hiver avec la neige sur le Kenroku-en."
   },
@@ -263,9 +274,11 @@ const DESTINATIONS_DB = {
       "Le bœuf de Hida est une variété de Wagyu qui rivalise avec le célèbre bœuf de Kobe."
     ],
     restaurants: [
-      { name: "Center4 Hamburgers", type: "Burger Hida Beef", desc: "Burger artisanal au bœuf de Hida. Oui, un burger au Japon peut être transcendant.", price: "¥1,200" },
-      { name: "Kyoya", type: "Soba", desc: "Soba faites maison dans un bâtiment historique. Le dipping soba est exceptionnel.", price: "¥1,000" },
-      { name: "Ebihachi", type: "Grill", desc: "Bœuf de Hida grillé au charbon. Fondant, juteux, inoubliable.", price: "¥3,500" }
+      { name: "Ebihachi", type: "Grill", desc: "Bœuf de Hida wagyu grillé au charbon : fondant, marbré, intense. Le meilleur repas de Takayama, sans débat.", price: "¥3,500", tip: "🌟 Réservez à l'avance" },
+      { name: "Center4 Hamburgers", type: "Burger Hida Beef", desc: "Burger artisanal au bœuf de Hida. Concept inattendu, résultat transcendant. File d'attente fréquente.", price: "¥1,400" },
+      { name: "Kyoya", type: "Soba", desc: "Soba faites main dans un bâtiment historique en bois. Le dipping soba (zaru soba) est exceptionnel.", price: "¥1,000" },
+      { name: "Marché du matin (Jinya-mae)", type: "Marché", desc: "Petit marché paysan ouvert chaque matin avec légumes de montagne, pickles artisanaux, miso de Hida et artisanat local.", price: "¥200-1,000", tip: "⏰ 7h-12h, chaque matin" },
+      { name: "Sake no Yado Shiraki Izumi", type: "Sake", desc: "Brasserie de saké dans une maison d'époque. Dégustations gratuites des cuvées locales.", price: "Gratuit (dégustation)" }
     ],
     tips: "Si vous visitez Shirakawa-go (village classé UNESCO aux maisons gasshō-zukuri), Takayama est la base idéale. Bus direct en 50 min."
   },

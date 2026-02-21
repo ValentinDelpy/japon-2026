@@ -1184,14 +1184,22 @@ a:hover { color: var(--blush); }
   background: var(--surface); border: 1px solid var(--border);
   border-radius: var(--r-md); padding: 12px 14px;
   transition: box-shadow var(--t), border-color var(--t);
+  display: flex; flex-direction: column;
 }
 .resto-card:hover { box-shadow: var(--shadow-sm); border-color: var(--border2); }
+.resto-card-top { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; flex-wrap: wrap; }
 .resto-type-badge {
   display: inline-block; padding: 2px 8px; border-radius: 20px;
-  font-size: .62rem; font-weight: 700; margin-bottom: 6px;
+  font-size: .62rem; font-weight: 700;
+}
+.resto-tip-badge {
+  font-size: .62rem; color: var(--amber-dark, #a06010); font-weight: 600;
+  background: var(--amber-l, #fff8e8); padding: 2px 7px; border-radius: 20px;
+  white-space: nowrap;
 }
 .resto-name { font-weight: 700; font-size: .88rem; color: var(--ink); margin-bottom: 4px; }
-.resto-desc { font-size: .75rem; color: var(--ink2); line-height: 1.5; margin-bottom: 6px; }
+.resto-desc { font-size: .75rem; color: var(--ink2); line-height: 1.5; flex: 1; }
+.resto-footer { margin-top: 8px; border-top: 1px solid var(--border); padding-top: 6px; }
 .resto-price { font-size: .72rem; color: var(--ink3); font-weight: 600; }
 
 /* Souvenirs */
@@ -1380,12 +1388,14 @@ a:hover { color: var(--blush); }
 .j101-q-text { font-weight: 600; font-size: .78rem; color: var(--ink); flex: 1; }
 .j101-chevron { font-size: .6rem; color: var(--ink3); margin-left: 8px; flex-shrink: 0; }
 .j101-a {
-  max-height: 0; overflow: hidden; padding: 0 10px;
-  font-size: .76rem; color: var(--ink2); line-height: 1.6;
-  transition: max-height .3s var(--ease), padding .3s;
+  max-height: 0; overflow: hidden;
+  transition: max-height .35s cubic-bezier(.4,0,.2,1);
   background: var(--sky-l);
 }
-.j101-open .j101-a { padding: 10px 10px 12px; }
+.j101-a-inner {
+  padding: 10px 12px 14px;
+  font-size: .76rem; color: var(--ink2); line-height: 1.65;
+}
 .j101-a strong { color: var(--ink); }
 
 /* ── SURPRISE-MOI ───────────────────────────────────────── */
