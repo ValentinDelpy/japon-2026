@@ -76,6 +76,7 @@ a:hover { color: var(--blush); }
   background: var(--ink); color: #fff;
   display: flex; flex-direction: column;
   z-index: 100; transition: transform var(--t) var(--ease);
+  isolation: isolate;
 }
 .sidebar-header {
   padding: 20px 18px;
@@ -206,7 +207,7 @@ a:hover { color: var(--blush); }
 .map-title-bar.flex-between, .recap-header { justify-content: space-between; }
 
 /* Map */
-#dashboard-map, #itinerary-map, #print-map { height: 440px; width: 100%; isolation: isolate; }
+#dashboard-map, #itinerary-map, #print-map { height: 440px; width: 100%; }
 
 .custom-marker-wrapper { background: none !important; border: none !important; }
 .custom-marker {
@@ -451,7 +452,9 @@ a:hover { color: var(--blush); }
 
 /* Guide detail modal */
 .guide-detail-overlay {
-  position: fixed; inset: 0; z-index: 9999;
+  position: fixed; inset: 0; z-index: 2147483647;
+  transform: translateZ(0); -webkit-transform: translateZ(0);
+  will-change: opacity;
   background: rgba(42,37,32,0.45); display: flex; align-items: center; justify-content: center;
   padding: 20px; animation: fadeIn 0.2s ease; backdrop-filter: blur(4px);
 }

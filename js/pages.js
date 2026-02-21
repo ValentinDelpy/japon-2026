@@ -183,6 +183,13 @@ function createMap(containerId, steps) {
     popup += '<a class="popup-cta" onclick="openGuideDetail(\''+encodeURIComponent(g.city||g.lieu)+'\')" href="javascript:void(0)">Voir la fiche →</a>';
     popup += '</div></div>';
     marker.bindPopup(popup,{maxWidth:280,className:'custom-popup'});
+    // Centre la carte sur le marqueur au clic + ouvre le popup
+    (function(c) {
+      marker.on('click', function() {
+        var m = maps[containerId];
+        if (m) m.flyTo(c, Math.max(m.getZoom(), 11), {duration:0.8, easeLinearity:0.4});
+      });
+    })(coords);
     pts.push(coords);
   });
   if (pts.length > 1) L.polyline(pts,{color:'#c73e1d',weight:2.5,opacity:0.6,dashArray:'8,8'}).addTo(map);
@@ -774,7 +781,9 @@ function openGuideDetail(idxOrName) {
 
   h += '</div></div>';
   overlay.innerHTML = h;
-  document.body.appendChild(overlay);
+  // Append to <html> directly to escape any transform-based stacking contexts
+  // (sidebar transition: transform can trap position:fixed children in some browsers)
+  document.documentElement.appendChild(overlay);
   setTimeout(_repairBrokenImages, 50);
 }
 
