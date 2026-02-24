@@ -1811,3 +1811,127 @@ function closeMoodLightbox() {
   if (lb) lb.style.display = 'none';
   document.body.style.overflow = '';
 }
+
+// ═══════════════════════════════════════════════════════════════════
+// PHOTOS — Google Drive, par destination
+// ═══════════════════════════════════════════════════════════════════
+
+function renderPhotos() {
+  var pc = document.getElementById('page-container');
+  pc.innerHTML =
+    _newPageHeader('🖼️', 'Photos', '写真', 'Nos souvenirs photo par destination') +
+    '<div class="photos-toolbar">' +
+      '<span class="photos-total" id="photos-total"></span>' +
+      '<button class="photos-refresh-btn" onclick="reloadPhotos()">🔄 Actualiser</button>' +
+    '</div>' +
+    '<div id="photos-content">' +
+      '<div class="loading-screen" style="min-height:180px">' +
+        '<div class="loading-torii">📷</div>' +
+        '<p class="loading-text">Chargement des photos depuis Drive…</p>' +
+      '</div>' +
+    '</div>';
+
+  _loadPhotosContent(false);
+}
+
+function reloadPhotos() {
+  try { sessionStorage.removeItem('ldva-photos'); } catch(e) {}
+  var content = document.getElementById('photos-content');
+  if (content) content.innerHTML =
+    '<div class="loading-screen" style="min-height:180px">' +
+      '<div class="loading-torii">📷</div>' +
+      '<p class="loading-text">Actualisation…</p>' +
+    '</div>';
+  _loadPhotosContent(true);
+}
+
+function _loadPhotosContent(force) {
+  DataService.fetchPhotos(force).then(function(data) {
+    var content = document.getElementById('photos-content');
+    if (!content) return;
+
+    if (!data || typeof data !== 'object' || Object.keys(data).length === 0) {
+      content.innerHTML =
+        '<div class="photos-empty">' +
+          '<div class="empty-icon">📂</div>' +
+          '<p>Aucune photo trouvée dans le dossier Drive.</p>' +
+          '<p class="text-sm" style="opacity:.6">Assurez-vous que les photos sont dans des sous-dossiers (un par lieu).</p>' +
+          '<div class="photos-setup-box">' +
+            '<strong>Configuration requise dans votre Apps Script :</strong><br>' +
+            'Ajoutez la fonction <code>getPhotosList()</code> et gérez <code>action=photos</code> dans <code>doGet</code>.<br>' +
+            'Voir les instructions fournies séparément.' +
+          '</div>' +
+        '</div>';
+      return;
+    }
+
+    var totalCount = 0;
+    var html = '';
+    var cities = Object.keys(data);
+
+    cities.forEach(function(city) {
+      var files = data[city];
+      if (!Array.isArray(files) || !files.length) return;
+      totalCount += files.length;
+
+      html += '<div class="photos-section">';
+      html += '<div class="photos-section-header">' +
+        '<span class="photos-city">' + city + '</span>' +
+        '<span class="photos-count">' + files.length + ' photo' + (files.length > 1 ? 's' : '') + '</span>' +
+      '</div>';
+      html += '<div class="photos-masonry">';
+      files.forEach(function(file) {
+        var thumb = 'https://drive.google.com/thumbnail?id=' + file.id + '&sz=w600';
+        var cityEnc = encodeURIComponent(city);
+        var nameEnc = encodeURIComponent(file.name || '');
+        html += '<div class="photo-item" onclick="openPhotoLightbox(\'' + file.id + '\',\'' + nameEnc + '\',\'' + cityEnc + '\')">' +
+          '<img class="photo-img" src="' + thumb + '" alt="' + city + '" loading="lazy" decoding="async" onload="this.classList.add(\'loaded\')">' +
+          '<div class="photo-item-overlay"></div>' +
+        '</div>';
+      });
+      html += '</div></div>';
+    });
+
+    content.innerHTML = html;
+
+    var totalEl = document.getElementById('photos-total');
+    if (totalEl) totalEl.textContent = totalCount + ' photo' + (totalCount > 1 ? 's' : '') + ' · ' + cities.length + ' lieu' + (cities.length > 1 ? 'x' : '');
+  });
+}
+
+function openPhotoLightbox(fileId, nameEnc, cityEnc) {
+  var old = document.getElementById('photo-lightbox');
+  if (old) old.remove();
+
+  var city = decodeURIComponent(cityEnc);
+  var name = decodeURIComponent(nameEnc);
+  var fullUrl = 'https://drive.google.com/thumbnail?id=' + fileId + '&sz=w1600';
+
+  var lb = document.createElement('div');
+  lb.id = 'photo-lightbox';
+  lb.className = 'photo-lightbox';
+  lb.setAttribute('role', 'dialog');
+  lb.onclick = function(e) { if (e.target === lb) closePhotoLightbox(); };
+
+  lb.innerHTML =
+    '<button class="photo-lb-close" onclick="closePhotoLightbox()" aria-label="Fermer">×</button>' +
+    '<div class="photo-lb-content">' +
+      '<img class="photo-lb-img" src="' + fullUrl + '" alt="' + name + '">' +
+      '<div class="photo-lb-caption">' +
+        '<span class="photo-lb-city">' + city + '</span>' +
+        (name ? '<span class="photo-lb-name">' + name + '</span>' : '') +
+      '</div>' +
+    '</div>';
+
+  document.body.appendChild(lb);
+  document.body.style.overflow = 'hidden';
+  requestAnimationFrame(function() { lb.classList.add('active'); });
+}
+
+function closePhotoLightbox() {
+  var lb = document.getElementById('photo-lightbox');
+  if (!lb) return;
+  lb.classList.remove('active');
+  setTimeout(function() { if (lb.parentNode) lb.parentNode.removeChild(lb); }, 300);
+  document.body.style.overflow = '';
+}

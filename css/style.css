@@ -1663,7 +1663,7 @@ a:hover { color: var(--blush); }
 
 .mood-lightbox {
   position: fixed; inset: 0; background: rgba(0,0,0,.92);
-  z-index: 9999; display: flex !important; flex-direction: column;
+  z-index: 9999; display: flex; flex-direction: column;
   align-items: center; justify-content: center; gap: 12px;
   padding: 20px; box-sizing: border-box;
 }
@@ -1682,3 +1682,55 @@ a:hover { color: var(--blush); }
 .mood-lb-caption {
   color: rgba(255,255,255,.8); font-size: .78rem; text-align: center;
 }
+
+/* ═══ PHOTOS PAGE ═══ */
+.photos-toolbar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
+.photos-refresh-btn { display: flex; align-items: center; gap: 6px; padding: 6px 14px; background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--r-sm); font-size: .75rem; font-weight: 600; color: var(--ink2); cursor: pointer; transition: all var(--t); }
+.photos-refresh-btn:hover { border-color: var(--accent); color: var(--accent); }
+.photos-total { font-size: .75rem; color: var(--ink3); }
+
+.photos-section { margin-bottom: 28px; }
+.photos-section-header { display: flex; align-items: baseline; gap: 10px; margin-bottom: 10px; padding-left: 10px; border-left: 3px solid var(--blush); }
+.photos-city { font-weight: 700; font-size: .92rem; color: var(--ink); font-family: 'Shippori Mincho', serif; }
+.photos-count { font-size: .7rem; color: var(--ink3); }
+
+.photos-masonry { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 6px; }
+@media (min-width: 600px) { .photos-masonry { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); } }
+
+.photo-item {
+  position: relative; aspect-ratio: 1; border-radius: var(--r-sm); overflow: hidden;
+  cursor: zoom-in; background: var(--surface2);
+  transition: transform .25s var(--ease), box-shadow .25s var(--ease);
+}
+.photo-item:hover { transform: scale(1.02); box-shadow: var(--shadow-md); }
+.photo-img { width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity .35s; display: block; }
+.photo-img.loaded { opacity: 1; }
+.photo-item-overlay { position: absolute; inset: 0; background: linear-gradient(transparent 60%, rgba(0,0,0,.55)); opacity: 0; transition: opacity var(--t); pointer-events: none; }
+.photo-item:hover .photo-item-overlay { opacity: 1; }
+
+.photos-empty { text-align: center; padding: 48px 20px; color: var(--ink2); }
+.photos-empty .empty-icon { font-size: 2.5rem; margin-bottom: 12px; }
+.photos-empty p { margin: 4px 0; }
+.photos-setup-box { background: var(--surface2); border: 1.5px solid var(--border); border-radius: var(--r-md); padding: 18px 20px; margin-top: 20px; font-size: .8rem; color: var(--ink2); line-height: 1.7; }
+.photos-setup-box code { background: var(--surface); padding: 2px 6px; border-radius: 4px; font-family: 'Space Mono', monospace; font-size: .75rem; color: var(--blush); }
+
+/* Photo lightbox */
+.photo-lightbox {
+  position: fixed; inset: 0; background: rgba(0,0,0,.96); z-index: 10000;
+  display: flex; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box;
+  opacity: 0; transition: opacity .3s var(--ease);
+}
+.photo-lightbox.active { opacity: 1; }
+.photo-lb-close {
+  position: absolute; top: 16px; right: 20px; z-index: 1;
+  background: rgba(255,255,255,.15); border: none; color: #fff;
+  font-size: 1.5rem; width: 38px; height: 38px; border-radius: 50%;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: background var(--t);
+}
+.photo-lb-close:hover { background: rgba(255,255,255,.3); }
+.photo-lb-content { display: flex; flex-direction: column; align-items: center; gap: 12px; max-width: 92vw; }
+.photo-lb-img { max-width: 92vw; max-height: 82vh; object-fit: contain; border-radius: var(--r-sm); }
+.photo-lb-caption { display: flex; align-items: center; gap: 10px; color: rgba(255,255,255,.75); font-size: .78rem; }
+.photo-lb-city { font-weight: 700; color: rgba(255,255,255,.95); font-family: 'Shippori Mincho', serif; }
+.photo-lb-name { opacity: .65; }

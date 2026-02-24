@@ -130,6 +130,39 @@ const DataService = {
     return this._normaliseLinks(raw);
   },
 
+  // ── Fetch photos list from Drive via Apps Script ──
+  async fetchPhotos(force) {
+    const CACHE_KEY = 'ldva-photos';
+    const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+
+    if (!force) {
+      try {
+        const cached = JSON.parse(sessionStorage.getItem(CACHE_KEY) || 'null');
+        if (cached && Date.now() - cached.ts < CACHE_TTL) return cached.data;
+      } catch(e) {}
+    }
+
+    try {
+      const url = this.APPS_SCRIPT_URL + '?action=photos';
+      const resp = await fetch(url, { cache: 'no-store' });
+      if (!resp.ok) throw new Error('HTTP ' + resp.status);
+      const text = await resp.text();
+      const jsonStr = text.match(/\{.*\}/s)?.[0];
+      if (!jsonStr) throw new Error('No JSON');
+      const data = JSON.parse(jsonStr);
+      if (data.error) throw new Error(data.error);
+      // Vérifie qu'on a bien reçu des photos (pas juste la réponse liens par défaut)
+      const hasPhotos = Object.values(data).some(v => Array.isArray(v) && v.length > 0 && v[0].id);
+      if (!hasPhotos) throw new Error('Réponse inattendue (action=photos non gérée ?)');
+      try { sessionStorage.setItem(CACHE_KEY, JSON.stringify({ data, ts: Date.now() })); } catch(e) {}
+      console.log('[Photos] ✅', Object.keys(data).length, 'dossiers');
+      return data;
+    } catch(e) {
+      console.warn('[Photos]', e.message);
+      return null;
+    }
+  },
+
   // ── Load everything ──
   async loadAllData() {
     await Promise.allSettled([this.tryFetchSheets(), this.fetchExchangeRate()]);
@@ -174,6 +207,12 @@ const DataService = {
   // ── Smart column finder ──
   _col(...keywords) {
     if (!this.rawData) return null;
+    // Pass 1 : correspondance exacte (insensible à la casse)
+    for (const kw of keywords) {
+      const found = this.rawData.cols.find(c => c.toLowerCase() === kw.toLowerCase());
+      if (found) return found;
+    }
+    // Pass 2 : correspondance partielle (contains)
     for (const kw of keywords) {
       const found = this.rawData.cols.find(c => c.toLowerCase().includes(kw.toLowerCase()));
       if (found) return found;

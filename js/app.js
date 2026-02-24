@@ -111,6 +111,7 @@ const Router = {
       case 'stats':       renderStats(); break;
       case 'agenda':     renderAgenda(); break;
       case 'moodboard':   renderMoodboard(); break;
+      case 'photos':      renderPhotos(); break;
       case 'meteo':       renderMeteo(); break;
       default:           renderDashboard();
     }
@@ -170,6 +171,8 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
     const overlay = document.querySelector('.guide-detail-overlay');
     if (overlay) overlay.remove();
+    closeMoodLightbox();
+    closePhotoLightbox();
     closeMobileMenu();
   }
   // t = toggle theme
