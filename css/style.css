@@ -451,27 +451,52 @@ a:hover { color: var(--blush); }
 .stops-list::-webkit-scrollbar{width:4px} .stops-list::-webkit-scrollbar-track{background:transparent} .stops-list::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
 
 .stop-card {
-  position: relative; border-radius: var(--r-sm); border: 1px solid var(--border);
-  margin-bottom: 5px; overflow: hidden; cursor: pointer;
+  position: relative; border-radius: var(--r); border: 1px solid var(--border);
+  margin-bottom: 8px; overflow: hidden; cursor: pointer;
   transition: all var(--t) var(--ease); animation: slideIn .32s ease backwards; background: var(--snow);
 }
-.stop-card:hover { border-color: var(--border2); box-shadow: var(--shadow-sm); }
-.stop-card.active { border-color: var(--blush); box-shadow: 0 4px 20px rgba(196,126,126,.14); }
-.card-strip { position: absolute; left: 0; top: 0; bottom: 0; width: 3px; }
-.card-head-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px 10px 16px; cursor: pointer; }
-.card-num { font-size: .52rem; text-transform: uppercase; letter-spacing: .16em; font-weight: 600; opacity: .55; margin-bottom: 1px; }
-.card-city { font-family: 'Shippori Mincho', serif; font-size: .96rem; font-weight: 700; line-height: 1.2; }
-.card-right { text-align: right; flex-shrink: 0; }
-.card-dates { font-size: .64rem; color: var(--ink3); letter-spacing: .03em; }
+.stop-card:hover { border-color: var(--border2); box-shadow: var(--shadow-md); transform: translateY(-1px); }
+.stop-card.active { border-color: var(--blush); box-shadow: 0 4px 22px rgba(196,126,126,.18); }
+.card-strip { position: absolute; left: 0; top: 0; bottom: 0; width: 3px; z-index: 2; }
+
+/* ── Text header (collapsed) ── */
+.card-head-row { display: flex; align-items: center; gap: 10px; padding: 10px 10px 10px 10px; cursor: pointer; }
+.card-num-badge {
+  width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: .6rem; font-weight: 700; color: #fff; box-shadow: 0 2px 6px rgba(0,0,0,.2);
+}
+.card-num-city { flex: 1; min-width: 0; }
+.card-city { font-family: 'Shippori Mincho', serif; font-size: .9rem; font-weight: 700; line-height: 1.2; color: var(--ink); }
+.card-dates { font-size: .6rem; color: var(--ink3); letter-spacing: .02em; margin-top: 1px; }
+.card-right { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+.card-price { font-family: 'Space Mono', monospace; font-size: .7rem; font-weight: 700; color: var(--vermillion); }
 .card-expand-btn {
   background: var(--surface2); border: 1px solid var(--border); border-radius: 50%;
-  width: 22px; height: 22px; display: flex; align-items: center; justify-content: center;
-  font-size: .58rem; color: var(--ink3); margin-top: 3px; transition: all .2s var(--ease);
+  width: 20px; height: 20px; display: flex; align-items: center; justify-content: center;
+  font-size: .56rem; color: var(--ink3); transition: all .2s var(--ease);
 }
 .stop-card.active .card-expand-btn { background: var(--blush-l); border-color: rgba(196,126,126,.3); color: var(--blush); }
 .card-expand-btn .arrow { transition: transform .3s var(--ease); display: inline-block; }
 .stop-card.expanded .card-expand-btn .arrow { transform: rotate(180deg); }
-.card-quick { display: flex; flex-wrap: wrap; gap: 4px; padding: 0 12px 8px 16px; }
+
+/* ── Image inside expanded body ── */
+.card-hero-expanded {
+  position: relative; height: 110px; background-size: cover; background-position: center;
+  border-radius: var(--r-sm); overflow: hidden; margin-bottom: 10px;
+  background-color: var(--surface2);
+}
+.card-hero-exp-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(160deg, transparent 40%, rgba(0,0,0,.55) 100%);
+}
+.card-hero-exp-city {
+  position: absolute; bottom: 8px; left: 10px; z-index: 1;
+  font-family: 'Shippori Mincho', serif; font-size: .8rem; font-weight: 700;
+  color: #fff; text-shadow: 0 1px 4px rgba(0,0,0,.6); line-height: 1.2;
+}
+.card-hero-jp { font-size: .7em; opacity: .75; margin-left: 4px; }
+.card-quick { display: flex; flex-wrap: wrap; gap: 4px; padding: 4px 10px 6px 10px; background: var(--surface); border-bottom: 1px solid var(--border); }
 .quick-chip { display: inline-flex; align-items: center; gap: 3px; padding: 2px 7px; border-radius: 20px; font-size: .58rem; font-weight: 500; background: var(--surface2); color: var(--ink2); border: 1px solid var(--border); }
 .qc-sky { background: var(--sky-l); color: var(--sky); border-color: rgba(122,155,181,.2); }
 .qc-sage { background: var(--sage-l); color: var(--sage); border-color: rgba(122,158,142,.2); }

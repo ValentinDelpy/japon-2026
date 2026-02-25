@@ -1,0 +1,33 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir \"C:\\\\Users\\\\soulh\\\\Documents\\\\japon-2026-react\")",
+      "Bash(powershell -Command \"Get-ChildItem ''C:\\\\Users\\\\soulh\\\\Documents\\\\japon-2026-react'' -Force | Select-Object Name, LastWriteTime\")",
+      "Bash(powershell -Command \"Get-ChildItem ''C:\\\\Users\\\\soulh\\\\Documents\\\\japon-2026-react'' -Force\")",
+      "Bash(echo \"exit: $?\")",
+      "Bash(node -e \"const fs=require\\(''fs''\\); function walk\\(dir\\){return fs.readdirSync\\(dir\\).flatMap\\(f=>{const p=dir+''/''+f; return fs.statSync\\(p\\).isDirectory\\(\\)?walk\\(p\\):[p]}\\)} console.log\\(walk\\(''C:/Users/soulh/Documents/japon-2026-react/src''\\).join\\(''\\\\n''\\)\\)\")",
+      "Bash(dir /b /s \"c:\\\\Users\\\\soulh\\\\Documents\\\\japon-2026-react\\\\src\")",
+      "Bash(cmd /c \"dir /b /s C:\\\\Users\\\\soulh\\\\Documents\\\\japon-2026-react\\\\src 2>&1\")",
+      "Bash(npm run build)",
+      "Bash(cmd /c \"npm run build 2>&1\")",
+      "Bash(powershell -Command \"cd ''C:\\\\Users\\\\soulh\\\\Documents\\\\japon-2026-react''; npm run build 2>&1 | Out-String\")",
+      "Bash(node ./node_modules/.bin/vite build)",
+      "Bash(tee /tmp/vite_build.txt)",
+      "Bash(echo \"Exit: $?\")",
+      "Bash(npx vite build)",
+      "Bash(echo \"DONE: $?\")",
+      "Bash(node --version)",
+      "Bash(npm --version)",
+      "Bash(powershell.exe -NoProfile -NonInteractive -Command \"cd ''C:\\\\Users\\\\soulh\\\\Documents\\\\japon-2026-react''; npm run build 2>&1 | Tee-Object -FilePath ''C:\\\\Users\\\\soulh\\\\AppData\\\\Local\\\\Temp\\\\build_out.txt''; Get-Content ''C:\\\\Users\\\\soulh\\\\AppData\\\\Local\\\\Temp\\\\build_out.txt''\")",
+      "Bash(npx tsc --noEmit)",
+      "Bash(echo \"EXIT:$?\")",
+      "Bash(node node_modules/.bin/tsc --noEmit)",
+      "Bash(powershell -Command \"Get-Content ''C:\\\\Users\\\\soulh\\\\Documents\\\\japon-2026-react\\\\src\\\\data\\\\destinations.ts'' | Measure-Object -Line\")",
+      "Bash(powershell -Command \"Get-Content ''C:\\\\Users\\\\soulh\\\\Documents\\\\japon-2026-react\\\\src\\\\data\\\\destinations.ts'' | Select-Object -Last 80\")",
+      "Bash(python3 -c \":*)",
+      "Bash(node -e \"const fs=require\\(''fs''\\);const lines=fs.readFileSync\\(''C:/Users/soulh/Documents/japon-2026-react/src/data/destinations.ts'',''utf8''\\).split\\(''\\\\n''\\);console.log\\(''TOTAL:''+lines.length\\);lines.slice\\(-80\\).forEach\\(\\(l,i\\)=>console.log\\(\\(lines.length-80+i\\)+'': ''+l\\)\\);\")",
+      "Bash(node -e \"var fs=require\\(''fs''\\);var c=fs.readFileSync\\(''C:/Users/soulh/Documents/japon-2026-react/src/data/destinations.ts'',''utf8''\\);var lines=c.split\\(''\\\\n''\\);var last=lines.slice\\(Math.max\\(0,lines.length-80\\)\\);var out=''TOTAL=''+lines.length+''\\\\n''+last.join\\(''\\\\n''\\);fs.writeFileSync\\(''C:/Users/soulh/dest_tail.txt'',out\\);\")",
+      "Bash(dir \"C:\\\\Users\\\\soulh\\\\Documents\\\\japon-2026\")"
+    ]
+  }
+}

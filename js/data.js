@@ -45,7 +45,7 @@ const DataService = {
   },
 
   // ── Apps Script endpoint — reads RichText hyperlinks directly ──
-  APPS_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbzmwzyHKQK5e-1HPy33BMrsIuqf0_bGlOEyFWaSh-KS8_476zaY6l8A68V6Xj4Uv1SqQA/exec',
+  APPS_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbzpUzXkQEPgdDmo2nKVyi1CYokZE_DhhZTmiKPXhFJCUVukJmGP21R6yjt0H0kHYth0kw/exec',
 
   // ── Fetch all hyperlinks ──
   // Primary : Apps Script → JSON propre { "texte cellule": "url" }

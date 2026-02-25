@@ -466,23 +466,35 @@ function buildDashboardCards(groups) {
       '<div class="detail-content"><div class="detail-label">Note</div>'+
       '<div class="detail-value" style="font-style:italic;opacity:0.8">'+linkify(g.infos)+'</div></div></div>' : '';
 
+    var dest = findDestination(g.city);
+    var destKey = dest._destKey || '_default';
+    var nightsStr = g.nights ? (g.nights + 1) + ' nuits' : '1 nuit';
+
+    var heroImg = '<div class="card-hero-expanded img-loading" style="background-image:url(\'' + dest.image + '\')" data-dest-key="' + destKey + '">' +
+      '<div class="card-hero-exp-overlay"></div>' +
+      '<div class="card-hero-exp-city">' + g.city + (dest.nameJP ? ' <span class="card-hero-jp">' + dest.nameJP + '</span>' : '') + '</div>' +
+      '</div>';
+
     card.innerHTML = '<div class="card-strip" style="background:'+color+'"></div>'+
       '<div class="card-head-row" onclick="toggleDashCard('+i+', event)">'+
+        '<div class="card-num-badge" style="background:'+color+'">'+(i+1)+'</div>'+
         '<div class="card-num-city">'+
-          '<div class="card-num" style="color:'+color+'">Étape '+String(i+1).padStart(2,'0')+'</div>'+
           '<div class="card-city">'+g.city+'</div>'+
+          '<div class="card-dates">'+formatDateRange(g)+' · '+nightsStr+'</div>'+
         '</div>'+
         '<div class="card-right">'+
-          '<div class="card-dates">'+formatDateRange(g)+'</div>'+
+          (parseBudget(g.prix) ? '<div class="card-price">'+formatEURint(parseBudget(g.prix))+'</div>' : '')+
           '<div class="card-expand-btn"><span class="arrow">▾</span></div>'+
         '</div>'+
       '</div>'+
       (qChips.length ? '<div class="card-quick">'+qChips.join('')+'</div>' : '')+
       '<div class="card-body"><div class="card-body-inner">'+
+        heroImg+
         ((mainOpt||altOpt) ? '<div class="lodge-section"><div class="lodge-title">Hébergement</div><div class="lodge-options">'+mainOpt+altOpt+'</div>'+resLine+'</div>' : '')+
         (actPills ? '<div class="act-section"><div class="lodge-title">Activités</div><div class="activity-pills">'+actPills+'</div></div>' : '')+
         weatherMini+trajetRow+noteRow+
       '</div></div>';
+
 
     card.addEventListener('click', function(e) {
       if (!e.target.closest('.lodge-option') && !e.target.closest('.card-head-row')) activateDashStop(i);
