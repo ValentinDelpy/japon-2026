@@ -365,7 +365,7 @@ a:hover { color: var(--blush); }
 .map-title-bar.flex-between, .recap-header { justify-content: space-between; }
 
 /* ═══ STATS ═══ */
-.stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin-bottom: 26px; }
+.stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(clamp(140px, 20vw, 200px), 1fr)); gap: 12px; margin-bottom: 26px; }
 .stat-card {
   background: var(--snow); border-radius: var(--r-md); padding: 16px 18px;
   border: 1px solid var(--border);
@@ -396,7 +396,7 @@ a:hover { color: var(--blush); }
 
 /* ═══ DASHBOARD ═══ */
 .dashboard-grid { display: grid; gap: 16px; margin-bottom: 26px; }
-.dash-split { grid-template-columns: 1fr 360px; }
+.dash-split { grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); }
 
 #dashboard-map, #itinerary-map, #print-map { height: 440px; width: 100%; }
 
@@ -722,7 +722,7 @@ a:hover { color: var(--blush); }
   .stops-panel { max-height: 380px; }
 }
 @media (max-width:768px) {
-  .sidebar { transform: translateX(-100%); box-shadow: none; }
+  .sidebar { transform: translateX(-105%); box-shadow: none; }
   .sidebar.open { transform: translateX(0); box-shadow: 4px 0 30px rgba(0,0,0,.3); }
   .mobile-close { display: block; }
   .mobile-header { display: flex; }
@@ -1233,7 +1233,7 @@ a:hover { color: var(--blush); }
   padding: 8px 12px; background: var(--surface2); border-radius: var(--r-sm);
 }
 .souvenirs-grid {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px;
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); gap: 12px;
 }
 .souvenir-card {
   background: var(--surface); border: 1px solid var(--border);
@@ -1474,7 +1474,7 @@ a:hover { color: var(--blush); }
 
 /* ── STATS ──────────────────────────────────────────────── */
 .stats-big-grid {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px;
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(clamp(150px, 25%, 220px), 1fr)); gap: 16px;
   margin-bottom: 32px;
 }
 .stats-big-card {

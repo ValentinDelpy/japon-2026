@@ -58,7 +58,7 @@ function toggleTheme() { ThemeManager.toggle(); }
 
 // ─── COUNTDOWN ───
 function updateCountdown() {
-  const departure = new Date('2026-11-18T00:00:00');
+  const departure = DataService.config.departureDate;
   const now = new Date();
   const diff = Math.ceil((departure - now) / (1000 * 60 * 60 * 24));
   const el = document.getElementById('countdown-days');
@@ -154,6 +154,22 @@ async function refreshData() {
   Router.route();
 }
 
+function updateConfigUI() {
+  const cfg = DataService.config;
+  if (!cfg) return;
+
+  // Update titles and logos
+  if (cfg.tripTitle) {
+    document.title = `${cfg.tripTitle} — 日本の旅`;
+    const logoTitle = document.querySelector('.logo-title');
+    if (logoTitle) logoTitle.textContent = cfg.tripTitle.split(' ')[0] + (cfg.tripTitle.split(' ')[1] ? ' ' + cfg.tripTitle.split(' ')[1] : '');
+    const logoSub = document.querySelector('.logo-subtitle');
+    if (logoSub) logoSub.textContent = cfg.tripTitle.split(' ').slice(2).join(' ') || 'Very Arigatō';
+    const mobileTitle = document.querySelector('.mobile-title');
+    if (mobileTitle) mobileTitle.textContent = '⛩️ ' + cfg.tripTitle;
+  }
+}
+
 function updateExchangeWidget() {
   const el = document.getElementById('exchange-rate-value');
   if (el && DataService.exchangeRate) {
@@ -164,6 +180,7 @@ function updateExchangeWidget() {
     const t = DataService.lastSync;
     syncEl.textContent = `${t.getHours().toString().padStart(2,'0')}:${t.getMinutes().toString().padStart(2,'0')}`;
   }
+  updateConfigUI();
 }
 
 // ─── KEYBOARD SHORTCUTS ───
@@ -195,7 +212,7 @@ function patchLeafletPopups() {
 
 // ─── INITIALIZATION ───
 async function initApp() {
-  console.log('🏯 Little Domo Very Arigato V15 — Initializing…');
+  console.log(`🏯 ${DataService.config.tripTitle} — Initializing…`);
   // Bust image cache on new version deploy
   var _imgVer = 'ldva-img-v15';
   if (localStorage.getItem('ldva-img-ver') !== _imgVer) {

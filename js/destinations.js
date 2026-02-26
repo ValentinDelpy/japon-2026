@@ -428,6 +428,26 @@ const DESTINATIONS_DB = {
 
 // Helper to match a location name to the database
 function findDestination(locationName) {
+  // Try to merge dynamic data from spreadsheet first
+  const dynamicDests = DataService.sheets['1446487195'] || DataService.sheets['0']; // Probing tabs
+  if (dynamicDests && locationName) {
+    const row = dynamicDests.rows.find(r => {
+      const city = r['Lieu'] || r['Ville'] || r['City'] || '';
+      return city.toLowerCase().includes(locationName.toLowerCase()) || locationName.toLowerCase().includes(city.toLowerCase());
+    });
+    if (row) {
+      // Merge spreadsheet row into a temporary destination object
+      const merged = Object.assign({}, DESTINATIONS_DB["_default"], {
+        name: locationName,
+        intro: row['Intro'] || row['Description'] || row['Infos supplémentaires'] || DESTINATIONS_DB["_default"].intro
+      });
+      // Try to find if there's a base in DB for highlights/etc
+      const base = _findBaseDest(locationName);
+      if (base) Object.assign(merged, base);
+      return merged;
+    }
+  }
+
   if (!locationName) {
     var d = Object.assign({}, DESTINATIONS_DB["_default"]);
     d._destKey = '_default';
@@ -477,6 +497,21 @@ function findDestination(locationName) {
   def._destKey = '_default';
   def.image = getDestImage('_default');
   return def;
+}
+
+function _findBaseDest(locationName) {
+  const normalized = locationName.toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9\s]/g, "")
+    .trim();
+
+  for (const key of Object.keys(DESTINATIONS_DB)) {
+    if (key === "_default") continue;
+    if (normalized.includes(key) || key.includes(normalized.split(/\s/)[0])) {
+      return DESTINATIONS_DB[key];
+    }
+  }
+  return null;
 }
 
 // =============================================

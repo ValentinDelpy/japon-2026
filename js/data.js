@@ -7,41 +7,58 @@ const PUB_ID = '2PACX-1vR9migMUQys-qd6rcsbQ6ETIO3LRxungbKIvIXEMctSjdPYfNniSNASgb
 
 const DataService = {
   exchangeRate: null,
-  rawData: null,
+  rawData: null, // Itinerary data
+  sheets: {},    // Map of gid -> {cols, rows}
+  config: {
+    departureDate: new Date('2026-11-18'),
+    returnDate: new Date('2026-12-05'),
+    tripTitle: 'Little Domo Very Arigatō',
+    participants: 4,
+    origin: 'Toulouse',
+    destination: 'Tokyo'
+  },
   lastSync: null,
   linkMap: {},
 
   // ── Fetch sheet data as JSON via gviz ──
   async fetchSheet(gid) {
-    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=${gid}&_=${Date.now()}`;
-    const resp = await fetch(url, { cache: 'no-store' });
-    const text = await resp.text();
-    const jsonStr = text.match(/\{.*\}/s);
-    if (!jsonStr) throw new Error('Parse error');
-    const json = JSON.parse(jsonStr[0]);
-    if (!json.table) throw new Error('No table');
-    const cols = json.table.cols.map(c => (c.label || '').trim());
-    const rows = (json.table.rows || []).map(row => {
-      const obj = {};
-      (row.c || []).forEach((cell, i) => {
-        if (i >= cols.length) return;
-        let val = '';
-        if (cell && cell.v !== null && cell.v !== undefined) {
-          const dm = String(cell.v).match(/^Date\((\d+),(\d+),(\d+)\)$/);
-          if (dm) {
-            const d = new Date(+dm[1], +dm[2], +dm[3]);
-            val = d.getDate().toString().padStart(2, '0') + '/' +
-                  (d.getMonth() + 1).toString().padStart(2, '0') + '/' +
-                  d.getFullYear();
-          } else {
-            val = cell.f != null ? String(cell.f) : String(cell.v);
+    try {
+      const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=${gid}&_=${Date.now()}`;
+      const resp = await fetch(url, { cache: 'no-store' });
+      if (!resp.ok) throw new Error(`HTTP error! status: ${resp.status}`);
+      const text = await resp.text();
+      const jsonStr = text.match(/\{.*\}/s);
+      if (!jsonStr) throw new Error('Parse error: Could not find JSON in response');
+      const json = JSON.parse(jsonStr[0]);
+      if (!json.table) throw new Error('No table structure found in JSON');
+      const cols = json.table.cols.map(c => (c.label || '').trim());
+      const rows = (json.table.rows || []).map(row => {
+        const obj = {};
+        (row.c || []).forEach((cell, i) => {
+          if (i >= cols.length) return;
+          let val = '';
+          if (cell && cell.v !== null && cell.v !== undefined) {
+            const dm = String(cell.v).match(/^Date\((\d+),(\d+),(\d+)\)$/);
+            if (dm) {
+              const d = new Date(+dm[1], +dm[2], +dm[3]);
+              val = d.getDate().toString().padStart(2, '0') + '/' +
+                    (d.getMonth() + 1).toString().padStart(2, '0') + '/' +
+                    d.getFullYear();
+            } else {
+              val = cell.f != null ? String(cell.f) : String(cell.v);
+            }
           }
-        }
-        obj[cols[i]] = val;
+          obj[cols[i]] = val;
+        });
+        return obj;
       });
-      return obj;
-    });
-    return { cols, rows };
+      const result = { cols, rows };
+      this.sheets[gid] = result;
+      return result;
+    } catch (e) {
+      console.error(`[DataService] Error fetching sheet gid=${gid}:`, e.message);
+      throw e;
+    }
   },
 
   // ── Apps Script endpoint — reads RichText hyperlinks directly ──
@@ -163,29 +180,71 @@ const DataService = {
     }
   },
 
+  // ── Load configuration from tabs ──
+  async loadConfig() {
+    // Try to find configuration keys in "Calculateur" or "Plans de voyage"
+    const probeGids = ['0', '1446487195'];
+    for (const gid of probeGids) {
+      const sheet = this.sheets[gid];
+      if (!sheet) continue;
+
+      sheet.rows.forEach(row => {
+        // Look for Key/Value pairs
+        const keys = Object.keys(row);
+        const keyCol = keys.find(k => /paramètre|clé|key|config/i.test(k));
+        const valCol = keys.find(k => /valeur|value|donnée/i.test(k));
+
+        if (keyCol && valCol && row[keyCol]) {
+          const k = String(row[keyCol]).toLowerCase();
+          const v = row[valCol];
+          if (k.includes('départ') || k.includes('departure')) {
+            const d = this.parseDate(v);
+            if (d) this.config.departureDate = d;
+          }
+          if (k.includes('retour') || k.includes('return')) {
+            const d = this.parseDate(v);
+            if (d) this.config.returnDate = d;
+          }
+          if (k.includes('titre') || k.includes('title')) this.config.tripTitle = v;
+          if (k.includes('personne') || k.includes('participant')) this.config.participants = parseInt(v) || 4;
+        }
+      });
+    }
+    console.log('[DataService] Config loaded:', this.config);
+  },
+
   // ── Load everything ──
   async loadAllData() {
     await Promise.allSettled([this.tryFetchSheets(), this.fetchExchangeRate()]);
-    if (!this.rawData) { console.warn('Sheet failed, using fallback'); this.useFallbackData(); }
+    if (!this.rawData) {
+      console.warn('Sheet failed, using fallback');
+      this.useFallbackData();
+    } else {
+      await this.loadConfig();
+    }
     this.lastSync = new Date();
     return true;
   },
 
   async tryFetchSheets() {
-    for (const gid of ['2038497907', '0']) {
+    const gids = ['2038497907', '0', '1446487195']; // Added common GIDs or ones to probe
+    for (const gid of gids) {
       try {
         const result = await this.fetchSheet(gid);
         if (result && result.rows.length > 0) {
-          this.rawData = result;
-          console.log('Sheet gid=' + gid + ':', result.rows.length, 'rows, cols:', result.cols.join(', '));
-          // Now fetch links (await so they're ready before render)
-          try {
-            this.linkMap = await this.fetchLinks();
-          } catch (e) { console.warn('Link fetch failed:', e.message); }
-          return;
+          // If this looks like the itinerary (has Jour/Date/Lieu)
+          if (result.cols.some(c => /jour|date|lieu/i.test(c))) {
+            this.rawData = result;
+            console.log('Itinerary sheet found, gid=' + gid);
+          }
         }
-      } catch (e) { console.warn('gid=' + gid + ':', e.message); }
+      } catch (e) { /* ignore probes */ }
     }
+
+    // Now fetch links (await so they're ready before render)
+    try {
+      this.linkMap = await this.fetchLinks();
+    } catch (e) { console.warn('Link fetch failed:', e.message); }
   },
 
   // ── Exchange rate EUR→JPY ──
@@ -226,8 +285,9 @@ const DataService = {
     str = String(str).trim();
     let m = str.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
     if (m) return new Date(+m[3], +m[2] - 1, +m[1]);
+    const defaultYear = this.config.departureDate ? this.config.departureDate.getFullYear() : new Date().getFullYear();
     m = str.match(/^(\d{1,2})\/(\d{1,2})$/);
-    if (m) return new Date(2026, +m[2] - 1, +m[1]);
+    if (m) return new Date(defaultYear, +m[2] - 1, +m[1]);
     m = str.match(/^(\d{4})-(\d{2})-(\d{2})$/);
     if (m) return new Date(+m[1], +m[2] - 1, +m[3]);
     m = str.match(/Date\((\d+),(\d+),(\d+)\)/);
@@ -235,7 +295,7 @@ const DataService = {
     const MO = { jan: 0, fév: 1, feb: 1, mar: 2, avr: 3, apr: 3, mai: 4, may: 4, juin: 5, jun: 5,
                  juil: 6, jul: 6, août: 7, aug: 7, sep: 8, oct: 9, nov: 10, déc: 11, dec: 11 };
     m = str.match(/(\d{1,2})\s+([a-zéûô]+)\.?\s*(\d{4})?/i);
-    if (m) { const mo = MO[m[2].toLowerCase().substring(0, 3)]; if (mo !== undefined) return new Date(m[3] ? +m[3] : 2026, mo, +m[1]); }
+    if (m) { const mo = MO[m[2].toLowerCase().substring(0, 3)]; if (mo !== undefined) return new Date(m[3] ? +m[3] : defaultYear, mo, +m[1]); }
     return null;
   },
 
