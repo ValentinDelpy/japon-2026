@@ -363,8 +363,12 @@ function renderDashboard() {
   var last  = groups.length ? formatDateFR(groups[groups.length-1].endDate||groups[groups.length-1].startDate) : '—';
   var resCnt = groups.filter(function(g){ return g.reserve && /oui|true/i.test(g.reserve); }).length;
 
+  var cfg = DataService.config;
+  var months = ['Jan','Fév','Mar','Avr','Mai','Juin','Juil','Août','Sep','Oct','Nov','Déc'];
+  var dateStr = cfg.departureDate.getDate() + ' ' + months[cfg.departureDate.getMonth()] + ' — ' + cfg.returnDate.getDate() + ' ' + months[cfg.returnDate.getMonth()] + ' ' + cfg.departureDate.getFullYear();
+
   var html = '<div class="page-header"><h1>Dashboard <span class="jp-accent" style="opacity:0.3;font-size:0.6em">旅の概要</span></h1>';
-  html += '<p class="subtitle">Toulouse → Tokyo · Nov — Déc 2026 · 4 personnes</p></div>';
+  html += '<p class="subtitle">' + cfg.origin + ' → ' + cfg.destination + ' · ' + dateStr + ' · ' + cfg.participants + ' personnes</p></div>';
   html += '<div class="stats-row">';
   html += '<div class="stat-card"><div class="stat-label">Destinations</div><div class="stat-value indigo">'+places.length+'</div><div class="stat-detail">'+groups.length+' étapes</div></div>';
   html += '<div class="stat-card"><div class="stat-label">Période</div><div class="stat-value teal" style="font-size:0.9rem">'+first+'<br>'+last+'</div></div>';
@@ -528,7 +532,7 @@ function renderItinerary() {
   html += renderConverterCard(rate);
 
   var dateCol = cols.find(function(c){return /jour|date|day/i.test(c);}) || cols[0] || '';
-  var cutoffDate = new Date(2026, 11, 5);
+  var cutoffDate = DataService.config.returnDate;
 
   function getRowDate(row) { var v = String(row[dateCol]||'').trim(); return DataService.parseDate(v); }
   function isDateRow(row) { return /\d{1,2}[\/\-]\d{1,2}/.test(String(row[dateCol]||'').trim()); }
@@ -882,13 +886,10 @@ function toggleCheck(city, type, btn) {
 }
 
 // ─── TRIP STATUS ───
-var TRIP_START = new Date('2026-11-18');
-var TRIP_END   = new Date('2026-12-05');
-
 function getTripPhase() {
   var now = new Date(); now.setHours(0,0,0,0);
-  var s = new Date(TRIP_START); s.setHours(0,0,0,0);
-  var e = new Date(TRIP_END); e.setHours(0,0,0,0);
+  var s = new Date(DataService.config.departureDate); s.setHours(0,0,0,0);
+  var e = new Date(DataService.config.returnDate); e.setHours(0,0,0,0);
   if (now < s) return 'before';
   if (now > e) return 'after';
   return 'during';
@@ -922,15 +923,18 @@ function buildProgressStrip(groups) {
 
   var phase = getTripPhase();
   var progressLabel, progressPct, progressColor;
+  var s = DataService.config.departureDate;
+  var e = DataService.config.returnDate;
+
   if (phase === 'before') {
-    var msLeft = TRIP_START - new Date();
+    var msLeft = s - new Date();
     var daysLeft = Math.max(0, Math.ceil(msLeft / 86400000));
     progressLabel = daysLeft + ' jours avant départ';
     progressPct = Math.round((1 - daysLeft / 365) * 100);
     progressColor = 'blush';
   } else if (phase === 'during') {
-    var elapsed = Math.floor((new Date() - TRIP_START) / 86400000) + 1;
-    var tripLen  = Math.ceil((TRIP_END - TRIP_START) / 86400000);
+    var elapsed = Math.floor((new Date() - s) / 86400000) + 1;
+    var tripLen  = Math.ceil((e - s) / 86400000);
     progressLabel = 'Jour ' + elapsed + ' / ' + tripLen;
     progressPct = Math.round(elapsed / tripLen * 100);
     progressColor = 'sage';
@@ -969,9 +973,12 @@ function refreshProgressStrip() {
 // ─── TRIP STATUS BANNER ───
 function buildTripBanner(groups) {
   var phase = getTripPhase();
+  var s = DataService.config.departureDate;
+  var e = DataService.config.returnDate;
+
   if (phase === 'before') {
-    var days = Math.ceil((TRIP_START - new Date()) / 86400000);
-    return '<div class="trip-status-banner tsb-before"><span class="tsb-icon">✈️</span><div class="tsb-text"><strong>Voyage à venir</strong>Départ dans <strong>' + days + ' jours</strong> · Toulouse → Tokyo</div></div>';
+    var days = Math.ceil((s - new Date()) / 86400000);
+    return '<div class="trip-status-banner tsb-before"><span class="tsb-icon">✈️</span><div class="tsb-text"><strong>Voyage à venir</strong>Départ dans <strong>' + days + ' jours</strong> · ' + DataService.config.origin + ' → ' + DataService.config.destination + '</div></div>';
   }
   if (phase === 'during') {
     // find current city
@@ -980,8 +987,8 @@ function buildTripBanner(groups) {
       if (getGroupTripState(g) === 'current') cur = g;
     });
     var loc = cur ? ' · Actuellement à <strong>' + cur.city + '</strong>' : '';
-    var day = Math.floor((new Date() - TRIP_START) / 86400000) + 1;
-    var len = Math.ceil((TRIP_END - TRIP_START) / 86400000);
+    var day = Math.floor((new Date() - s) / 86400000) + 1;
+    var len = Math.ceil((e - s) / 86400000);
     return '<div class="trip-status-banner tsb-during"><span class="tsb-icon">📍</span><div class="tsb-text"><strong>Voyage en cours — Jour ' + day + '/' + len + '</strong>' + loc + '</div></div>';
   }
   return '<div class="trip-status-banner tsb-after"><span class="tsb-icon">🎌</span><div class="tsb-text"><strong>Voyage terminé</strong>Retour de Tokyo — よかった旅！</div></div>';

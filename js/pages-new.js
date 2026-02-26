@@ -182,9 +182,33 @@ function setRestoFilter(type) {
   });
 }
 
+function _getDynamicRestos() {
+  for (const gid in DataService.sheets) {
+    const sheet = DataService.sheets[gid];
+    if (sheet.cols.some(c => /resto|cuisine/i.test(c)) && sheet.cols.some(c => /lieu|ville/i.test(c))) {
+      const restosByCity = {};
+      sheet.rows.forEach(row => {
+        const city = row['Lieu'] || row['Ville'] || 'Général';
+        if (!restosByCity[city]) restosByCity[city] = [];
+        restosByCity[city].push({
+          name: row['Nom'] || row['Restaurant'] || row['Resto'],
+          type: row['Type'] || row['Cuisine'] || 'Restaurant',
+          desc: row['Description'] || row['Note'] || '',
+          price: row['Prix'] || '—',
+          tip: row['Conseil'] || row['Tip'] || ''
+        });
+      });
+      return restosByCity;
+    }
+  }
+  return null;
+}
+
 function _renderRestoContent(visitedKeys) {
   var container = document.getElementById('restos-content');
   if (!container) return;
+
+  const dynamicRestos = _getDynamicRestos();
 
   if (_tabRestos === 'restos') {
     var types = getAllRestoTypes();
@@ -196,10 +220,30 @@ function _renderRestoContent(visitedKeys) {
     '</div>';
 
     var destOrder = ['tokyo','kyoto','osaka','hiroshima','nara','kanazawa','takayama','hakone','miyajima','koyasan','magome'];
+
+    // Add cities from dynamic restos if they are not in the order
+    if (dynamicRestos) {
+      Object.keys(dynamicRestos).forEach(c => {
+        const k = _destKey(c);
+        if (!destOrder.includes(k)) destOrder.push(k);
+      });
+    }
+
     var sectionsHtml = '';
     destOrder.forEach(function(key) {
-      var dest = DESTINATIONS_DB[key];
-      if (!dest || !dest.restaurants) return;
+      var dest = DESTINATIONS_DB[key] || { name: key, nameJP: '', restaurants: [] };
+      var cityRestos = (dest.restaurants || []);
+
+      // Merge dynamic restos for this city
+      if (dynamicRestos) {
+        Object.keys(dynamicRestos).forEach(c => {
+          if (_destKey(c) === key) {
+            cityRestos = cityRestos.concat(dynamicRestos[c]);
+          }
+        });
+      }
+
+      if (!cityRestos.length) return;
       var inTrip = !!visitedKeys[key];
       sectionsHtml += '<div class="restos-city-section">' +
         '<div class="restos-city-header">' +
@@ -208,7 +252,7 @@ function _renderRestoContent(visitedKeys) {
           (inTrip ? '<span class="restos-in-trip">📍 Dans votre itinéraire</span>' : '') +
         '</div>' +
         '<div class="restos-grid">' +
-        dest.restaurants.map(function(r) {
+        cityRestos.map(function(r) {
           var typeColor = _typeColor(r.type);
           return '<div class="resto-card" data-type="' + r.type + '">' +
             '<div class="resto-card-top">' +
@@ -373,10 +417,32 @@ var PACKING_CATEGORIES = [
   },
 ];
 
+function _getDynamicPacking() {
+  // Try to find a sheet with packing info
+  for (const gid in DataService.sheets) {
+    const sheet = DataService.sheets[gid];
+    if (sheet.cols.some(c => /item|objet/i.test(c)) && sheet.cols.some(c => /cat/i.test(c))) {
+      const cats = {};
+      sheet.rows.forEach(row => {
+        const catName = row['Catégorie'] || row['Category'] || 'Général';
+        if (!cats[catName]) cats[catName] = { id: catName.toLowerCase(), label: catName, icon: '📦', items: [] };
+        cats[catName].items.push({
+          id: (catName + '_' + (row['Item'] || row['Objet'])).replace(/\s/g, '_').toLowerCase(),
+          label: row['Item'] || row['Objet'],
+          required: /oui|true/i.test(row['Requis'] || row['Required'])
+        });
+      });
+      return Object.values(cats);
+    }
+  }
+  return PACKING_CATEGORIES;
+}
+
 function renderPacking() {
+  const categories = _getDynamicPacking();
   var state = NewPagesStore.getObj('ldva-packing');
   var totalItems = 0, checkedItems = 0;
-  PACKING_CATEGORIES.forEach(function(cat) {
+  categories.forEach(function(cat) {
     cat.items.forEach(function(item) {
       totalItems++;
       if (state[item.id]) checkedItems++;
@@ -394,7 +460,7 @@ function renderPacking() {
   '</div>';
 
   html += '<div class="packing-grid">';
-  PACKING_CATEGORIES.forEach(function(cat) {
+  categories.forEach(function(cat) {
     var catChecked = cat.items.filter(function(i) { return state[i.id]; }).length;
     var catDone = catChecked === cat.items.length;
     html += '<div class="packing-cat' + (catDone ? ' packing-cat-done' : '') + '">' +
@@ -430,7 +496,8 @@ function togglePackingItem(id, li) {
   // Update progress
   var state = NewPagesStore.getObj('ldva-packing');
   var totalItems = 0, checkedItems = 0;
-  PACKING_CATEGORIES.forEach(function(cat) { cat.items.forEach(function(item) { totalItems++; if (state[item.id]) checkedItems++; }); });
+  const categories = _getDynamicPacking();
+  categories.forEach(function(cat) { cat.items.forEach(function(item) { totalItems++; if (state[item.id]) checkedItems++; }); });
   var pct = Math.round(checkedItems / totalItems * 100);
   var fill = document.querySelector('.packing-prog-fill');
   var val = document.querySelector('.packing-prog-value');
@@ -510,7 +577,11 @@ function renderChecklist() {
   });
   var pct = total ? Math.round(done / total * 100) : 0;
 
-  var html = _newPageHeader('✅', 'Check-list Pré-départ', '出発準備', 'Toutes les tâches à accomplir avant le 18 novembre');
+  var cfg = DataService.config;
+  var months = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
+  var dateStr = cfg.departureDate.getDate() + ' ' + months[cfg.departureDate.getMonth()] + ' ' + cfg.departureDate.getFullYear();
+
+  var html = _newPageHeader('✅', 'Check-list Pré-départ', '出発準備', 'Toutes les tâches à accomplir avant le ' + dateStr);
   html += '<div class="packing-progress-bar-wrap">' +
     '<div class="packing-prog-header"><span class="packing-prog-label">Tâches accomplies</span>' +
     '<span class="packing-prog-value">' + done + ' / ' + total + ' (' + pct + '%)</span></div>' +
@@ -563,15 +634,16 @@ function toggleChecklistItem(id, li) {
 // ═══════════════════════════════════════════════════════════════════
 function renderLogistique() {
   var html = _newPageHeader('🗺️', 'Logistique', '実用情報', 'Tout ce qu\'il faut savoir pour voyager au Japon');
+  var cfg = DataService.config;
 
   var sections = [
     {
       icon: '🚄', title: 'JR Pass — À calculer !',
       color: '#c73e1d',
       content: [
-        '⚠️ <strong>Pour votre itinéraire, le JR Pass 21 jours (~616€/pers) coûte ~157€ DE PLUS que les billets à l\'unité (~459€/pers estimés)</strong> — soit ~628€ en trop pour 4 personnes.',
+        '⚠️ <strong>Pour votre itinéraire, le JR Pass 21 jours (~616€/pers) coûte ~157€ DE PLUS que les billets à l\'unité (~459€/pers estimés)</strong> — soit ~' + (157 * cfg.participants) + '€ en trop pour ' + cfg.participants + ' personnes.',
         '<strong>Cumul des trajets :</strong> Tokyo→Kanazawa (~90€) · Kanazawa→Takayama (~30€) · Takayama→Kyoto (~65€) · Kyoto→Nara A/R (~9€) · Kyoto→Hiroshima (~70€) · Hiroshima→Osaka (~65€) · Osaka→Magome (~50€) · Magome→Tokyo (~80€) = <strong>~459€/pers.</strong>',
-        '👉 <strong>Recommandation : achetez les tickets séparément</strong>, en gare ou via <strong>Eki-net</strong> (réservation en ligne JR). Économie : ~628€ pour le groupe.',
+        '👉 <strong>Recommandation : achetez les tickets séparément</strong>, en gare ou via <strong>Eki-net</strong> (réservation en ligne JR). Économie : ~' + (157 * cfg.participants) + '€ pour le groupe.',
         'Le prix du JR Pass a <strong>fortement augmenté en octobre 2023</strong> (+65%). Méfiez-vous des articles de blog citant d\'anciens tarifs.',
         'Si vous optez quand même pour le pass : il ne couvre <strong>pas le Nozomi</strong>, s\'achète <strong>uniquement hors Japon</strong>, et s\'active le premier jour d\'utilisation.',
       ]
@@ -603,7 +675,7 @@ function renderLogistique() {
       color: '#7a9bb5',
       content: [
         '<strong>Option 1 — SIM japonaise</strong> : IIJmio, Sakura Mobile, Japan Tourist SIM. 15–20 jours, data illimitée, ~20€. Commandez avant le départ.',
-        '<strong>Option 2 — Pocket WiFi</strong> : routeur WiFi partageable entre 4 personnes. Glocalme, JapanWifiEagle. Rentable à 4. ~€5/jour.',
+        '<strong>Option 2 — Pocket WiFi</strong> : routeur WiFi partageable entre ' + cfg.participants + ' personnes. Glocalme, JapanWifiEagle. Rentable à ' + cfg.participants + '. ~€5/jour.',
         '<strong>Option 3 — eSIM</strong> : Airalo, Holafly. Activation instantanée. Uniquement data (pas d\'appels).',
         'Google Maps fonctionne bien offline (téléchargez les zones avant). <strong>Téléchargez aussi les cartes de Tokyo, Kyoto, Osaka, Hiroshima</strong>.',
         'App <strong>Japan Official Travel App</strong> (gratuite) : bonnes infos de transport.',
@@ -680,7 +752,7 @@ var PHRASES = [
   {
     cat: 'Restaurant', icon: '🍽️',
     phrases: [
-      { fr: 'Une table pour 4 personnes', jp: '4人です', rom: 'Yonin desu', pron: 'Yo-nin des' },
+      { fr: 'Une table pour ' + DataService.config.participants + ' personnes', jp: DataService.config.participants + '人です', rom: (DataService.config.participants === 4 ? 'Yonin' : DataService.config.participants) + ' desu', pron: (DataService.config.participants === 4 ? 'Yo-nin' : DataService.config.participants) + ' des' },
       { fr: 'Le menu, s\'il vous plaît', jp: 'メニューをください', rom: 'Menyū o kudasai', pron: 'Mé-nyou o kou-da-saï' },
       { fr: 'Je prends ça', jp: 'これをください', rom: 'Kore o kudasai', pron: 'Ko-ré o kou-da-saï' },
       { fr: 'C\'est délicieux !', jp: 'おいしい！', rom: 'Oishii!', pron: 'O-i-shi !' },
@@ -746,21 +818,43 @@ var PHRASES = [
 var _phraseFilter = '';
 var _phraseCatFilter = 'all';
 
+function _getDynamicPhrases() {
+  for (const gid in DataService.sheets) {
+    const sheet = DataService.sheets[gid];
+    if (sheet.cols.some(c => /français|french/i.test(c)) && sheet.cols.some(c => /japonais|japanese/i.test(c))) {
+      const cats = {};
+      sheet.rows.forEach(row => {
+        const catName = row['Catégorie'] || row['Category'] || 'Général';
+        if (!cats[catName]) cats[catName] = { cat: catName, icon: '🗣️', phrases: [] };
+        cats[catName].phrases.push({
+          fr: row['Français'] || row['French'],
+          jp: row['Japonais'] || row['Japanese'],
+          rom: row['Romaji'] || '',
+          pron: row['Prononciation'] || ''
+        });
+      });
+      return Object.values(cats);
+    }
+  }
+  return PHRASES;
+}
+
 function renderPhrasebook() {
+  const categories = _getDynamicPhrases();
   var html = _newPageHeader('🗣️', 'Phrasebook', '会話帳', 'Japonais de survie — prononciation approximative en français');
 
   html += '<div class="phrase-search-bar">' +
     '<input type="text" id="phrase-search" class="phrase-search-input" placeholder="Rechercher une phrase…" oninput="filterPhrases()" value="' + _phraseFilter + '">' +
     '<div class="phrase-cats">' +
       '<button class="phrase-cat-btn' + (_phraseCatFilter==='all'?' active':'') + '" onclick="setPhrasecat(\'all\')">Tout</button>' +
-      PHRASES.map(function(c) {
+      categories.map(function(c) {
         return '<button class="phrase-cat-btn' + (_phraseCatFilter===c.cat?' active':'') + '" onclick="setPhrasecat(\'' + c.cat.replace(/'/g,"\\'") + '\')">' + c.icon + ' ' + c.cat + '</button>';
       }).join('') +
     '</div>' +
   '</div>' +
   '<div id="phrases-container">';
 
-  PHRASES.forEach(function(cat) {
+  categories.forEach(function(cat) {
     var visible = _phraseCatFilter === 'all' || _phraseCatFilter === cat.cat;
     html += '<div class="phrase-section' + (!visible ? ' phrase-hidden' : '') + '" data-cat="' + cat.cat + '">' +
       '<div class="phrase-section-title">' + cat.icon + ' ' + cat.cat + '</div>' +
@@ -924,7 +1018,7 @@ var JAPON101_DATA = [
     items: [
       { q: 'Poubelles — le grand mystère', a: '<strong>Il n\'y a quasi pas de poubelles dans les rues japonaises</strong>, depuis les attentats au sarin de 1995 dans le métro. Promenez-vous avec un sac plastique pour vos déchets et jetez-les à l\'hôtel, dans un konbini (seuls les déchets du konbini) ou aux WC publics. Les Japonais ramènent chez eux leurs déchets.' },
       { q: 'WC japonais', a: 'Les washlet (WC électroniques) font peur mais deviennent addictifs. <strong>大 (大 = grand)</strong> : grosse chasse. <strong>小 (小 = petit)</strong> : petite chasse. Le bouton "son de flush" couvre les bruits — largement utilisé. La lunette est souvent chauffante en hiver. Profitez.' },
-      { q: 'Décalage horaire', a: 'Toulouse → Tokyo = <strong>+8h en hiver</strong> (UTC+9 vs UTC+1). Un vol de 13h vous fait arriver le lendemain matin. Conseil d\'adaptation : ne dormez pas dans l\'avion, résistez jusqu\'à 22h local le premier soir, exposez-vous à la lumière dès le matin.' },
+      { q: 'Décalage horaire', a: cfg.origin + ' → ' + cfg.destination + ' = <strong>+8h en hiver</strong> (UTC+9 vs UTC+1). Un vol de 13h vous fait arriver le lendemain matin. Conseil d\'adaptation : ne dormez pas dans l\'avion, résistez jusqu\'à 22h local le premier soir, exposez-vous à la lumière dès le matin.' },
       { q: 'Dormir en ryokan', a: 'Le futon est posé directement sur le tatami — rangé dans le placard le matin par le personnel. On dort en yukata. Le repas du soir (kaiseki) est servi dans votre chambre. Arrivez pour l\'heure de check-in prévue — le rituel est orchestré.' },
       { q: 'Tri des déchets', a: 'Le tri sélectif est très strict au Japon. Dans les ryokan et appartements, les poubelles sont compartimentées : burnable (燃えるゴミ), non-burnable (燃えないゴミ), recyclable (缶・瓶・ペット). Suivez ce que fait l\'hôtel.' },
       { q: 'Ambiance générale', a: 'Le Japon peut sembler distant ou formel au premier abord. En réalité, <strong>les Japonais sont incroyablement serviables</strong>. Si vous avez l\'air perdu, quelqu\'un viendra vous aider spontanément — même sans parler anglais, ils vous accompagneront physiquement à votre destination plutôt que d\'expliquer.' },
@@ -1174,7 +1268,7 @@ function renderStats() {
   var bigStats = [
     { icon: '🗺️', label: 'Km parcourus', value: totalKm.toLocaleString('fr-FR'), sub: '(estimé vol d\'oiseau)', color: 'var(--sage)' },
     { icon: '🌆', label: 'Villes', value: cities.length, sub: groups.length + ' étapes', color: 'var(--sky)' },
-    { icon: '🌙', label: 'Nuits au Japon', value: totalNights, sub: '18 nov — 5 déc', color: 'var(--lavender)' },
+    { icon: '🌙', label: 'Nuits au Japon', value: totalNights, sub: formatDateFR(DataService.config.departureDate) + ' — ' + formatDateFR(DataService.config.returnDate), color: 'var(--lavender)' },
     { icon: '💰', label: 'Budget hébergement', value: formatEURint(totalBudgetLodging), sub: formatEURint(totalBudgetLodging/4) + '/pers', color: 'var(--blush)' },
     { icon: '🚄', label: 'Budget transport', value: formatEURint(totalBudgetTransport * 4), sub: formatEURint(totalBudgetTransport) + '/pers', color: 'var(--amber)' },
     { icon: '💎', label: 'Budget total estimé', value: formatEURint(grand), sub: formatEURint(perPerson) + '/pers', color: '#c73e1d' },
@@ -1214,7 +1308,7 @@ function renderStats() {
   html += '<div class="stats-section-title">Quelques chiffres fun</div>';
   html += '<div class="stats-fun-grid">';
   var funs = [
-    { icon: '✈️', text: 'Distance Toulouse → Tokyo', val: '9 700 km', sub: 'environ 13h de vol' },
+    { icon: '✈️', text: 'Distance ' + cfg.origin + ' → ' + cfg.destination, val: '9 700 km', sub: 'environ 13h de vol' },
     { icon: '🍜', text: 'Restaurants dans vos fiches', val: restoCount + ' adresses', sub: cities.length + ' villes couvertes' },
     { icon: '🚄', text: 'Trajets en train/Shinkansen', val: shinkansen + ' trajets', sub: '⚠️ Comparer avec JR Pass avant achat' },
     { icon: '📸', text: 'Destinations UNESCO', val: '5', sub: 'Kyoto, Hiroshima, Nara, Miyajima, Shirakawa-gō' },
@@ -1618,7 +1712,11 @@ function renderAgenda() {
   });
   var types = Object.keys(typeSet).sort();
 
-  var html = _newPageHeader('🎌', 'Agenda culturel', '文化カレンダー', 'Événements et activités pendant votre séjour nov–déc 2026');
+  var cfg = DataService.config;
+  var months = ['jan','fév','mar','avr','mai','juin','juil','août','sep','oct','nov','déc'];
+  var rangeStr = months[cfg.departureDate.getMonth()] + '–' + months[cfg.returnDate.getMonth()] + ' ' + cfg.departureDate.getFullYear();
+
+  var html = _newPageHeader('🎌', 'Agenda culturel', '文化カレンダー', 'Événements et activités pendant votre séjour ' + rangeStr);
 
   // Filter buttons
   html += '<div class="agenda-filters">';
