@@ -1,12 +1,18 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { ContentService } from '../../core/content.service';
 import { Souvenir } from '../../core/models';
 
 @Component({
   selector: 'app-restaurants-page',
+  imports: [RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="page-header"><h1>Restos & Souvenirs <span class="jp-accent">食と買い物</span></h1><p class="subtitle">Adresses et idées cadeaux par ville.</p></div>
+    <div class="page-header">
+      <h1>Restos & Souvenirs <span class="jp-accent">食と買い物</span></h1>
+      <p class="subtitle">Adresses et idées cadeaux par ville.</p>
+      <a class="btn btn-secondary btn-sm" routerLink="/discover" style="margin-top:12px">🧭 Découvrir plus de lieux (OpenStreetMap) →</a>
+    </div>
 
     <div class="tabs-bar">
       <button class="tab-btn" [class.active]="tab() === 'restos'" (click)="tab.set('restos')">🍽️ Restaurants</button>

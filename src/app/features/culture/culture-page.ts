@@ -1,12 +1,18 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { ContentService } from '../../core/content.service';
 import { CulturalEvent } from '../../core/models';
 
 @Component({
   selector: 'app-culture-page',
+  imports: [RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="page-header"><h1>Agenda culturel <span class="jp-accent">文化カレンダー</span></h1><p class="subtitle">Événements pendant le séjour.</p></div>
+    <div class="page-header">
+      <h1>Agenda culturel <span class="jp-accent">文化カレンダー</span></h1>
+      <p class="subtitle">Événements pendant le séjour.</p>
+      <a class="btn btn-secondary btn-sm" routerLink="/discover" style="margin-top:12px">🧭 Must-see & insolites par ville (OpenStreetMap) →</a>
+    </div>
 
     <div class="agenda-filters">
       <button class="agenda-filter-btn" [class.active]="filter() === 'all'" (click)="filter.set('all')">Tout</button>
