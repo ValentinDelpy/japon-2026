@@ -1366,3 +1366,116 @@ body { font-size: 16px; line-height: 1.55; }
 /* Contraste renforcé pour le texte secondaire (≥ 4.5:1) */
 .muted, .stat-detail, .upcoming-acts, .card-dates, .guide-dest-preview { color: var(--ink3); }
 [data-theme="dark"] { --ink3: #8f8778; }
+
+/* ════════════════════════════════════════════════════════════════
+   D — MIZU (nouvelle direction)
+   Papier froid · Indigo 藍 · Or 金 · géométrie nette, éditorial
+   ════════════════════════════════════════════════════════════════ */
+
+:root {
+  --bg: #f1f4f7; --surface: #ffffff; --surface2: #e8edf2; --surface3: #dde4eb;
+  --border: #dbe3ea; --border2: #c2ceda; --snow: #ffffff; --white: #ffffff; --paper-warm: #f7fafc;
+  --ink: #0f1720; --ink2: #45525f; --ink3: #6d7b88;
+  --accent: #24396b; --accent-d: #1a2b52; --accent-l: #e7ecf7;
+  --accent2: #b08d3f; --accent2-l: #f7f1e3;
+  --vermillion: #24396b; --vermillion-l: #e7ecf7;
+  --sage: #4f7d5f; --sage-l: #e8f1ea; --sage-d: #3b5f47;
+  --blush: #a8443f; --blush-l: #f7e9e8; --blush-d: #87332f;
+  --sky: #3a6ea5; --sky-l: #e8f0f8; --sky-d: #2c557e;
+  --amber: #a9822f; --amber-l: #f7f1e1; --amber-d: #7f611f; --amber-dark: #8f6c26;
+  --lavender: #6b5aa0; --lavender-l: #efecf8;
+  --seal: #b08d3f; --seal-l: #d9c48c; --sumi: #0f1720;
+  --r-sm: 2px; --r-md: 4px; --r-lg: 6px; --r-xl: 8px; --r: 4px;
+  --shadow-xs: 0 1px 1px rgba(15, 23, 32, .04);
+  --shadow-sm: 0 1px 2px rgba(15, 23, 32, .05);
+  --shadow-md: 0 6px 20px rgba(15, 23, 32, .08);
+  --shadow-lg: 0 18px 44px rgba(15, 23, 32, .14);
+  --sidebar-bg: #0f1720; --sidebar-border: rgba(255, 255, 255, .07);
+  --sidebar-text: rgba(255, 255, 255, .5); --sidebar-text-active: #ffffff;
+  --sidebar-active-bg: rgba(36, 57, 107, .55); --sidebar-hover-bg: rgba(255, 255, 255, .05);
+  --header-bg: rgba(241, 244, 247, .85);
+}
+
+[data-theme="sakura"] {
+  --bg: #faf4f5; --surface: #fffafb; --surface2: #f4e9ec; --surface3: #ecdfe3;
+  --border: #ecdfe3; --border2: #d9c2c9; --snow: #fffafb; --white: #ffffff; --paper-warm: #fdf7f8;
+  --ink: #1f1418; --ink2: #5a444c; --ink3: #8a7078;
+  --accent: #8a2f52; --accent-d: #6e2441; --accent-l: #f7e8ee;
+  --accent2: #a86a3f; --accent2-l: #f7efe8;
+  --vermillion: #8a2f52; --vermillion-l: #f7e8ee;
+  --sage: #6f6a8a; --sage-l: #eeedf6; --sage-d: #565278;
+  --blush: #b0446a; --blush-l: #f9e9ef; --blush-d: #8c3453;
+  --sky: #6b5aa0; --sky-l: #efecf8; --sky-d: #52447d;
+  --amber: #a86a3f; --amber-l: #f7efe8; --amber-d: #824f2c; --amber-dark: #8f5a33;
+  --lavender: #8a5a9a; --lavender-l: #f3ecf6;
+  --seal: #b0446a; --seal-l: #d99cb2; --sumi: #1f1418;
+  --sidebar-bg: #241820; --sidebar-active-bg: rgba(138, 47, 82, .5);
+}
+
+[data-theme="dark"] {
+  --bg: #0a0f16; --surface: #111823; --surface2: #18212e; --surface3: #202b3a;
+  --border: #223041; --border2: #33465c; --snow: #111823; --white: #18212e; --paper-warm: #0d141d;
+  --ink: #e8eef4; --ink2: #a3b1bf; --ink3: #7c8a97;
+  --accent: #7ea0e0; --accent-d: #a3bdf0; --accent-l: rgba(126, 160, 224, .16);
+  --accent2: #d0aa5a; --accent2-l: rgba(208, 170, 90, .15);
+  --vermillion: #7ea0e0; --vermillion-l: rgba(126, 160, 224, .16);
+  --sage: #6fae87; --sage-l: rgba(111, 174, 135, .15); --sage-d: #97c9a9;
+  --blush: #d97a74; --blush-l: rgba(217, 122, 116, .15); --blush-d: #e8a09b;
+  --sky: #6fa8d8; --sky-l: rgba(111, 168, 216, .15); --sky-d: #9cc6e6;
+  --amber: #d0aa5a; --amber-l: rgba(208, 170, 90, .15); --amber-d: #e2c485; --amber-dark: #d0aa5a;
+  --lavender: #a99ad8; --lavender-l: rgba(169, 154, 216, .15);
+  --seal: #d0aa5a; --seal-l: #e2c485; --sumi: #0a0f16;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, .5);
+  --shadow-md: 0 6px 20px rgba(0, 0, 0, .55);
+  --shadow-lg: 0 18px 44px rgba(0, 0, 0, .65);
+  --sidebar-bg: #080c12; --sidebar-border: #1a2432;
+  --sidebar-active-bg: rgba(126, 160, 224, .16);
+  --header-bg: rgba(10, 15, 22, .85);
+}
+
+/* Typographie éditoriale */
+h1 { font-size: clamp(1.8rem, 3.6vw, 2.6rem); font-weight: 600; }
+h2, h3 { font-weight: 600; }
+.page-header h1::after { background: var(--accent2); }
+.page-header h1 .jp-accent { color: var(--accent2); }
+
+/* Sidebar indigo */
+.logo-mark { background: var(--accent); border-radius: 3px; box-shadow: none; }
+.nav-link.active { box-shadow: inset 3px 0 0 var(--accent2); }
+.countdown-days { color: var(--accent2); }
+.countdown-widget { border-color: rgba(176, 141, 63, .3); }
+.admin-seal { background: rgba(176, 141, 63, .12); border-color: rgba(176, 141, 63, .35); color: #e7d6ac; }
+.admin-seal:hover { background: rgba(176, 141, 63, .22); border-color: var(--accent2); color: #fff; }
+.admin-seal-mark { background: var(--accent2); }
+
+/* Hero : voile indigo */
+.dash-hero-overlay { background: linear-gradient(180deg, rgba(15, 23, 32, .25) 0%, rgba(15, 23, 32, .55) 55%, rgba(15, 23, 32, .92) 100%); }
+.dash-hero-arrow { color: var(--accent2); }
+
+/* Cartes nettes */
+.card-base, .map-container, .stops-panel, .budget-table-wrap, .budget-summary, .itinerary-full-table,
+.summary-card, .converter-card, .print-calendar, .recap-section, .packing-progress-bar-wrap,
+.packing-cat, .cl-phase, .logistique-card, .j101-section, .meteo-card, .meteo-packing-tip,
+.agenda-city-block, .resto-card, .souvenir-card, .phrase-card, .stats-big-card, .stats-fun-card,
+.surprise-card, .progress-strip, .stat-card, .home-panel, .stop-card, .guide-dest-card,
+.admin-form, .discover-card, .before-card, .live-hero, .next-card {
+  border-radius: var(--r-md); border-color: var(--border); box-shadow: var(--shadow-xs);
+}
+.stat-card:hover, .stop-card:hover, .guide-dest-card:hover, .quick-link:hover, .admin-card:hover,
+.discover-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-sm); border-color: var(--border2); }
+.map-title-bar, .stops-panel-header, .recap-header, .converter-header, .calendar-header {
+  background: var(--surface2); border-bottom: 1px solid var(--border); letter-spacing: .16em;
+}
+
+/* Boutons indigo/or */
+.btn { border-radius: var(--r-sm); letter-spacing: .1em; text-transform: uppercase; font-size: .72rem; font-weight: 700; }
+.btn-primary { background: var(--accent); box-shadow: none; }
+.btn-primary:hover { background: var(--accent-d); box-shadow: none; }
+.btn-secondary { background: transparent; border: 1px solid var(--border2); }
+.surprise-btn { background: var(--accent); border-radius: var(--r-md); }
+.stops-count, .guide-dest-num { background: var(--accent); }
+.prog-fill-blush { background: var(--accent); }
+.bottom-nav-link.active { background: var(--accent-l); color: var(--accent); }
+.mobile-header .mobile-title-jp { background: var(--accent); }
+.tl-dot { box-shadow: 0 0 0 2px var(--bg), 0 0 0 3px var(--border); }
+.gd-section-title, .phrase-section-title, .stats-section-title { border-bottom-color: var(--border2); }
