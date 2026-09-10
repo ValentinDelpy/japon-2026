@@ -1,0 +1,13 @@
+{
+  "name": "Little Domo Very Arigatō — 日本の旅",
+  "short_name": "Little Domo",
+  "description": "Carnet de voyage au Japon",
+  "theme_color": "#4f46e5",
+  "background_color": "#f6f6f8",
+  "display": "standalone",
+  "start_url": "/",
+  "scope": "/",
+  "icons": [
+    { "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

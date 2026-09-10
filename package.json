@@ -5,6 +5,9 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "preview": "node scripts/serve-dist.mjs",
+    "seed": "node scripts/migrate-existing-data.mjs",
+    "seed:supabase": "node scripts/seed-supabase.mjs",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
@@ -28,6 +31,7 @@
     "@angular/forms": "^20.3.0",
     "@angular/platform-browser": "^20.3.0",
     "@angular/router": "^20.3.0",
+    "@angular/service-worker": "^20.3.31",
     "@supabase/supabase-js": "^2.116.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",

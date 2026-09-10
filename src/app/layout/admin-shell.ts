@@ -53,6 +53,13 @@ export class AdminShell {
     { path: 'days', icon: '📅', label: 'Journées' },
     { path: 'activities', icon: '🎯', label: 'Activités' },
     { path: 'reservations', icon: '🎫', label: 'Réservations' },
+    { path: 'restaurants', icon: '🍜', label: 'Restaurants' },
+    { path: 'souvenirs', icon: '🛍️', label: 'Souvenirs' },
+    { path: 'phrases', icon: '🗣️', label: 'Phrases' },
+    { path: 'culture', icon: '🎌', label: 'Agenda' },
+    { path: 'weather', icon: '🌤️', label: 'Météo' },
+    { path: 'surprise', icon: '🎲', label: 'Surprise' },
+    { path: 'photos', icon: '🖼️', label: 'Photos' },
     { path: 'content', icon: '📝', label: 'Contenu' },
   ];
 

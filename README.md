@@ -77,9 +77,34 @@ node scripts/migrate-existing-data.mjs
 
 | Commande | Rôle |
 |---|---|
-| `npm start` | serveur de dev |
+| `npm start` | serveur de dev → http://localhost:4200 |
 | `npm run build` | build production dans `dist/ldva/browser` |
+| `npm run preview` | sert le build de prod en local → http://localhost:4300 |
+| `npm run seed` | régénère `public/seed.json` depuis l'ancien site |
+| `npm run seed:supabase` | pousse `seed.json` vers PostgreSQL |
 | `npm test` | tests unitaires (Karma) |
+
+## Lancer en local (le plus simple)
+
+```bash
+npm install
+npm start
+```
+
+L'app démarre en **mode démo** (données `public/seed.json`, admin accessible en lecture seule).
+Pour tester le rendu de production avec le service worker (offline) :
+
+```bash
+npm run build
+npm run preview     # http://localhost:4300
+```
+
+## PWA / offline
+
+Un service worker (`ngsw-config.json`) met en cache l'app, les polices, les images et les
+réponses API Supabase (`freshness`, 1 jour) : les journées, activités, hôtels, transports,
+réservations, phrasebook et checklists restent consultables sans connexion. Les cochettes
+(packing/check-list/souvenirs) sont stockées en `localStorage`.
 
 ## Déploiement (GitHub Pages)
 
