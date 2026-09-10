@@ -363,8 +363,17 @@ function renderDashboard() {
   var last  = groups.length ? formatDateFR(groups[groups.length-1].endDate||groups[groups.length-1].startDate) : '—';
   var resCnt = groups.filter(function(g){ return g.reserve && /oui|true/i.test(g.reserve); }).length;
 
-  var html = '<div class="page-header"><h1>Dashboard <span class="jp-accent" style="opacity:0.3;font-size:0.6em">旅の概要</span></h1>';
-  html += '<p class="subtitle">Toulouse → Tokyo · Nov — Déc 2026 · 4 personnes</p></div>';
+  var html = '<div class="dash-hero">';
+  html += '<div class="dash-hero-main">';
+  html += '<span class="dash-hero-eyebrow">Voyage · Nov — Déc 2026 · 4 personnes</span>';
+  html += '<h1>Toulouse <span class="dash-hero-arrow">→</span> Tokyo</h1>';
+  html += '<p class="dash-hero-dates">'+first+' → '+last+' · '+places.length+' villes · '+groups.length+' étapes</p>';
+  html += '</div>';
+  var _daysLeft = Math.ceil((TRIP_START - new Date()) / 86400000);
+  var _heroCount = _daysLeft > 0 ? _daysLeft : (_daysLeft === 0 ? '✈️' : '🎌');
+  html += '<div class="dash-hero-side"><div class="dash-hero-count" id="dash-hero-count">'+_heroCount+'</div>';
+  html += '<div class="dash-hero-count-label">'+(_daysLeft > 0 ? 'jours avant le départ' : 'Bon voyage !')+'</div></div>';
+  html += '</div>';
   html += '<div class="stats-row">';
   html += '<div class="stat-card"><div class="stat-label">Destinations</div><div class="stat-value indigo">'+places.length+'</div><div class="stat-detail">'+groups.length+' étapes</div></div>';
   html += '<div class="stat-card"><div class="stat-label">Période</div><div class="stat-value teal" style="font-size:0.9rem">'+first+'<br>'+last+'</div></div>';

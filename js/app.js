@@ -61,6 +61,8 @@ function updateCountdown() {
   const departure = new Date('2026-11-18T00:00:00');
   const now = new Date();
   const diff = Math.ceil((departure - now) / (1000 * 60 * 60 * 24));
+  const hero = document.getElementById('dash-hero-count');
+  if (hero) hero.textContent = diff > 0 ? diff : (diff === 0 ? '✈️' : '🎌');
   const el = document.getElementById('countdown-days');
   const widget = document.getElementById('countdown-widget');
   if (!el || !widget) return;
