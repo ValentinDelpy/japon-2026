@@ -78,7 +78,9 @@ export class StopsPage {
     const s = this.editing();
     if (!s?.city) return;
     const tripId = this.content.trip()?.id;
-    await this.admin.save('stops', { ...s, trip_id: tripId });
+    // `nights` est une colonne générée : ne jamais l'envoyer.
+    const { nights, ...payload } = s as Record<string, unknown>;
+    await this.admin.save('stops', { ...payload, trip_id: tripId });
     if (this.acc.name) {
       const stopId = s.id ?? this.content.stops().find((x) => x.city === s.city)?.id;
       if (stopId) await this.admin.save('accommodations', { ...this.acc, id: this.accId, stop_id: stopId, trip_id: tripId });
