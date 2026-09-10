@@ -1,6 +1,6 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 import type { Session } from '@supabase/supabase-js';
-import { supabase, supabaseConfigured } from './supabase';
+import { getSupabase, supabaseConfigured } from './supabase';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -12,23 +12,25 @@ export class AuthService {
   readonly user = computed(() => this.session()?.user ?? null);
 
   constructor() {
-    if (!supabase) { this.ready.set(true); return; }
-    supabase.auth.getSession().then(({ data }) => {
+    const sb = getSupabase();
+    if (!sb) { this.ready.set(true); return; }
+    sb.auth.getSession().then(({ data }) => {
       this.session.set(data.session);
       this.ready.set(true);
     });
-    supabase.auth.onAuthStateChange((_e, s) => this.session.set(s));
+    sb.auth.onAuthStateChange((_e, s) => this.session.set(s));
   }
 
   async signIn(email: string, password: string): Promise<void> {
-    if (!supabase) throw new Error('Supabase non configuré (mode démo).');
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const sb = getSupabase();
+    if (!sb) throw new Error('Supabase non configuré (mode démo).');
+    const { error } = await sb.auth.signInWithPassword({ email, password });
     if (error) throw error;
   }
 
   async signOut(): Promise<void> {
-    await supabase?.auth.signOut();
+    await getSupabase()?.auth.signOut();
   }
 
-  get canUseBackend(): boolean { return supabaseConfigured; }
+  get canUseBackend(): boolean { return supabaseConfigured(); }
 }

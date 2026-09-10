@@ -1,11 +1,19 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { environment } from '../../environments/environment';
+import { loadConfig } from './config';
 
-export const supabaseConfigured = !!(environment.supabaseUrl && environment.supabaseAnonKey);
+let client: SupabaseClient | null = null;
+let configured = false;
 
-/** Client Supabase partagé (null si non configuré → mode démo seed.json). */
-export const supabase: SupabaseClient | null = supabaseConfigured
-  ? createClient(environment.supabaseUrl, environment.supabaseAnonKey, {
+/** Initialise le client Supabase depuis la config runtime. */
+export async function initSupabase(): Promise<void> {
+  const cfg = await loadConfig();
+  if (cfg.supabaseUrl && cfg.supabaseAnonKey) {
+    client = createClient(cfg.supabaseUrl, cfg.supabaseAnonKey, {
       auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true },
-    })
-  : null;
+    });
+    configured = true;
+  }
+}
+
+export function getSupabase(): SupabaseClient | null { return client; }
+export function supabaseConfigured(): boolean { return configured; }

@@ -42,25 +42,29 @@ Sans configuration Supabase, l'app lit `public/seed.json` (mode démo, lecture s
 ## Configuration Supabase
 
 1. Créer un projet sur https://supabase.com.
-2. Exécuter `supabase/migrations/0001_init.sql` (SQL Editor).
-3. Renseigner `src/environments/environment.ts` :
-   ```ts
-   supabaseUrl: 'https://xxxx.supabase.co',
-   supabaseAnonKey: '<clé anon publique>',
-   ```
-4. Créer un utilisateur dans **Authentication → Users** (email + mot de passe).
-5. Lui donner les droits admin :
+2. Appliquer le schéma (deux options) :
+   - SQL Editor : exécuter `supabase/migrations/0001_init.sql` puis `0002_improvements.sql` ;
+   - ou en ligne de commande : `DATABASE_URL=postgresql://... npm run db:migrate`.
+3. Créer un utilisateur dans **Authentication → Users** (email + mot de passe).
+4. Lui donner les droits admin :
    ```sql
    insert into admin_users (user_id) values ('<uid de l’utilisateur>');
    ```
-6. Importer les données :
+5. Importer les données :
    ```bash
-   SUPABASE_URL=https://xxxx.supabase.co \
-   SUPABASE_SERVICE_ROLE_KEY=<clé service_role> \
-   node scripts/seed-supabase.mjs
+   npm run seed                                             # génère public/seed.json
+   DATABASE_URL=postgresql://... npm run db:seed            # charge dans PostgreSQL
    ```
+6. **Clé publique (runtime)** : renseigner `public/config.json` (non versionné) :
+   ```json
+   { "supabaseUrl": "https://xxxx.supabase.co", "supabaseAnonKey": "<clé anon publique>" }
+   ```
+   (copier `public/config.example.json`). La clé `anon` est publique par nature ;
+   la clé `service_role` ne doit **jamais** être mise dans le front.
+   Sans ce fichier, l'app tourne en mode démo (`public/seed.json`).
 
-La clé `service_role` est **secrète** : elle ne doit jamais être mise dans le code ni commitée.
+Les scripts `db:migrate` / `db:seed` utilisent `DATABASE_URL` (chaîne de connexion PostgreSQL
+du projet, à garder secrète).
 
 ## Migration du contenu existant
 

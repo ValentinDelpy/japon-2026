@@ -1,5 +1,5 @@
 import { Injectable, computed, signal } from '@angular/core';
-import { supabase, supabaseConfigured } from './supabase';
+import { getSupabase, supabaseConfigured } from './supabase';
 import { Content, Destination, EMPTY_CONTENT } from './models';
 
 type Source = 'supabase' | 'seed';
@@ -9,7 +9,7 @@ export class ContentService {
   private readonly _content = signal<Content>(EMPTY_CONTENT);
   private readonly _loading = signal(false);
   private readonly _error = signal<string | null>(null);
-  private readonly _source = signal<Source>(supabaseConfigured ? 'supabase' : 'seed');
+  private readonly _source = signal<Source>(supabaseConfigured() ? 'supabase' : 'seed');
 
   readonly content = this._content.asReadonly();
   readonly loading = this._loading.asReadonly();
@@ -46,7 +46,7 @@ export class ContentService {
     this._loading.set(true);
     this._error.set(null);
     try {
-      const content = supabaseConfigured ? await this.fromSupabase() : await this.fromSeed();
+      const content = supabaseConfigured() ? await this.fromSupabase() : await this.fromSeed();
       this._content.set(content);
     } catch (e) {
       this._error.set(e instanceof Error ? e.message : String(e));
@@ -72,7 +72,7 @@ export class ContentService {
 
   // ── Source de vérité : PostgreSQL via Supabase ──
   private async fromSupabase(): Promise<Content> {
-    const sb = supabase!;
+    const sb = getSupabase()!;
     const rows = async <T>(table: string): Promise<T[]> => {
       const { data, error } = await sb.from(table).select('*');
       if (error) throw new Error(`${table}: ${error.message}`);

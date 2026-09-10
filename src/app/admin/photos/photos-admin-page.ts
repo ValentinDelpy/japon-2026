@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/cor
 import { FormsModule } from '@angular/forms';
 import { ContentService } from '../../core/content.service';
 import { AdminService } from '../../core/admin.service';
-import { supabase } from '../../core/supabase';
+import { getSupabase } from '../../core/supabase';
 import { environment } from '../../../environments/environment';
 import { Photo } from '../../core/models';
 
@@ -59,12 +59,13 @@ export class PhotosAdminPage {
   onFile(e: Event): void { this.file = (e.target as HTMLInputElement).files?.[0] ?? null; }
 
   async upload(): Promise<void> {
-    if (!supabase || !this.file) return;
+    const sb = getSupabase();
+    if (!sb || !this.file) return;
     this.busy.set(true);
     this.message.set(null);
     try {
       const path = `${Date.now()}-${this.file.name.replace(/[^a-zA-Z0-9._-]/g, '_')}`;
-      const { error } = await supabase.storage.from('photos').upload(path, this.file, { upsert: false });
+      const { error } = await sb.storage.from('photos').upload(path, this.file, { upsert: false });
       if (error) throw error;
       await this.admin.save('photos', {
         trip_id: this.content.trip()?.id, storage_path: path,
@@ -81,9 +82,10 @@ export class PhotosAdminPage {
   }
 
   async remove(p: Photo): Promise<void> {
-    if (!supabase || !p.id) return;
+    const sb = getSupabase();
+    if (!sb || !p.id) return;
     if (!confirm('Supprimer cette photo ?')) return;
-    await supabase.storage.from('photos').remove([p.storage_path]);
+    await sb.storage.from('photos').remove([p.storage_path]);
     await this.admin.remove('photos', p.id);
   }
 }

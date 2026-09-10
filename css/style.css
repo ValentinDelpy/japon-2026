@@ -1569,3 +1569,106 @@ h2, h3 { font-weight: 500; }
   .dash-hero { padding: 26px 22px; }
   .card-hero-expanded { height: 130px; }
 }
+
+/* ════════════════════════════════════════════════════════════════
+   V29 — BIG BANG
+   Kinari + sumi + shu · hero cinématographique · cartes douces
+   ════════════════════════════════════════════════════════════════ */
+
+:root {
+  --bg: #f2eee6;
+  --surface: #fffefb;
+  --surface2: #ece7dc;
+  --surface3: #e3dccc;
+  --border: #e4ddce;
+  --border2: #cfc6b2;
+  --ink: #1a1815;
+  --ink2: #575147;
+  --ink3: #9a9285;
+  --accent: #b23a2e;
+  --accent-d: #8d2a20;
+  --r-sm: 6px; --r-md: 10px; --r-lg: 16px; --r-xl: 22px; --r: 10px;
+  --shadow-sm: 0 1px 3px rgba(26, 24, 21, .06);
+  --shadow-md: 0 10px 30px rgba(26, 24, 21, .09);
+  --shadow-lg: 0 24px 60px rgba(26, 24, 21, .16);
+}
+[data-theme="dark"] {
+  --bg: #0c0b09; --surface: #151310; --surface2: #1e1b16; --surface3: #262118;
+  --border: #2a2519; --border2: #3d3727;
+  --ink: #ece6da; --ink2: #a79f90; --ink3: #746c5f;
+}
+
+/* Papier plus net */
+body { background-image: none; background-color: var(--bg); }
+
+/* Cartes douces et surélevées */
+.card-base, .map-container, .stops-panel, .budget-table-wrap, .budget-summary, .itinerary-full-table,
+.summary-card, .converter-card, .print-calendar, .recap-section, .packing-progress-bar-wrap,
+.packing-cat, .cl-phase, .logistique-card, .j101-section, .meteo-card, .meteo-packing-tip,
+.agenda-city-block, .resto-card, .souvenir-card, .phrase-card, .stats-big-card, .stats-fun-card,
+.surprise-card, .progress-strip, .stat-card, .home-panel, .stop-card, .guide-dest-card, .admin-form {
+  border-radius: var(--r-lg);
+  border-color: var(--border);
+  box-shadow: var(--shadow-sm);
+}
+.stat-card:hover, .stop-card:hover, .guide-dest-card:hover, .quick-link:hover, .admin-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--border2);
+}
+.map-title-bar, .stops-panel-header, .recap-header, .converter-header, .calendar-header {
+  border-radius: 0; background: var(--surface);
+}
+
+/* Hero cinématographique */
+.dash-hero {
+  position: relative; display: block; padding: 0; min-height: 360px;
+  border: none; border-radius: var(--r-xl); overflow: hidden; color: #fff;
+  background-color: #17150f; background-size: cover; background-position: center;
+  box-shadow: var(--shadow-lg);
+}
+.dash-hero::before, .dash-hero::after { display: none; }
+.dash-hero-overlay {
+  position: absolute; inset: 0; z-index: 1;
+  background: linear-gradient(180deg, rgba(12, 11, 9, .18) 0%, rgba(12, 11, 9, .5) 55%, rgba(12, 11, 9, .9) 100%);
+}
+.dash-hero-content {
+  position: relative; z-index: 2;
+  display: flex; align-items: flex-end; justify-content: space-between; gap: 24px;
+  min-height: 360px; padding: 40px 44px;
+}
+.dash-hero-main h1 { color: #fff; font-size: clamp(1.9rem, 4vw, 3rem); }
+.dash-hero-main h1::after { display: none; }
+.dash-hero-eyebrow { color: rgba(255, 255, 255, .88); }
+.dash-hero-dates { color: rgba(255, 255, 255, .78); }
+.dash-hero-arrow { color: var(--seal-l); }
+.dash-hero-side {
+  background: rgba(255, 255, 255, .12); border: 1px solid rgba(255, 255, 255, .22);
+  border-radius: var(--r-md); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  color: #fff; flex-shrink: 0;
+}
+.dash-hero-count { color: #fff; }
+.dash-hero-count-label { color: rgba(255, 255, 255, .82); }
+
+/* Accents */
+.stops-count, .guide-dest-num { background: var(--accent); }
+.prog-fill-blush { background: var(--accent); }
+.tl-dot { box-shadow: 0 0 0 2px var(--bg), 0 0 0 3px var(--border); }
+
+/* Boutons & champs plus doux */
+.btn { border-radius: 8px; }
+.btn-primary { background: var(--accent); box-shadow: 0 6px 18px rgba(178, 58, 46, .25); }
+.btn-primary:hover { box-shadow: 0 10px 26px rgba(178, 58, 46, .32); }
+.input, .select, .textarea { border-radius: var(--r-sm); }
+
+/* Sidebar : filet vermillon plus marqué */
+.nav-link.active { box-shadow: inset 3px 0 0 var(--accent); }
+.logo-mark { box-shadow: 0 6px 16px rgba(178, 58, 46, .35); }
+
+/* Responsive */
+@media (max-width: 860px) {
+  .dash-hero, .dash-hero-content { min-height: 300px; }
+  .dash-hero-content { flex-direction: column; align-items: flex-start; padding: 28px 22px; }
+  .dash-hero-side { display: flex; align-items: baseline; gap: 10px; }
+  .dash-hero-count-label { margin-top: 0; }
+}

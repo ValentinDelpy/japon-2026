@@ -12,15 +12,18 @@ declare const L: any;
   template: `
     @if (trip(); as t) {
       <!-- Hero -->
-      <div class="dash-hero">
-        <div class="dash-hero-main">
-          <span class="dash-hero-eyebrow">{{ t.subtitle }}</span>
-          <h1>{{ t.origin }} <span class="dash-hero-arrow">→</span> {{ t.destination }}</h1>
-          <p class="dash-hero-dates">{{ formatRange(t.start_date, t.end_date) }} · {{ stops().length }} étapes · {{ t.travelers }} personnes</p>
-        </div>
-        <div class="dash-hero-side">
-          <div class="dash-hero-count">{{ countdownText() }}</div>
-          <div class="dash-hero-count-label">{{ countdownLabel() }}</div>
+      <div class="dash-hero" [style.background-image]="heroImage()">
+        <div class="dash-hero-overlay"></div>
+        <div class="dash-hero-content">
+          <div class="dash-hero-main">
+            <span class="dash-hero-eyebrow">{{ t.subtitle }}</span>
+            <h1>{{ t.origin }} <span class="dash-hero-arrow">→</span> {{ t.destination }}</h1>
+            <p class="dash-hero-dates">{{ formatRange(t.start_date, t.end_date) }} · {{ stops().length }} étapes · {{ t.travelers }} personnes</p>
+          </div>
+          <div class="dash-hero-side">
+            <div class="dash-hero-count">{{ countdownText() }}</div>
+            <div class="dash-hero-count-label">{{ countdownLabel() }}</div>
+          </div>
         </div>
       </div>
 
@@ -318,6 +321,11 @@ export class DashboardPage implements AfterViewInit, OnDestroy {
   activitiesForStop(stopId?: string | null): string[] { return this.activities().filter((a) => a.stop_id === stopId).map((a) => a.title); }
 
   readonly openStop = signal<string | null>(null);
+  readonly heroImage = computed(() => {
+    const first = this.stops()[0];
+    const url = first ? this.content.destinationByCity(first.city)?.image_url : null;
+    return url ? `url('${url}')` : '';
+  });
   toggleStop(stop: { id?: string; city: string }): void {
     const key = stop.id ?? stop.city;
     this.openStop.set(this.openStop() === key ? null : key);

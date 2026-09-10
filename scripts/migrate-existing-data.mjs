@@ -57,7 +57,7 @@ async function fetchSheet() {
       let val = '';
       if (cell && cell.v != null) {
         const dm = String(cell.v).match(/^Date\((\d+),(\d+),(\d+)\)$/);
-        val = dm ? `${String(+dm[2] + 1).padStart(2, '0')}/${dm[3]}/${dm[1]}` : cell.f != null ? String(cell.f) : String(cell.v);
+        val = dm ? `${String(dm[3]).padStart(2, '0')}/${String(+dm[2] + 1).padStart(2, '0')}/${dm[1]}` : cell.f != null ? String(cell.f) : String(cell.v);
       }
       obj[cols[i]] = val;
     });

@@ -8,6 +8,8 @@
     "preview": "node scripts/serve-dist.mjs",
     "seed": "node scripts/migrate-existing-data.mjs",
     "seed:supabase": "node scripts/seed-supabase.mjs",
+    "db:migrate": "node scripts/db-migrate.mjs",
+    "db:seed": "node scripts/seed-db.mjs",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
@@ -48,6 +50,7 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
+    "pg": "^8.23.0",
     "typescript": "~5.9.2"
   }
 }
