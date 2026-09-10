@@ -142,6 +142,7 @@ export class Shell {
       { path: 'logistics', icon: '🚉', label: 'Logistique Japon' },
     ] },
     { label: 'Sur place', items: [
+      { path: 'discover', icon: '🧭', label: 'Découvrir' },
       { path: 'restaurants', icon: '🍜', label: 'Restos & Souvenirs' },
       { path: 'phrasebook', icon: '🗣️', label: 'Phrasebook' },
       { path: 'culture', icon: '🎌', label: 'Agenda culturel' },

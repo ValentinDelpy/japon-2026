@@ -18,6 +18,7 @@ export const routes: Routes = [
       { path: 'checklist', loadComponent: () => import('./features/checklist/checklist-page').then((m) => m.ChecklistPage) },
       { path: 'logistics', loadComponent: () => import('./features/logistics/logistics-page').then((m) => m.LogisticsPage) },
       { path: 'restaurants', loadComponent: () => import('./features/restaurants/restaurants-page').then((m) => m.RestaurantsPage) },
+      { path: 'discover', loadComponent: () => import('./features/discover/discover-page').then((m) => m.DiscoverPage) },
       { path: 'phrasebook', loadComponent: () => import('./features/phrasebook/phrasebook-page').then((m) => m.PhrasebookPage) },
       { path: 'culture', loadComponent: () => import('./features/culture/culture-page').then((m) => m.CulturePage) },
       { path: 'moodboard', loadComponent: () => import('./features/moodboard/moodboard-page').then((m) => m.MoodboardPage) },

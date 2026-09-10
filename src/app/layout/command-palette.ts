@@ -24,6 +24,7 @@ const PAGES: Result[] = [
   { key: 'p-checklist', icon: '✅', label: 'Check-list départ', kind: 'Page', link: '/checklist' },
   { key: 'p-logistics', icon: '🚉', label: 'Logistique Japon', kind: 'Page', link: '/logistics' },
   { key: 'p-restos', icon: '🍜', label: 'Restos & Souvenirs', kind: 'Page', link: '/restaurants' },
+  { key: 'p-discover', icon: '🧭', label: 'Découvrir', kind: 'Page', link: '/discover' },
   { key: 'p-phrases', icon: '🗣️', label: 'Phrasebook', kind: 'Page', link: '/phrasebook' },
   { key: 'p-culture', icon: '🎌', label: 'Agenda culturel', kind: 'Page', link: '/culture' },
   { key: 'p-moodboard', icon: '📸', label: 'Moodboard', kind: 'Page', link: '/moodboard' },
