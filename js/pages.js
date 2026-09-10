@@ -161,7 +161,7 @@ function createMap(containerId, steps) {
   var el = document.getElementById(containerId);
   if (!el) return null;
   var map = L.map(containerId, {scrollWheelZoom:true,zoomControl:true});
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'© OSM © CARTO',maxZoom:18}).addTo(map);
+  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}',{attribution:'© Esri · © OpenStreetMap',maxZoom:16}).addTo(map);
   var pts = [], seen = {};
   steps.forEach(function(g, idx) {
     var coords = getCoords(g.city || g.lieu);
@@ -211,7 +211,7 @@ function createDashboardMap(groups) {
   var el = document.getElementById('dashboard-map');
   if (!el) return null;
   var map = L.map('dashboard-map', {scrollWheelZoom:true,zoomControl:true});
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'© OSM © CARTO',maxZoom:18}).addTo(map);
+  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}',{attribution:'© Esri · © OpenStreetMap',maxZoom:16}).addTo(map);
   maps['dashboard-map'] = map;
   _dashState.markers = [];
   var pts = [], seen = {};
@@ -537,7 +537,7 @@ function renderItinerary() {
   var mainRows = rows.filter(function(r) { if (!isDateRow(r)) return false; var d=getRowDate(r); return d && d<=cutoffDate; });
   var extraRows = rows.filter(function(r) { if (!hasContent(r)) return false; if (!isDateRow(r)) return true; var d=getRowDate(r); return d && d>cutoffDate; });
 
-  html += '<div class="itinerary-full-table mt-2 mb-2">';
+  html += '<div class="itinerary-full-table iti-desktop mt-2 mb-2">';
   html += '<div class="map-title-bar flex-between"><span>📋 Données du spreadsheet</span><span class="text-sm text-muted">'+mainRows.length+' lignes</span></div>';
   html += '<div class="table-scroll"><table class="iti-table"><thead><tr>';
   cols.forEach(function(c){html+='<th>'+c+'</th>';});
@@ -552,6 +552,38 @@ function renderItinerary() {
     html += '</tr>';
   });
   html += '</tbody></table></div></div>';
+
+  // Vue mobile : cartes jour par jour (le tableau n'est pas exploitable sur téléphone)
+  var MC = {
+    lieu: cols.find(function(c){return /lieu|ville|city/i.test(c);}),
+    logement: cols.find(function(c){return /logement|hébergement|hotel/i.test(c);}),
+    prixPersonne: cols.find(function(c){return /prix.*personne/i.test(c);}),
+    activites: cols.find(function(c){return /activité/i.test(c);}),
+    duree: cols.find(function(c){return /durée/i.test(c);}),
+    infos: cols.find(function(c){return /infos/i.test(c);})
+  };
+  html += '<div class="iti-mobile mt-2 mb-2">';
+  var mobileCity = '';
+  mainRows.forEach(function(row) {
+    var dateVal = String(row[dateCol] || '').trim();
+    var cityVal = MC.lieu ? String(row[MC.lieu] || '').trim() : '';
+    if (cityVal) mobileCity = cityVal;
+    var acts = MC.activites ? String(row[MC.activites] || '').trim() : '';
+    var log = MC.logement ? String(row[MC.logement] || '').trim() : '';
+    var dur = MC.duree ? String(row[MC.duree] || '').trim() : '';
+    var pP = MC.prixPersonne ? String(row[MC.prixPersonne] || '').trim() : '';
+    var infos = MC.infos ? String(row[MC.infos] || '').trim() : '';
+    html += '<div class="iti-day-card">';
+    html += '<div class="iti-day-head"><span class="iti-day-date">'+dateVal.replace(/\/\d{4}$/, '')+'</span>';
+    html += '<span class="iti-day-city">'+(cityVal || mobileCity || '—')+'</span></div>';
+    html += '<div class="iti-day-body">';
+    if (acts) html += '<div class="iti-day-line"><span class="iti-day-ic">📍</span><span>'+linkify(acts)+'</span></div>';
+    if (log) html += '<div class="iti-day-line"><span class="iti-day-ic">🏨</span><span>'+linkify(log)+'</span></div>';
+    if (dur) html += '<div class="iti-day-line"><span class="iti-day-ic">🚄</span><span>'+dur+(pP?' · '+formatEURint(parseBudget(pP))+'/pers':'')+'</span></div>';
+    if (infos) html += '<div class="iti-day-line iti-day-note"><span class="iti-day-ic">✦</span><span>'+linkify(infos)+'</span></div>';
+    html += '</div></div>';
+  });
+  html += '</div>';
 
   if (extraRows.length > 0) {
     // Build a clean summary from extra rows - pivot into a readable format

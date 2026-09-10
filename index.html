@@ -2,31 +2,33 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#1b1916">
   <title>Little Domo Very Arigato — 日本の旅</title>
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&family=Cormorant+Garamond:ital,wght@1,400;1,500&display=swap" rel="stylesheet">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⛩️</text></svg>">
 </head>
 <body>
   <div id="mobile-overlay" class="mobile-overlay" onclick="closeMobileMenu()"></div>
 
-  <nav id="sidebar" class="sidebar">
+  <nav id="sidebar" class="sidebar" aria-label="Navigation principale">
     <div class="sidebar-header">
       <span class="logo-kanji">日本</span>
       <div class="logo-text">
         <span class="logo-title">Little Domo</span>
         <span class="logo-subtitle">Very Arigatō</span>
       </div>
-      <button class="mobile-close" onclick="closeMobileMenu()" aria-label="Fermer">&times;</button>
+      <button class="mobile-close" onclick="closeMobileMenu()" aria-label="Fermer le menu">&times;</button>
     </div>
 
     <ul class="nav-links">
       <li class="nav-group-label">Voyage</li>
       <li><a href="#/" data-page="dashboard" class="nav-link active">
-        <span class="nav-icon">📊</span><span class="nav-label">Dashboard</span>
+        <span class="nav-icon">⛩️</span><span class="nav-label">Dashboard</span>
       </a></li>
       <li><a href="#/itinerary" data-page="itinerary" class="nav-link">
         <span class="nav-icon">🗺️</span><span class="nav-label">Itinéraire</span>
@@ -49,7 +51,7 @@
         <span class="nav-icon">✅</span><span class="nav-label">Check-list départ</span>
       </a></li>
       <li><a href="#/logistique" data-page="logistique" class="nav-link">
-        <span class="nav-icon">🗺️</span><span class="nav-label">Logistique Japon</span>
+        <span class="nav-icon">🚉</span><span class="nav-label">Logistique Japon</span>
       </a></li>
 
       <li class="nav-group-label">Sur place</li>
@@ -84,7 +86,6 @@
       </a></li>
     </ul>
 
-    <!-- Countdown to departure -->
     <div class="countdown-widget" id="countdown-widget">
       <div class="countdown-days" id="countdown-days">—</div>
       <div class="countdown-label">jours avant le départ</div>
@@ -97,10 +98,10 @@
       </div>
       <div class="sidebar-controls">
         <span id="last-sync" class="sync-time">Dernière sync: —</span>
-        <button onclick="refreshData()" class="icon-btn refresh-btn" title="Rafraîchir">
+        <button onclick="refreshData()" class="icon-btn refresh-btn" title="Rafraîchir les données" aria-label="Rafraîchir">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
         </button>
-        <button onclick="toggleTheme()" class="icon-btn theme-btn" id="theme-btn" title="Passer en mode Sakura">
+        <button onclick="toggleTheme()" class="icon-btn theme-btn" id="theme-btn" title="Changer de thème">
           <span class="theme-icon" aria-hidden="true">🌸</span><span class="theme-label">Sakura</span>
         </button>
       </div>
@@ -109,15 +110,12 @@
 
   <main id="main-content" class="main-content">
     <header class="mobile-header">
-      <button class="hamburger" onclick="openMobileMenu()" aria-label="Menu">
-        <span></span><span></span><span></span>
-      </button>
-      <span class="mobile-title">⛩️ Little Domo</span>
-      <div style="display:flex;gap:6px;align-items:center">
-        <button onclick="toggleTheme()" class="icon-btn theme-btn theme-btn-mobile" id="theme-btn-mobile" title="Passer en mode Sakura">
+      <span class="mobile-title"><span class="mobile-title-jp">⛩️</span> Little Domo</span>
+      <div class="mobile-header-actions">
+        <button onclick="toggleTheme()" class="icon-btn theme-btn theme-btn-mobile" id="theme-btn-mobile" title="Changer de thème" aria-label="Changer de thème">
           <span class="theme-icon" aria-hidden="true">🌸</span>
         </button>
-        <button onclick="refreshData()" class="icon-btn refresh-btn" title="Rafraîchir">
+        <button onclick="refreshData()" class="icon-btn refresh-btn" title="Rafraîchir les données" aria-label="Rafraîchir">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
         </button>
       </div>
@@ -131,6 +129,26 @@
       </div>
     </div>
   </main>
+
+  <nav class="bottom-nav" aria-label="Navigation mobile">
+    <div class="bottom-nav-inner">
+      <a href="#/" data-page="dashboard" class="bottom-nav-link active">
+        <span class="bottom-nav-icon">⛩️</span><span class="bottom-nav-label">Accueil</span>
+      </a>
+      <a href="#/itinerary" data-page="itinerary" class="bottom-nav-link">
+        <span class="bottom-nav-icon">🗺️</span><span class="bottom-nav-label">Itinéraire</span>
+      </a>
+      <a href="#/timeline" data-page="timeline" class="bottom-nav-link">
+        <span class="bottom-nav-icon">📅</span><span class="bottom-nav-label">Timeline</span>
+      </a>
+      <a href="#/guides" data-page="guides" class="bottom-nav-link">
+        <span class="bottom-nav-icon">📖</span><span class="bottom-nav-label">Fiches</span>
+      </a>
+      <button type="button" class="bottom-nav-link" id="bottom-nav-more" onclick="openMobileMenu()" aria-label="Plus de pages">
+        <span class="bottom-nav-icon">☰</span><span class="bottom-nav-label">Plus</span>
+      </button>
+    </div>
+  </nav>
 
   <div id="print-view" class="print-view"></div>
 

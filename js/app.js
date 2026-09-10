@@ -93,6 +93,14 @@ const Router = {
       link.classList.toggle('active', link.dataset.page === path);
     });
 
+    // Bottom nav : les 4 onglets principaux + "Plus"
+    const PRIMARY = ['dashboard', 'itinerary', 'timeline', 'guides'];
+    document.querySelectorAll('.bottom-nav-link[data-page]').forEach(link => {
+      link.classList.toggle('active', link.dataset.page === path);
+    });
+    const moreBtn = document.getElementById('bottom-nav-more');
+    if (moreBtn) moreBtn.classList.toggle('active', !PRIMARY.includes(path));
+
     this.currentPage = path;
 
     switch (path) {
