@@ -1261,3 +1261,217 @@ a:hover { color: var(--accent-d); }
   .budget-grid { grid-template-columns: 1fr; }
   #dashboard-map, #itinerary-map, #print-map { height: 280px; }
 }
+
+/* ════════════════════════════════════════════════════════════════
+   V26 — DIRECTION ARTISTIQUE JAPONAISE
+   Washi (紙) · Sumi (墨) · Shu (朱) · Ai (藍) · Kin (金)
+   Esthétique : wabi-sabi, ma (間), traits fins, typo Mincho
+   ════════════════════════════════════════════════════════════════ */
+
+/* ─── Tokens · washi (clair) ─── */
+:root {
+  --bg: #f5f1e8;
+  --surface: #fffdf8;
+  --surface2: #efe9dd;
+  --surface3: #e7e0d2;
+  --border: #e0d8c8;
+  --border2: #cdc3ae;
+  --snow: #fffdf8;
+  --white: #ffffff;
+  --paper-warm: #faf6ee;
+
+  --ink: #1b1916;
+  --ink2: #514c44;
+  --ink3: #948c7f;
+
+  --accent: #b23a2e;      /* 朱 shu */
+  --accent-d: #8d2a20;
+  --accent-l: #f6e6e0;
+  --accent2: #2b4a63;     /* 藍 ai */
+  --accent2-l: #e6edf2;
+
+  --vermillion: #b23a2e;
+  --vermillion-l: #f6e6e0;
+  --sage: #5f7a5a;        /* matcha */
+  --sage-l: #e9efe4;
+  --sage-d: #46593f;
+  --blush: #b23a2e;
+  --blush-l: #f6e6e0;
+  --blush-d: #8d2a20;
+  --sky: #2b4a63;
+  --sky-l: #e6edf2;
+  --sky-d: #1e374a;
+  --amber: #a9822f;       /* 金 kin */
+  --amber-l: #f5eeda;
+  --amber-d: #836222;
+  --amber-dark: #8f6c26;
+  --lavender: #6d5a7a;
+  --lavender-l: #efe9f1;
+
+  --shadow-xs: 0 1px 2px rgba(27, 25, 22, .04);
+  --shadow-sm: 0 1px 2px rgba(27, 25, 22, .05), 0 3px 10px rgba(27, 25, 22, .05);
+  --shadow-md: 0 6px 22px rgba(27, 25, 22, .08);
+  --shadow-lg: 0 16px 44px rgba(27, 25, 22, .12);
+  --shadow-xl: 0 28px 64px rgba(27, 25, 22, .18);
+
+  --r-sm: 3px; --r-md: 5px; --r-lg: 8px; --r-xl: 12px; --r: 5px;
+  --seal: #b23a2e;
+  --seal-l: #e58f78;
+  --sumi: #17150f;
+  --paper-texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+
+  --sidebar-bg: #17150f;
+  --sidebar-border: rgba(240, 233, 221, .08);
+  --sidebar-text: rgba(240, 233, 221, .55);
+  --sidebar-text-active: #f5f1e8;
+  --sidebar-active-bg: rgba(178, 58, 46, .18);
+  --sidebar-hover-bg: rgba(240, 233, 221, .06);
+  --header-bg: rgba(245, 241, 232, .82);
+}
+
+/* ─── Tokens · sakura ─── */
+[data-theme="sakura"] {
+  --bg: #faf3ef; --surface: #fffaf7; --surface2: #f5e7e4; --surface3: #eedcd9;
+  --border: #e8d3cf; --border2: #d8b9b4; --snow: #fffaf7; --white: #ffffff; --paper-warm: #fdf6f2;
+  --ink: #241a18; --ink2: #5c4844; --ink3: #9c837e;
+  --accent: #c2476b; --accent-d: #a03456; --accent-l: #fbe6ec;
+  --accent2: #7a5a8a; --accent2-l: #f0e8f4;
+  --vermillion: #c2476b; --vermillion-l: #fbe6ec;
+  --sage: #8a6a72; --sage-l: #f4e8ea; --sage-d: #6a4f56;
+  --blush: #d15c7c; --blush-l: #ffe8ee; --blush-d: #b04060;
+  --sky: #8a6aa8; --sky-l: #f1e8f8; --sky-d: #6d4f8a;
+  --amber: #b07a4a; --amber-l: #f8ece0; --amber-d: #8a5c34; --amber-dark: #9a6a3a;
+  --lavender: #a06aa0; --lavender-l: #f6e8f6;
+  --seal: #c2476b; --seal-l: #e79cb4; --sumi: #1f141a;
+  --sidebar-bg: #1f141a; --sidebar-border: rgba(255, 220, 228, .08);
+  --sidebar-text: rgba(255, 225, 232, .55); --sidebar-text-active: #fff4f7;
+  --sidebar-active-bg: rgba(194, 71, 107, .2); --sidebar-hover-bg: rgba(255, 220, 228, .06);
+  --header-bg: rgba(250, 243, 239, .82);
+}
+
+/* ─── Tokens · sumi (sombre) ─── */
+[data-theme="dark"] {
+  --bg: #0f0e0b; --surface: #17150f; --surface2: #1f1c15; --surface3: #282419;
+  --border: #2b271e; --border2: #3d3729; --snow: #17150f; --white: #1f1c15; --paper-warm: #141210;
+  --ink: #efe9dd; --ink2: #b3aa99; --ink3: #7c7466;
+  --accent: #d4644c; --accent-d: #e58f78; --accent-l: rgba(212, 100, 76, .16);
+  --accent2: #7fa3bd; --accent2-l: rgba(127, 163, 189, .15);
+  --vermillion: #d4644c; --vermillion-l: rgba(212, 100, 76, .16);
+  --sage: #7fa06a; --sage-l: rgba(127, 160, 106, .15); --sage-d: #a3c08f;
+  --blush: #d4644c; --blush-l: rgba(212, 100, 76, .16); --blush-d: #e58f78;
+  --sky: #7fa3bd; --sky-l: rgba(127, 163, 189, .15); --sky-d: #a9c6dc;
+  --amber: #c9a24a; --amber-l: rgba(201, 162, 74, .15); --amber-d: #dcc07f; --amber-dark: #c9a24a;
+  --lavender: #a08ec4; --lavender-l: rgba(160, 142, 196, .15);
+  --seal: #d4644c; --seal-l: #e58f78; --sumi: #0b0a08;
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, .4);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, .5);
+  --shadow-md: 0 6px 22px rgba(0, 0, 0, .55);
+  --shadow-lg: 0 16px 44px rgba(0, 0, 0, .65);
+  --shadow-xl: 0 28px 64px rgba(0, 0, 0, .75);
+  --sidebar-bg: #0b0a08; --sidebar-border: #221f18;
+  --sidebar-text: #8f8778; --sidebar-text-active: #f5f1e8;
+  --sidebar-active-bg: rgba(212, 100, 76, .18); --sidebar-hover-bg: rgba(255, 255, 255, .05);
+  --header-bg: rgba(15, 14, 11, .82);
+}
+
+/* ─── Base · papier washi + Mincho ─── */
+body { background-color: var(--bg); background-image: var(--paper-texture); }
+h1, h2, h3, h4 { font-family: 'Shippori Mincho', serif; font-weight: 600; letter-spacing: .01em; }
+.page-header h1 { letter-spacing: .015em; }
+.page-header h1 .jp-accent { color: var(--seal); opacity: .8; }
+.text-sm, .subtitle { letter-spacing: .01em; }
+
+/* ─── Sidebar sumi ─── */
+.sidebar { background: var(--sidebar-bg); border-right: 1px solid var(--sidebar-border); }
+.logo-mark { background: var(--seal); color: #fff; border-radius: 4px; box-shadow: none; font-family: 'Shippori Mincho', serif; }
+.logo-title { font-family: 'Shippori Mincho', serif; letter-spacing: .04em; }
+.logo-subtitle { letter-spacing: .08em; }
+.nav-group-label { letter-spacing: .18em; }
+.nav-link { letter-spacing: .02em; }
+.nav-link.active { box-shadow: inset 2px 0 0 var(--seal); }
+.countdown-widget { background: rgba(178, 58, 46, .1); border-color: rgba(178, 58, 46, .28); }
+.countdown-days { font-family: 'Shippori Mincho', serif; color: var(--seal-l); }
+.exchange-widget { background: rgba(240, 233, 221, .05); border-color: rgba(240, 233, 221, .08); }
+.exchange-value { color: var(--amber); }
+
+/* ─── Accès admin (sceau hanko) ─── */
+.admin-seal {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 10px;
+  padding: 9px 12px; border-radius: var(--r-sm);
+  background: rgba(178, 58, 46, .14); border: 1px solid rgba(178, 58, 46, .38);
+  color: #f0d9d3; font-size: .8rem; font-weight: 600; letter-spacing: .03em;
+  transition: background var(--t), border-color var(--t), color var(--t);
+}
+.admin-seal:hover { background: rgba(178, 58, 46, .26); border-color: var(--seal); color: #fff; }
+.admin-seal-mark {
+  display: flex; align-items: center; justify-content: center;
+  width: 22px; height: 22px; flex-shrink: 0; border-radius: 3px;
+  background: var(--seal); color: #fff;
+  font-family: 'Shippori Mincho', serif; font-size: .82rem; line-height: 1;
+}
+.admin-btn {
+  font-family: 'Shippori Mincho', serif; font-weight: 700; font-size: .82rem;
+  color: var(--seal) !important; border-color: rgba(178, 58, 46, .35) !important;
+}
+.admin-btn:hover { background: var(--seal) !important; color: #fff !important; border-color: var(--seal) !important; }
+
+/* ─── Hero · panneau sumi + seigaiha ─── */
+.dash-hero {
+  background: var(--sumi); color: #f5f1e8;
+  border: 1px solid rgba(245, 241, 232, .12); border-radius: var(--r-lg);
+  box-shadow: var(--shadow-lg);
+}
+.dash-hero::before {
+  content: ''; position: absolute; inset: 0; pointer-events: none; opacity: .8;
+  background-image:
+    radial-gradient(circle at 100% 150%, transparent 24%, rgba(245, 241, 232, .06) 25%, rgba(245, 241, 232, .06) 28%, transparent 29%),
+    radial-gradient(circle at 0 150%, transparent 24%, rgba(245, 241, 232, .06) 25%, rgba(245, 241, 232, .06) 28%, transparent 29%),
+    radial-gradient(circle at 50% 100%, transparent 10%, rgba(245, 241, 232, .05) 11%, rgba(245, 241, 232, .05) 23%, transparent 24%),
+    radial-gradient(circle at 100% 50%, transparent 5%, rgba(245, 241, 232, .05) 6%, rgba(245, 241, 232, .05) 15%, transparent 16%),
+    radial-gradient(circle at 0 50%, transparent 5%, rgba(245, 241, 232, .05) 6%, rgba(245, 241, 232, .05) 15%, transparent 16%);
+  background-size: 96px 48px;
+}
+.dash-hero::after {
+  content: '旅'; right: -8px; bottom: -48px;
+  font-family: 'Shippori Mincho', serif; font-size: 9rem; color: rgba(245, 241, 232, .08);
+}
+.dash-hero-main h1 { color: #fff; font-family: 'Shippori Mincho', serif; letter-spacing: .02em; }
+.dash-hero-eyebrow { color: var(--seal-l); letter-spacing: .2em; }
+.dash-hero-dates { color: rgba(245, 241, 232, .78); }
+.dash-hero-side { background: rgba(245, 241, 232, .06); border: 1px solid rgba(245, 241, 232, .18); }
+.dash-hero-count { font-family: 'Shippori Mincho', serif; color: #fff; }
+
+/* ─── Composants · traits fins, sobriété ─── */
+.stat-card, .stop-card, .guide-dest-card, .resto-card, .phrase-card, .meteo-card,
+.logistique-card, .j101-section, .cl-phase, .packing-cat, .stats-big-card, .stats-fun-card {
+  box-shadow: none;
+}
+.stat-card:hover, .stop-card:hover, .guide-dest-card:hover { transform: none; box-shadow: var(--shadow-sm); }
+.map-title-bar, .stops-panel-header, .recap-header, .converter-header, .calendar-header {
+  text-transform: uppercase; letter-spacing: .14em; font-size: .66rem; font-weight: 700;
+}
+.stat-label, .lodge-title, .detail-label, .prog-label { letter-spacing: .16em; }
+
+.btn { border-radius: var(--r-sm); letter-spacing: .08em; text-transform: uppercase; font-size: .72rem; font-weight: 700; }
+.btn-primary { background: var(--accent); box-shadow: none; }
+.btn-primary:hover { background: var(--accent-d); }
+.btn-secondary { background: transparent; border: 1px solid var(--border2); }
+
+.surprise-btn { background: var(--accent); box-shadow: none; border-radius: var(--r-lg); }
+.surprise-btn:hover { box-shadow: var(--shadow-md); }
+
+/* En-tête mobile · sceau */
+.mobile-header .mobile-title { font-family: 'Shippori Mincho', serif; letter-spacing: .04em; }
+.mobile-header .mobile-title-jp { background: var(--seal); border-radius: 4px; box-shadow: none; }
+.bottom-nav-link.active { background: var(--accent-l); }
+
+/* Ligne décorative vermillon sous les titres de section */
+.gd-section-title, .phrase-section-title, .stats-section-title { border-bottom-color: var(--border2); }
+.recap-card-label, .calendar-header { font-family: 'Shippori Mincho', serif; }
+
+/* ─── Impression (neutralise le hero sombre) ─── */
+@media print {
+  .dash-hero { background: #f2f2f2 !important; color: #111 !important; border-color: #ddd; }
+  .dash-hero::before, .dash-hero::after { display: none; }
+  .dash-hero-main h1, .dash-hero-eyebrow, .dash-hero-dates, .dash-hero-count { color: #111 !important; }
+}

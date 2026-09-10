@@ -45,6 +45,10 @@ interface NavGroup { label: string; items: NavItem[]; }
       }
 
       <div class="sidebar-footer">
+        <a class="admin-seal" routerLink="/admin">
+          <span class="admin-seal-mark">印</span>
+          <span>Administration</span>
+        </a>
         <div class="exchange-widget">
           <span class="exchange-label">1 € → ¥</span>
           <span class="exchange-value">{{ exchange.rate() ? exchange.rate()!.toFixed(2) : '---' }}</span>
@@ -65,6 +69,7 @@ interface NavGroup { label: string; items: NavItem[]; }
       <header class="mobile-header">
         <span class="mobile-title"><span class="mobile-title-jp">⛩️</span> Little Domo</span>
         <div class="mobile-header-actions">
+          <a class="icon-btn admin-btn" routerLink="/admin" aria-label="Administration" title="Administration">印</a>
           <button class="icon-btn theme-btn theme-btn-mobile" (click)="theme.toggle()" aria-label="Changer de thème">
             <span class="theme-icon">{{ themeIcon() }}</span>
           </button>
