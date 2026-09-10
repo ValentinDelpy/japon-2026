@@ -4,14 +4,15 @@ import { ContentService } from '../core/content.service';
 import { ExchangeService } from '../core/exchange.service';
 import { SearchService } from '../core/search.service';
 import { ThemeService } from '../core/theme.service';
+import { Icon, IconName } from '../shared/icon';
 import { CommandPalette } from './command-palette';
 
-interface NavItem { path: string; icon: string; label: string; }
+interface NavItem { path: string; icon: IconName; label: string; }
 interface NavGroup { label: string; items: NavItem[]; }
 
 @Component({
   selector: 'app-shell',
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, CommandPalette],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, CommandPalette, Icon],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="mobile-overlay" [class.active]="menuOpen()" (click)="closeMenu()"></div>
@@ -32,7 +33,7 @@ interface NavGroup { label: string; items: NavItem[]; }
           @for (item of group.items; track item.path) {
             <li>
               <a class="nav-link" [routerLink]="item.path" routerLinkActive="active" (click)="closeMenu()">
-                <span class="nav-icon">{{ item.icon }}</span><span class="nav-label">{{ item.label }}</span>
+                <app-icon class="nav-icon" [name]="item.icon" [size]="17" /><span class="nav-label">{{ item.label }}</span>
               </a>
             </li>
           }
@@ -47,7 +48,7 @@ interface NavGroup { label: string; items: NavItem[]; }
       }
 
       <div class="sidebar-footer">
-        <button class="sidebar-search" (click)="search.show()"><span class="ss-icon">⌕</span> Rechercher <kbd>Ctrl K</kbd></button>
+        <button class="sidebar-search" (click)="search.show()"><app-icon class="ss-icon" name="search" [size]="15" /> Rechercher <kbd>Ctrl K</kbd></button>
         <a class="admin-seal" routerLink="/admin">
           <span class="admin-seal-mark">印</span>
           <span>Administration</span>
@@ -58,11 +59,9 @@ interface NavGroup { label: string; items: NavItem[]; }
         </div>
         <div class="sidebar-controls">
           <span class="sync-time">{{ syncLabel() }}</span>
-          <button class="icon-btn refresh-btn" (click)="refresh()" title="Rafraîchir" aria-label="Rafraîchir">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
-          </button>
+          <button class="icon-btn refresh-btn" (click)="refresh()" title="Rafraîchir" aria-label="Rafraîchir"><app-icon name="refresh" [size]="14" /></button>
           <button class="icon-btn theme-btn" (click)="theme.toggle()" [title]="themeLabel()">
-            <span class="theme-icon">{{ themeIcon() }}</span><span class="theme-label">{{ themeLabel() }}</span>
+            <app-icon class="theme-icon" [name]="themeIconName()" [size]="14" /><span class="theme-label">{{ themeLabel() }}</span>
           </button>
         </div>
       </div>
@@ -72,14 +71,12 @@ interface NavGroup { label: string; items: NavItem[]; }
       <header class="mobile-header">
         <span class="mobile-title"><span class="mobile-title-jp">⛩️</span> Little Domo</span>
         <div class="mobile-header-actions">
-          <button class="icon-btn" (click)="search.show()" aria-label="Rechercher">⌕</button>
+          <button class="icon-btn" (click)="search.show()" aria-label="Rechercher"><app-icon name="search" [size]="16" /></button>
           <a class="icon-btn admin-btn" routerLink="/admin" aria-label="Administration" title="Administration">印</a>
           <button class="icon-btn theme-btn theme-btn-mobile" (click)="theme.toggle()" aria-label="Changer de thème">
-            <span class="theme-icon">{{ themeIcon() }}</span>
+            <app-icon class="theme-icon" [name]="themeIconName()" [size]="15" />
           </button>
-          <button class="icon-btn refresh-btn" (click)="refresh()" aria-label="Rafraîchir">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
-          </button>
+          <button class="icon-btn refresh-btn" (click)="refresh()" aria-label="Rafraîchir"><app-icon name="refresh" [size]="14" /></button>
         </div>
       </header>
 
@@ -107,11 +104,11 @@ interface NavGroup { label: string; items: NavItem[]; }
       <div class="bottom-nav-inner">
         @for (item of bottomItems; track item.path) {
           <a class="bottom-nav-link" [routerLink]="item.path" routerLinkActive="active">
-            <span class="bottom-nav-icon">{{ item.icon }}</span><span class="bottom-nav-label">{{ item.label }}</span>
+            <app-icon class="bottom-nav-icon" [name]="item.icon" [size]="20" /><span class="bottom-nav-label">{{ item.label }}</span>
           </a>
         }
-        <button type="button" class="bottom-nav-link" [class.active]="menuOpen()" (click)="openMenu()">
-          <span class="bottom-nav-icon">☰</span><span class="bottom-nav-label">Plus</span>
+        <button type="button" class="bottom-nav-link" [class.active]="menuOpen()" (click)="openMenu()" aria-label="Plus de pages">
+          <app-icon class="bottom-nav-icon" name="menu" [size]="20" /><span class="bottom-nav-label">Plus</span>
         </button>
       </div>
     </nav>
@@ -129,37 +126,37 @@ export class Shell {
 
   readonly groups: NavGroup[] = [
     { label: 'Voyage', items: [
-      { path: 'dashboard', icon: '⛩️', label: 'Dashboard' },
-      { path: 'today', icon: '📍', label: "Aujourd'hui" },
-      { path: 'itinerary', icon: '🗺️', label: 'Itinéraire' },
-      { path: 'timeline', icon: '📅', label: 'Timeline' },
-      { path: 'sheets', icon: '📖', label: 'Fiches Voyage' },
-      { path: 'statistics', icon: '📊', label: 'Statistiques' },
+      { path: 'dashboard', icon: 'home', label: 'Dashboard' },
+      { path: 'today', icon: 'pin', label: "Aujourd'hui" },
+      { path: 'itinerary', icon: 'route', label: 'Itinéraire' },
+      { path: 'timeline', icon: 'calendar', label: 'Timeline' },
+      { path: 'sheets', icon: 'book', label: 'Fiches Voyage' },
+      { path: 'statistics', icon: 'chart', label: 'Statistiques' },
     ] },
     { label: 'Préparation', items: [
-      { path: 'packing', icon: '🎒', label: 'Packing List' },
-      { path: 'checklist', icon: '✅', label: 'Check-list départ' },
-      { path: 'logistics', icon: '🚉', label: 'Logistique Japon' },
+      { path: 'packing', icon: 'backpack', label: 'Packing List' },
+      { path: 'checklist', icon: 'check', label: 'Check-list départ' },
+      { path: 'logistics', icon: 'train', label: 'Logistique Japon' },
     ] },
     { label: 'Sur place', items: [
-      { path: 'discover', icon: '🧭', label: 'Découvrir' },
-      { path: 'restaurants', icon: '🍜', label: 'Restos & Souvenirs' },
-      { path: 'phrasebook', icon: '🗣️', label: 'Phrasebook' },
-      { path: 'culture', icon: '🎌', label: 'Agenda culturel' },
-      { path: 'moodboard', icon: '📸', label: 'Moodboard' },
-      { path: 'photos', icon: '🖼️', label: 'Photos' },
-      { path: 'weather', icon: '🌤️', label: 'Météo & Saison' },
-      { path: 'japan-101', icon: '🇯🇵', label: 'Japon 101' },
-      { path: 'surprise', icon: '🎲', label: 'Surprise !' },
+      { path: 'discover', icon: 'compass', label: 'Découvrir' },
+      { path: 'restaurants', icon: 'utensils', label: 'Restos & Souvenirs' },
+      { path: 'phrasebook', icon: 'message', label: 'Phrasebook' },
+      { path: 'culture', icon: 'flag', label: 'Agenda culturel' },
+      { path: 'moodboard', icon: 'image', label: 'Moodboard' },
+      { path: 'photos', icon: 'camera', label: 'Photos' },
+      { path: 'weather', icon: 'sun', label: 'Météo & Saison' },
+      { path: 'japan-101', icon: 'info', label: 'Japon 101' },
+      { path: 'surprise', icon: 'dice', label: 'Surprise !' },
     ] },
-    { label: 'Outils', items: [{ path: 'print', icon: '🖨️', label: 'Impression' }] },
+    { label: 'Outils', items: [{ path: 'print', icon: 'printer', label: 'Impression' }] },
   ];
 
   readonly bottomItems: NavItem[] = [
-    { path: 'dashboard', icon: '⛩️', label: 'Accueil' },
-    { path: 'today', icon: '📍', label: "Aujourd'hui" },
-    { path: 'timeline', icon: '📅', label: 'Timeline' },
-    { path: 'itinerary', icon: '🗺️', label: 'Itinéraire' },
+    { path: 'dashboard', icon: 'home', label: 'Accueil' },
+    { path: 'today', icon: 'pin', label: "Aujourd'hui" },
+    { path: 'timeline', icon: 'calendar', label: 'Timeline' },
+    { path: 'itinerary', icon: 'route', label: 'Itinéraire' },
   ];
 
   readonly daysLeft = computed(() => {
@@ -172,7 +169,7 @@ export class Shell {
     return d === null ? '—' : d > 0 ? String(d) : d === 0 ? '✈️' : '🎌';
   });
   readonly countdownLabel = computed(() => ((this.daysLeft() ?? 1) > 0 ? 'jours avant le départ' : 'Bon voyage !'));
-  readonly themeIcon = computed(() => this.theme.meta[this.theme.current()].icon);
+  readonly themeIconName = computed(() => this.theme.meta[this.theme.current()].iconName);
   readonly themeLabel = computed(() => this.theme.meta[this.theme.current()].label);
   readonly syncLabel = computed(() => {
     const d = this.exchange.updatedAt();

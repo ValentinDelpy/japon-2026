@@ -2,16 +2,16 @@ import { Injectable, signal } from '@angular/core';
 
 export type Theme = 'light' | 'sakura' | 'dark';
 
-interface ThemeMeta { next: Theme; icon: string; label: string; }
+interface ThemeMeta { next: Theme; icon: string; iconName: 'flower' | 'moon' | 'sun'; label: string; }
 
 @Injectable({ providedIn: 'root' })
 export class ThemeService {
   private readonly KEY = 'ldva-theme';
   readonly current = signal<Theme>('light');
   readonly meta: Record<Theme, ThemeMeta> = {
-    light: { next: 'sakura', icon: '🌸', label: 'Sakura' },
-    sakura: { next: 'dark', icon: '🌙', label: 'Sombre' },
-    dark: { next: 'light', icon: '☀️', label: 'Clair' },
+    light: { next: 'sakura', icon: '🌸', iconName: 'flower', label: 'Sakura' },
+    sakura: { next: 'dark', icon: '🌙', iconName: 'moon', label: 'Sombre' },
+    dark: { next: 'light', icon: '☀️', iconName: 'sun', label: 'Clair' },
   };
 
   init(): void {

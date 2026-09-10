@@ -1322,3 +1322,47 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .sidebar-search:hover { background: rgba(240, 233, 221, .12); color: var(--sidebar-text-active); }
 .sidebar-search .ss-icon { font-size: .95rem; }
 .sidebar-search kbd { margin-left: auto; font-family: 'Space Mono', monospace; font-size: .6rem; opacity: .6; border: 1px solid rgba(240, 233, 221, .2); border-radius: 4px; padding: 1px 5px; }
+
+/* ════════════════════════════════════════════════════════════════
+   C — TOKENS (primitive → semantic) & ACCESSIBILITÉ
+   ════════════════════════════════════════════════════════════════ */
+
+/* Primitives */
+:root {
+  --sumi-900: #141210; --sumi-800: #1a1815; --sumi-700: #575147; --sumi-500: #736b5e;
+  --washi-50: #fffefb; --washi-100: #f2eee6; --washi-200: #ece7dc; --washi-300: #e4ddce; --washi-400: #cfc6b2;
+  --shu-600: #b23a2e; --shu-700: #8d2a20; --shu-100: #f6e6e0;
+  --ai-700: #2b4a63; --matcha-600: #5f7a5a; --kin-600: #a9822f;
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px; --space-5: 24px; --space-6: 32px;
+}
+
+/* Sémantiques (référencées par les composants) */
+:root {
+  --ink: var(--sumi-800); --ink2: var(--sumi-700); --ink3: var(--sumi-500);
+  --bg: var(--washi-100); --surface: var(--washi-50); --surface2: var(--washi-200);
+  --border: var(--washi-300); --border2: var(--washi-400);
+  --accent: var(--shu-600); --accent-d: var(--shu-700); --accent-l: var(--shu-100);
+  --sky: var(--ai-700);
+}
+
+/* Typographie : base 16px, interligne confortable */
+body { font-size: 16px; line-height: 1.55; }
+.text-sm { font-size: .82rem; line-height: 1.5; }
+
+/* Icônes de navigation */
+.nav-icon { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; }
+.bottom-nav-icon { display: inline-flex; align-items: center; justify-content: center; }
+.cmd-icon { color: var(--ink3); }
+
+/* Cibles tactiles confortables sur mobile (≥44px) */
+@media (max-width: 860px) {
+  .nav-link { min-height: 44px; }
+  .bottom-nav-link { min-height: 48px; }
+  .icon-btn { min-width: 44px; min-height: 44px; }
+  .btn { min-height: 44px; }
+  .tab-btn, .phrase-cat-btn, .resto-filter-btn, .agenda-filter-btn, .mood-filter-btn, .discover-cities button { min-height: 40px; }
+}
+
+/* Contraste renforcé pour le texte secondaire (≥ 4.5:1) */
+.muted, .stat-detail, .upcoming-acts, .card-dates, .guide-dest-preview { color: var(--ink3); }
+[data-theme="dark"] { --ink3: #8f8778; }
