@@ -1,10 +1,10 @@
-﻿/**
+/**
  * Envoie public/seed.json vers Supabase (PostgreSQL).
  *
- * PrÃ©requis :
+ * Prérequis :
  *   SUPABASE_URL=...  SUPABASE_SERVICE_ROLE_KEY=...  node scripts/seed-supabase.mjs
  *
- * âš ï¸ La clÃ© service_role est secrÃ¨te : ne jamais la committer.
+ * ⚠️ La clé service_role est secrète : ne jamais la committer.
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -25,7 +25,7 @@ async function insert(table, rows) {
   if (!rows?.length) return;
   const { error } = await db.from(table).upsert(rows);
   if (error) throw new Error(`${table}: ${error.message}`);
-  console.log(`âœ“ ${table} (${rows.length})`);
+  console.log(`✓ ${table} (${rows.length})`);
 }
 
 async function main() {
@@ -69,8 +69,8 @@ async function main() {
   await insert('japan101_sections', japan101Sections.map(withTrip));
   await insert('japan101_items', japan101Sections.flatMap((s) => s.items.map((i) => ({ ...i, section_id: s.id }))));
 
-  console.log('\nâœ… Seed terminÃ©. CrÃ©ez ensuite votre utilisateur admin et ajoutez son uid :');
+  console.log('\n✅ Seed terminé. Créez ensuite votre utilisateur admin et ajoutez son uid :');
   console.log("   insert into admin_users (user_id) values ('<votre-uid>');");
 }
 
-main().catch((e) => { console.error('Ã‰chec seed :', e.message); process.exit(1); });
+main().catch((e) => { console.error('Échec seed :', e.message); process.exit(1); });

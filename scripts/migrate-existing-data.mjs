@@ -1,6 +1,6 @@
-﻿/**
+/**
  * Migration du contenu existant (site vanilla) vers public/seed.json.
- * Produit un dump relationnel (ids + clÃ©s Ã©trangÃ¨res) identique au schÃ©ma PostgreSQL.
+ * Produit un dump relationnel (ids + clés étrangères) identique au schéma PostgreSQL.
  *
  * Sources : Google Sheet public + js/destinations.js + js/pages-new.js
  * Usage   : node scripts/migrate-existing-data.mjs
@@ -74,7 +74,7 @@ const COORDS = {
   koyasan: [34.2131, 135.5833], shirakawa: [36.2574, 136.9060], magome: [35.5314, 137.5600],
 };
 
-// â”€â”€ Destinations â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Destinations ───────────────────────────────────────────────
 function buildDestinations() {
   const { DESTINATIONS_DB } = evalBrowserScript(read('js/destinations.js'), '({ DESTINATIONS_DB })');
   const destinations = [], restaurants = [];
@@ -96,7 +96,7 @@ function buildDestinations() {
   return { destinations, restaurants };
 }
 
-// â”€â”€ ItinÃ©raire (Sheet) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Itinéraire (Sheet) ─────────────────────────────────────────
 function buildItinerary({ cols, rows }, destinations) {
   const find = (...kws) => {
     for (const kw of kws) { const c = cols.find((c) => c.toLowerCase() === kw.toLowerCase()); if (c) return c; }
@@ -104,9 +104,9 @@ function buildItinerary({ cols, rows }, destinations) {
     return null;
   };
   const C = {
-    date: find('Jour', 'Date'), city: find('Lieu visitÃ©', 'Lieu'), lodge: find('Logement'),
+    date: find('Jour', 'Date'), city: find('Lieu visité', 'Lieu'), lodge: find('Logement'),
     alt: find('Alternative'), price: find('Prix'), pricePp: find('Prix / personne'),
-    reserved: find('RÃ©servÃ©'), act: find('ActivitÃ©s'), dur: find('DurÃ©e trajet'),
+    reserved: find('Réservé'), act: find('Activités'), dur: find('Durée trajet'),
     priceTrip: find('Prix trajet'), tickets: find('Billets'), info: find('Infos'),
   };
   const destId = (city) => destinations.find((d) => slug(d.name).includes(slug(city)) || slug(city).includes(slug(d.name)) || slug(city).includes(d.slug))?.id ?? null;
@@ -144,7 +144,7 @@ function buildItinerary({ cols, rows }, destinations) {
     const dayId = uid();
     days.push({ id: dayId, stop_id: current.id, date, title: null, notes: (row[C.info] || '').trim() || null, order_index: dayOrder++ });
 
-    const acts = (row[C.act] || '').split(/[,\nÂ·]/).map((a) => a.trim()).filter(Boolean);
+    const acts = (row[C.act] || '').split(/[,\n·]/).map((a) => a.trim()).filter(Boolean);
     for (const title of acts) activities.push({ id: uid(), day_id: dayId, stop_id: current.id, title, order_index: actOrder++ });
   }
 
@@ -155,15 +155,15 @@ function buildItinerary({ cols, rows }, destinations) {
       check_in: s.start_date, check_out: s.end_date,
     });
     if (s.reserved || s.tickets) reservations.push({
-      id: uid(), kind: 'hotel', title: `SÃ©jour ${s.city}`,
-      status: s.reserved ? 'booked' : 'todo', notes: s.tickets ? 'Billets rÃ©servÃ©s' : null, order_index: reservations.length,
+      id: uid(), kind: 'hotel', title: `Séjour ${s.city}`,
+      status: s.reserved ? 'booked' : 'todo', notes: s.tickets ? 'Billets réservés' : null, order_index: reservations.length,
     });
   }
 
   return { stops, days, activities, transportLegs, accommodations, reservations };
 }
 
-// â”€â”€ Contenu Ã©ditorial (pages-new.js) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Contenu éditorial (pages-new.js) ───────────────────────────
 function buildEditorial() {
   const data = evalBrowserScript(
     read('js/pages-new.js'),
@@ -219,69 +219,69 @@ function buildEditorial() {
 }
 
 const LOGISTICS = [
-  { icon: 'ðŸš„', title: 'JR Pass â€” Ã€ calculer !', color: '#c73e1d', items: [
-    "âš ï¸ Pour votre itinÃ©raire, le JR Pass 21 jours (~616â‚¬/pers) coÃ»te ~157â‚¬ DE PLUS que les billets Ã  l'unitÃ© (~459â‚¬/pers estimÃ©s).",
-    'Recommandation : achetez les tickets sÃ©parÃ©ment, en gare ou via Eki-net.',
-    'Le prix du JR Pass a fortement augmentÃ© en octobre 2023 (+65%).',
+  { icon: '🚄', title: 'JR Pass — À calculer !', color: '#c73e1d', items: [
+    "⚠️ Pour votre itinéraire, le JR Pass 21 jours (~616€/pers) coûte ~157€ DE PLUS que les billets à l'unité (~459€/pers estimés).",
+    'Recommandation : achetez les tickets séparément, en gare ou via Eki-net.',
+    'Le prix du JR Pass a fortement augmenté en octobre 2023 (+65%).',
   ]},
-  { icon: 'ðŸš‡', title: 'Suica / Pasmo', color: '#5c8f7d', items: [
-    'Carte Ã  puce rechargeable utilisable dans tous les mÃ©tros, trains locaux, buses et konbini.',
-    'Chargeable aux automates IC Card. Minimum Â¥500, maximum Â¥20,000.',
-    "RÃ©cupÃ©rez votre carte Suica Ã  l'aÃ©roport dÃ¨s l'arrivÃ©e.",
+  { icon: '🚇', title: 'Suica / Pasmo', color: '#5c8f7d', items: [
+    'Carte à puce rechargeable utilisable dans tous les métros, trains locaux, buses et konbini.',
+    'Chargeable aux automates IC Card. Minimum ¥500, maximum ¥20,000.',
+    "Récupérez votre carte Suica à l'aéroport dès l'arrivée.",
   ]},
-  { icon: 'ðŸ’´', title: 'Argent & ATMs', color: '#a87d3a', items: [
-    'Le Japon reste trÃ¨s cash-friendly : prÃ©voyez 30 000â€“50 000 Â¥ en espÃ¨ces.',
-    'ATM 7-Bank (dans tous les 7-Eleven) = la rÃ©fÃ©rence pour les cartes Ã©trangÃ¨res.',
-    'La plupart des ATMs de banques locales refusent les cartes Ã©trangÃ¨res.',
+  { icon: '💴', title: 'Argent & ATMs', color: '#a87d3a', items: [
+    'Le Japon reste très cash-friendly : prévoyez 30 000–50 000 ¥ en espèces.',
+    'ATM 7-Bank (dans tous les 7-Eleven) = la référence pour les cartes étrangères.',
+    'La plupart des ATMs de banques locales refusent les cartes étrangères.',
   ]},
-  { icon: 'ðŸ“±', title: 'ConnectivitÃ©', color: '#7a9bb5', items: [
-    'SIM japonaise, Pocket WiFi ou eSIM : commandez avant le dÃ©part.',
-    'Google Maps fonctionne bien offline (tÃ©lÃ©chargez les zones avant).',
+  { icon: '📱', title: 'Connectivité', color: '#7a9bb5', items: [
+    'SIM japonaise, Pocket WiFi ou eSIM : commandez avant le départ.',
+    'Google Maps fonctionne bien offline (téléchargez les zones avant).',
   ]},
-  { icon: 'ðŸ§³', title: 'Bagages & Shinkansen', color: '#b06080', items: [
-    'Les bagages volumineux nÃ©cessitent une rÃ©servation de siÃ¨ge dans le Shinkansen.',
-    'Service Takkyubin : envoyez vos valises de ville en ville pour ~Â¥1,500.',
+  { icon: '🧳', title: 'Bagages & Shinkansen', color: '#b06080', items: [
+    'Les bagages volumineux nécessitent une réservation de siège dans le Shinkansen.',
+    'Service Takkyubin : envoyez vos valises de ville en ville pour ~¥1,500.',
   ]},
-  { icon: 'ðŸ¥', title: 'SantÃ© & Urgences', color: '#c06070', items: [
-    "NumÃ©ros d'urgence : 110 (police), 119 (SAMU/pompiers).",
-    'Ambassade de France Ã  Tokyo : +81-3-5798-6000.',
+  { icon: '🏥', title: 'Santé & Urgences', color: '#c06070', items: [
+    "Numéros d'urgence : 110 (police), 119 (SAMU/pompiers).",
+    'Ambassade de France à Tokyo : +81-3-5798-6000.',
     'Assurance voyage indispensable.',
   ]},
-  { icon: 'ðŸŽŒ', title: 'Ã‰tiquette & Customs', color: '#606c38', items: [
-    'Pas de pourboire â€” jamais.',
+  { icon: '🎌', title: 'Étiquette & Customs', color: '#606c38', items: [
+    'Pas de pourboire — jamais.',
     'Retirez vos chaussures dans les maisons, temples et certains ryokan.',
-    'Les escalators : restez Ã  gauche Ã  Osaka, Ã  droite ailleurs.',
+    'Les escalators : restez à gauche à Osaka, à droite ailleurs.',
   ]},
 ];
 
 function buildSurprise(destinations, restaurants) {
   const items = [];
   for (const d of destinations) {
-    for (const h of d.highlights || []) items.push({ type: 'highlight', city: d.name, text: h, icon: 'â­' });
-    for (const f of d.funFacts || []) items.push({ type: 'highlight', city: d.name, text: f, icon: 'ðŸ’¡' });
+    for (const h of d.highlights || []) items.push({ type: 'highlight', city: d.name, text: h, icon: '⭐' });
+    for (const f of d.funFacts || []) items.push({ type: 'highlight', city: d.name, text: f, icon: '💡' });
   }
-  for (const r of restaurants) items.push({ type: 'restaurant', city: r.city, text: `${r.name} â€” ${r.description || ''}`, icon: 'ðŸœ', price: r.price });
+  for (const r of restaurants) items.push({ type: 'restaurant', city: r.city, text: `${r.name} — ${r.description || ''}`, icon: '🍜', price: r.price });
   return items.map((it, i) => ({ id: uid(), ...it, order_index: i }));
 }
 
 async function main() {
-  console.log('â†’ Google Sheetâ€¦');
+  console.log('→ Google Sheet…');
   const sheet = await fetchSheet();
 
-  console.log('â†’ destinations.jsâ€¦');
+  console.log('→ destinations.js…');
   const { destinations, restaurants } = buildDestinations();
 
   const iti = buildItinerary(sheet, destinations);
 
-  console.log('â†’ pages-new.jsâ€¦');
+  console.log('→ pages-new.js…');
   const editorial = buildEditorial();
 
   const seed = {
     trip: {
-      id: uid(), slug: 'japon-2026', title: 'Little Domo Very ArigatÅ',
-      subtitle: 'Toulouse â†’ Tokyo Â· Nov â€” DÃ©c 2026', origin: 'Toulouse', destination: 'Tokyo',
+      id: uid(), slug: 'japon-2026', title: 'Little Domo Very Arigatō',
+      subtitle: 'Toulouse → Tokyo · Nov — Déc 2026', origin: 'Toulouse', destination: 'Tokyo',
       start_date: '2026-11-18', end_date: '2026-12-05', travelers: 4,
-      description: 'Voyage au Japon en famille â€” itinÃ©raire, prÃ©paratifs et carnet de route.',
+      description: 'Voyage au Japon en famille — itinéraire, préparatifs et carnet de route.',
       currency: 'EUR', theme: 'light', is_active: true,
     },
     destinations, restaurants,
@@ -296,7 +296,7 @@ async function main() {
 
   fs.writeFileSync(path.join(ROOT, 'supabase', 'seed.json'), JSON.stringify(seed, null, 2));
   const n = (a) => (Array.isArray(a) ? a.length : 0);
-  console.log(`âœ“ seed.json : ${n(seed.destinations)} destinations, ${n(seed.restaurants)} restos, ${n(seed.stops)} Ã©tapes, ${n(seed.days)} jours, ${n(seed.activities)} activitÃ©s, ${n(seed.phrases)} phrases, ${n(seed.surpriseItems)} surprises.`);
+  console.log(`✓ seed.json : ${n(seed.destinations)} destinations, ${n(seed.restaurants)} restos, ${n(seed.stops)} étapes, ${n(seed.days)} jours, ${n(seed.activities)} activités, ${n(seed.phrases)} phrases, ${n(seed.surpriseItems)} surprises.`);
 }
 
-main().catch((e) => { console.error('Ã‰chec migration :', e); process.exit(1); });
+main().catch((e) => { console.error('Échec migration :', e); process.exit(1); });

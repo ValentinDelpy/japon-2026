@@ -1,4 +1,4 @@
-﻿import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ContentService } from '../../core/content.service';
 import { AdminService } from '../../core/admin.service';
@@ -10,20 +10,20 @@ import { formatDay } from '../../core/format';
   imports: [FormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="admin-page-header"><h1>ðŸŽ¯ ActivitÃ©s</h1><span class="spacer"></span><button class="btn btn-primary btn-sm" (click)="add()">+ Nouvelle activitÃ©</button></div>
+    <div class="admin-page-header"><h1>🎯 Activités</h1><span class="spacer"></span><button class="btn btn-primary btn-sm" (click)="add()">+ Nouvelle activité</button></div>
 
     @if (editing(); as a) {
       <form class="admin-form mb-2" (ngSubmit)="save()">
         <div class="form-grid">
           <div class="field"><label>Titre</label><input class="input" name="title" [(ngModel)]="a.title" required></div>
-          <div class="field"><label>JournÃ©e</label><select class="select" name="day_id" [(ngModel)]="a.day_id">
-            <option [ngValue]="null">â€”</option>
-            @for (d of content.days(); track d.id) { <option [ngValue]="d.id">{{ formatDay(d.date) }} â€” {{ stopName(d.stop_id) }}</option> }
+          <div class="field"><label>Journée</label><select class="select" name="day_id" [(ngModel)]="a.day_id">
+            <option [ngValue]="null">—</option>
+            @for (d of content.days(); track d.id) { <option [ngValue]="d.id">{{ formatDay(d.date) }} — {{ stopName(d.stop_id) }}</option> }
           </select></div>
           <div class="field"><label>Heure</label><input class="input" name="time" placeholder="09:00" [(ngModel)]="a.time"></div>
-          <div class="field"><label>CatÃ©gorie</label><input class="input" name="category" [(ngModel)]="a.category"></div>
-          <div class="field"><label>DurÃ©e</label><input class="input" name="duration" [(ngModel)]="a.duration"></div>
-          <div class="field"><label>CoÃ»t (Â¥)</label><input class="input" type="number" name="cost" [(ngModel)]="a.cost"></div>
+          <div class="field"><label>Catégorie</label><input class="input" name="category" [(ngModel)]="a.category"></div>
+          <div class="field"><label>Durée</label><input class="input" name="duration" [(ngModel)]="a.duration"></div>
+          <div class="field"><label>Coût (¥)</label><input class="input" type="number" name="cost" [(ngModel)]="a.cost"></div>
         </div>
         <div class="field"><label>Description</label><textarea class="textarea" name="description" [(ngModel)]="a.description"></textarea></div>
         <div class="field"><label>Lien</label><input class="input" name="link" [(ngModel)]="a.link"></div>
@@ -33,20 +33,20 @@ import { formatDay } from '../../core/format';
 
     <div class="admin-table-wrap">
       <table class="admin-table">
-        <thead><tr><th>Heure</th><th>Titre</th><th>JournÃ©e</th><th>CatÃ©gorie</th><th></th></tr></thead>
+        <thead><tr><th>Heure</th><th>Titre</th><th>Journée</th><th>Catégorie</th><th></th></tr></thead>
         <tbody>
           @for (a of sorted(); track a.id) {
             <tr>
-              <td class="row-date">{{ a.time || 'â€”' }}</td>
+              <td class="row-date">{{ a.time || '—' }}</td>
               <td>{{ a.title }}</td>
               <td>{{ dayLabel(a.day_id) }}</td>
-              <td>{{ a.category || 'â€”' }}</td>
+              <td>{{ a.category || '—' }}</td>
               <td><div class="row-actions">
-                <button class="icon-action" (click)="edit(a)" title="Modifier">âœï¸</button>
-                <button class="icon-action" (click)="remove(a)" title="Supprimer">ðŸ—‘ï¸</button>
+                <button class="icon-action" (click)="edit(a)" title="Modifier">✏️</button>
+                <button class="icon-action" (click)="remove(a)" title="Supprimer">🗑️</button>
               </div></td>
             </tr>
-          } @empty { <tr><td colspan="5" class="empty-state">Aucune activitÃ©.</td></tr> }
+          } @empty { <tr><td colspan="5" class="empty-state">Aucune activité.</td></tr> }
         </tbody>
       </table>
     </div>
@@ -61,7 +61,7 @@ export class ActivitiesPage {
 
   readonly sorted = () => [...this.content.activities()].sort((a, b) => a.order_index - b.order_index);
   stopName(id?: string | null): string { return this.content.stops().find((s) => s.id === id)?.city ?? ''; }
-  dayLabel(id?: string | null): string { const d = this.content.days().find((x) => x.id === id); return d ? formatDay(d.date) : 'â€”'; }
+  dayLabel(id?: string | null): string { const d = this.content.days().find((x) => x.id === id); return d ? formatDay(d.date) : '—'; }
   add(): void { this.editing.set({ order_index: this.content.activities().length }); }
   edit(a: Activity): void { this.editing.set({ ...a }); }
 
@@ -73,6 +73,6 @@ export class ActivitiesPage {
   }
 
   async remove(a: Activity): Promise<void> {
-    if (a.id && confirm(`Supprimer Â« ${a.title} Â» ?`)) await this.admin.remove('activities', a.id);
+    if (a.id && confirm(`Supprimer « ${a.title} » ?`)) await this.admin.remove('activities', a.id);
   }
 }

@@ -1,4 +1,4 @@
-﻿import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ContentService } from '../../core/content.service';
 import { AdminService } from '../../core/admin.service';
@@ -9,22 +9,22 @@ import { Reservation } from '../../core/models';
   imports: [FormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="admin-page-header"><h1>ðŸŽ« RÃ©servations</h1><span class="spacer"></span><button class="btn btn-primary btn-sm" (click)="add()">+ Nouvelle rÃ©servation</button></div>
+    <div class="admin-page-header"><h1>🎫 Réservations</h1><span class="spacer"></span><button class="btn btn-primary btn-sm" (click)="add()">+ Nouvelle réservation</button></div>
 
     @if (editing(); as r) {
       <form class="admin-form mb-2" (ngSubmit)="save()">
         <div class="form-grid">
           <div class="field"><label>Titre</label><input class="input" name="title" [(ngModel)]="r.title" required></div>
           <div class="field"><label>Type</label><select class="select" name="kind" [(ngModel)]="r.kind">
-            <option value="hotel">HÃ´tel</option><option value="restaurant">Restaurant</option><option value="transport">Transport</option><option value="activity">ActivitÃ©</option><option value="attraction">Attraction</option><option value="other">Autre</option>
+            <option value="hotel">Hôtel</option><option value="restaurant">Restaurant</option><option value="transport">Transport</option><option value="activity">Activité</option><option value="attraction">Attraction</option><option value="other">Autre</option>
           </select></div>
           <div class="field"><label>Date</label><input class="input" type="date" name="date" [(ngModel)]="r.date"></div>
           <div class="field"><label>Heure</label><input class="input" name="time" [(ngModel)]="r.time"></div>
-          <div class="field"><label>Prix (â‚¬)</label><input class="input" type="number" name="price" [(ngModel)]="r.price"></div>
+          <div class="field"><label>Prix (€)</label><input class="input" type="number" name="price" [(ngModel)]="r.price"></div>
           <div class="field"><label>Statut</label><select class="select" name="status" [(ngModel)]="r.status">
-            <option value="todo">Ã€ faire</option><option value="booked">RÃ©servÃ©</option><option value="cancelled">AnnulÃ©</option>
+            <option value="todo">À faire</option><option value="booked">Réservé</option><option value="cancelled">Annulé</option>
           </select></div>
-          <div class="field"><label>RÃ©fÃ©rence</label><input class="input" name="reference" [(ngModel)]="r.reference"></div>
+          <div class="field"><label>Référence</label><input class="input" name="reference" [(ngModel)]="r.reference"></div>
           <div class="field"><label>Lien</label><input class="input" name="url" [(ngModel)]="r.url"></div>
         </div>
         <div class="field"><label>Notes</label><textarea class="textarea" name="notes" [(ngModel)]="r.notes"></textarea></div>
@@ -40,14 +40,14 @@ import { Reservation } from '../../core/models';
             <tr>
               <td><strong>{{ r.title }}</strong></td>
               <td>{{ r.kind }}</td>
-              <td class="row-date">{{ r.date || 'â€”' }}</td>
+              <td class="row-date">{{ r.date || '—' }}</td>
               <td><span class="tag" [class.tag-ok]="r.status === 'booked'" [class.tag-todo]="r.status !== 'booked'">{{ r.status }}</span></td>
               <td><div class="row-actions">
-                <button class="icon-action" (click)="edit(r)" title="Modifier">âœï¸</button>
-                <button class="icon-action" (click)="remove(r)" title="Supprimer">ðŸ—‘ï¸</button>
+                <button class="icon-action" (click)="edit(r)" title="Modifier">✏️</button>
+                <button class="icon-action" (click)="remove(r)" title="Supprimer">🗑️</button>
               </div></td>
             </tr>
-          } @empty { <tr><td colspan="5" class="empty-state">Aucune rÃ©servation.</td></tr> }
+          } @empty { <tr><td colspan="5" class="empty-state">Aucune réservation.</td></tr> }
         </tbody>
       </table>
     </div>
@@ -70,6 +70,6 @@ export class ReservationsPage {
   }
 
   async remove(r: Reservation): Promise<void> {
-    if (r.id && confirm(`Supprimer Â« ${r.title} Â» ?`)) await this.admin.remove('reservations', r.id);
+    if (r.id && confirm(`Supprimer « ${r.title} » ?`)) await this.admin.remove('reservations', r.id);
   }
 }

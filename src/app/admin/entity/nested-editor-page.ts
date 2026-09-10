@@ -1,4 +1,4 @@
-﻿import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { AdminService } from '../../core/admin.service';
@@ -39,8 +39,8 @@ import { NESTED, NestedConfig } from './nested-config';
           <header class="nested-head">
             <strong>{{ label(group.parent) }}</strong>
             <span class="spacer"></span>
-            <button class="icon-action" (click)="editParent(group.parent)" title="Modifier">âœï¸</button>
-            <button class="icon-action" (click)="removeParent(group.parent)" title="Supprimer">ðŸ—‘ï¸</button>
+            <button class="icon-action" (click)="editParent(group.parent)" title="Modifier">✏️</button>
+            <button class="icon-action" (click)="removeParent(group.parent)" title="Supprimer">🗑️</button>
           </header>
 
           <table class="admin-table">
@@ -50,11 +50,11 @@ import { NESTED, NestedConfig } from './nested-config';
                 <tr>
                   @for (col of cfg.childColumns; track col.key) { <td>{{ child[col.key] }}</td> }
                   <td><div class="row-actions">
-                    <button class="icon-action" (click)="editChild(group.parent, child)">âœï¸</button>
-                    <button class="icon-action" (click)="removeChild(child)">ðŸ—‘ï¸</button>
+                    <button class="icon-action" (click)="editChild(group.parent, child)">✏️</button>
+                    <button class="icon-action" (click)="removeChild(child)">🗑️</button>
                   </div></td>
                 </tr>
-              } @empty { <tr><td [attr.colspan]="cfg.childColumns.length + 1" class="muted" style="padding:10px">Aucun Ã©lÃ©ment.</td></tr> }
+              } @empty { <tr><td [attr.colspan]="cfg.childColumns.length + 1" class="muted" style="padding:10px">Aucun élément.</td></tr> }
             </tbody>
           </table>
 
@@ -68,7 +68,7 @@ import { NESTED, NestedConfig } from './nested-config';
                       @case ('textarea') { <textarea class="textarea" [name]="'c_'+f.key" [(ngModel)]="childDraft[f.key]"></textarea> }
                       @case ('number') { <input class="input" type="number" [name]="'c_'+f.key" [(ngModel)]="childDraft[f.key]"> }
                       @case ('date') { <input class="input" type="date" [name]="'c_'+f.key" [(ngModel)]="childDraft[f.key]"> }
-                      @case ('select') { <select class="select" [name]="'c_'+f.key" [(ngModel)]="childDraft[f.key]">@for (o of f.options ?? []; track o) { <option [ngValue]="o">{{ o || 'â€”' }}</option> }</select> }
+                      @case ('select') { <select class="select" [name]="'c_'+f.key" [(ngModel)]="childDraft[f.key]">@for (o of f.options ?? []; track o) { <option [ngValue]="o">{{ o || '—' }}</option> }</select> }
                       @case ('checkbox') { <label class="checkbox-row"><input type="checkbox" [name]="'c_'+f.key" [(ngModel)]="childDraft[f.key]"> Oui</label> }
                       @default { <input class="input" [name]="'c_'+f.key" [(ngModel)]="childDraft[f.key]"> }
                     }
@@ -82,7 +82,7 @@ import { NESTED, NestedConfig } from './nested-config';
           }
         </section>
       } @empty {
-        <div class="empty-state">Aucun Ã©lÃ©ment. CrÃ©ez une premiÃ¨re {{ cfg.parentSingular }}.</div>
+        <div class="empty-state">Aucun élément. Créez une première {{ cfg.parentSingular }}.</div>
       }
     } @else {
       <div class="empty-state">Collection inconnue.</div>
@@ -118,7 +118,7 @@ export class NestedEditorPage {
 
   label(parent: any): string {
     const col = this.config?.parentColumns[0]?.key ?? 'id';
-    return String(parent[col] ?? 'â€”');
+    return String(parent[col] ?? '—');
   }
 
   addParent(): void {
@@ -135,7 +135,7 @@ export class NestedEditorPage {
   }
   async removeParent(parent: any): Promise<void> {
     if (!this.config || !parent.id) return;
-    if (confirm('Supprimer cet Ã©lÃ©ment et son contenu ?')) await this.admin.remove(this.config.parentTable, parent.id);
+    if (confirm('Supprimer cet élément et son contenu ?')) await this.admin.remove(this.config.parentTable, parent.id);
   }
 
   addChild(parent: any): void {
@@ -157,6 +157,6 @@ export class NestedEditorPage {
   }
   async removeChild(child: any): Promise<void> {
     if (!this.config || !child.id) return;
-    if (confirm('Supprimer cet Ã©lÃ©ment ?')) await this.admin.remove(this.config.childTable, child.id);
+    if (confirm('Supprimer cet élément ?')) await this.admin.remove(this.config.childTable, child.id);
   }
 }

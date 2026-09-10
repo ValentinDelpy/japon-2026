@@ -1,4 +1,4 @@
-﻿import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ContentService } from '../../core/content.service';
 import { AdminService } from '../../core/admin.service';
@@ -10,24 +10,24 @@ import { formatRange } from '../../core/format';
   imports: [FormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="admin-page-header"><h1>ðŸ“ Ã‰tapes</h1><span class="spacer"></span><button class="btn btn-primary btn-sm" (click)="add()">+ Nouvelle Ã©tape</button></div>
+    <div class="admin-page-header"><h1>📍 Étapes</h1><span class="spacer"></span><button class="btn btn-primary btn-sm" (click)="add()">+ Nouvelle étape</button></div>
 
     @if (editing(); as s) {
       <form class="admin-form mb-2" (ngSubmit)="save()">
         <div class="form-grid">
           <div class="field"><label>Ville</label><input class="input" name="city" [(ngModel)]="s.city" required></div>
           <div class="field"><label>Ville (JP)</label><input class="input" name="city_jp" [(ngModel)]="s.city_jp"></div>
-          <div class="field"><label>DÃ©but</label><input class="input" type="date" name="start_date" [(ngModel)]="s.start_date"></div>
+          <div class="field"><label>Début</label><input class="input" type="date" name="start_date" [(ngModel)]="s.start_date"></div>
           <div class="field"><label>Fin</label><input class="input" type="date" name="end_date" [(ngModel)]="s.end_date"></div>
         </div>
-        <h3 style="margin:10px 0 8px;font-size:.9rem">HÃ©bergement</h3>
+        <h3 style="margin:10px 0 8px;font-size:.9rem">Hébergement</h3>
         <div class="form-grid">
           <div class="field"><label>Nom</label><input class="input" name="acc_name" [(ngModel)]="acc.name"></div>
           <div class="field"><label>Lien</label><input class="input" name="acc_url" [(ngModel)]="acc.url"></div>
           <div class="field"><label>Alternative</label><input class="input" name="acc_alt" [(ngModel)]="acc.alt_name"></div>
           <div class="field"><label>Lien alternatif</label><input class="input" name="acc_alt_url" [(ngModel)]="acc.alt_url"></div>
-          <div class="field"><label>Prix total (â‚¬)</label><input class="input" type="number" name="acc_price" [(ngModel)]="acc.price_total"></div>
-          <div class="field"><label>RÃ©servÃ©</label><select class="select" name="acc_res" [(ngModel)]="acc.reserved"><option [ngValue]="true">Oui</option><option [ngValue]="false">Non</option></select></div>
+          <div class="field"><label>Prix total (€)</label><input class="input" type="number" name="acc_price" [(ngModel)]="acc.price_total"></div>
+          <div class="field"><label>Réservé</label><select class="select" name="acc_res" [(ngModel)]="acc.reserved"><option [ngValue]="true">Oui</option><option [ngValue]="false">Non</option></select></div>
         </div>
         <div class="form-actions"><button class="btn btn-ghost" type="button" (click)="editing.set(null)">Annuler</button><button class="btn btn-primary" type="submit">Enregistrer</button></div>
       </form>
@@ -35,20 +35,20 @@ import { formatRange } from '../../core/format';
 
     <div class="admin-table-wrap">
       <table class="admin-table">
-        <thead><tr><th>Ville</th><th>Dates</th><th>HÃ©bergement</th><th>Prix</th><th></th></tr></thead>
+        <thead><tr><th>Ville</th><th>Dates</th><th>Hébergement</th><th>Prix</th><th></th></tr></thead>
         <tbody>
           @for (stop of content.stops(); track stop.id) {
             <tr>
               <td><strong>{{ stop.city }}</strong></td>
               <td class="row-date">{{ formatRange(stop.start_date, stop.end_date) }}</td>
-              <td>{{ accommodation(stop.id)?.name || 'â€”' }}</td>
-              <td>{{ accommodation(stop.id)?.price_total ?? 'â€”' }}</td>
+              <td>{{ accommodation(stop.id)?.name || '—' }}</td>
+              <td>{{ accommodation(stop.id)?.price_total ?? '—' }}</td>
               <td><div class="row-actions">
-                <button class="icon-action" (click)="edit(stop)" title="Modifier">âœï¸</button>
-                <button class="icon-action" (click)="remove(stop)" title="Supprimer">ðŸ—‘ï¸</button>
+                <button class="icon-action" (click)="edit(stop)" title="Modifier">✏️</button>
+                <button class="icon-action" (click)="remove(stop)" title="Supprimer">🗑️</button>
               </div></td>
             </tr>
-          } @empty { <tr><td colspan="5" class="empty-state">Aucune Ã©tape.</td></tr> }
+          } @empty { <tr><td colspan="5" class="empty-state">Aucune étape.</td></tr> }
         </tbody>
       </table>
     </div>
@@ -86,6 +86,6 @@ export class StopsPage {
   }
 
   async remove(stop: Stop): Promise<void> {
-    if (stop.id && confirm(`Supprimer l'Ã©tape ${stop.city} ?`)) await this.admin.remove('stops', stop.id);
+    if (stop.id && confirm(`Supprimer l'étape ${stop.city} ?`)) await this.admin.remove('stops', stop.id);
   }
 }

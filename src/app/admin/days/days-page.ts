@@ -1,4 +1,4 @@
-﻿import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ContentService } from '../../core/content.service';
 import { AdminService } from '../../core/admin.service';
@@ -10,14 +10,14 @@ import { formatDay } from '../../core/format';
   imports: [FormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="admin-page-header"><h1>ðŸ“… JournÃ©es</h1><span class="spacer"></span><button class="btn btn-primary btn-sm" (click)="add()">+ Nouvelle journÃ©e</button></div>
+    <div class="admin-page-header"><h1>📅 Journées</h1><span class="spacer"></span><button class="btn btn-primary btn-sm" (click)="add()">+ Nouvelle journée</button></div>
 
     @if (editing(); as d) {
       <form class="admin-form mb-2" (ngSubmit)="save()">
         <div class="form-grid">
           <div class="field"><label>Date</label><input class="input" type="date" name="date" [(ngModel)]="d.date" required></div>
-          <div class="field"><label>Ã‰tape</label><select class="select" name="stop_id" [(ngModel)]="d.stop_id">
-            <option [ngValue]="null">â€”</option>
+          <div class="field"><label>Étape</label><select class="select" name="stop_id" [(ngModel)]="d.stop_id">
+            <option [ngValue]="null">—</option>
             @for (s of content.stops(); track s.id) { <option [ngValue]="s.id">{{ s.city }}</option> }
           </select></div>
           <div class="field"><label>Titre</label><input class="input" name="title" [(ngModel)]="d.title"></div>
@@ -29,20 +29,20 @@ import { formatDay } from '../../core/format';
 
     <div class="admin-table-wrap">
       <table class="admin-table">
-        <thead><tr><th>Date</th><th>Ã‰tape</th><th>Titre</th><th>ActivitÃ©s</th><th></th></tr></thead>
+        <thead><tr><th>Date</th><th>Étape</th><th>Titre</th><th>Activités</th><th></th></tr></thead>
         <tbody>
           @for (day of content.days(); track day.id) {
             <tr>
               <td class="row-date">{{ formatDay(day.date) }}</td>
               <td>{{ stopName(day.stop_id) }}</td>
-              <td>{{ day.title || 'â€”' }}</td>
+              <td>{{ day.title || '—' }}</td>
               <td>{{ activityCount(day.id) }}</td>
               <td><div class="row-actions">
-                <button class="icon-action" (click)="edit(day)" title="Modifier">âœï¸</button>
-                <button class="icon-action" (click)="remove(day)" title="Supprimer">ðŸ—‘ï¸</button>
+                <button class="icon-action" (click)="edit(day)" title="Modifier">✏️</button>
+                <button class="icon-action" (click)="remove(day)" title="Supprimer">🗑️</button>
               </div></td>
             </tr>
-          } @empty { <tr><td colspan="5" class="empty-state">Aucune journÃ©e.</td></tr> }
+          } @empty { <tr><td colspan="5" class="empty-state">Aucune journée.</td></tr> }
         </tbody>
       </table>
     </div>
@@ -55,7 +55,7 @@ export class DaysPage {
   readonly formatDay = formatDay;
   readonly editing = signal<Partial<Day> | null>(null);
 
-  stopName(id?: string | null): string { return this.content.stops().find((s) => s.id === id)?.city ?? 'â€”'; }
+  stopName(id?: string | null): string { return this.content.stops().find((s) => s.id === id)?.city ?? '—'; }
   activityCount(id?: string): number { return this.content.content().activities.filter((a) => a.day_id === id).length; }
   add(): void { this.editing.set({ date: new Date().toISOString().slice(0, 10), order_index: this.content.days().length }); }
   edit(day: Day): void { this.editing.set({ ...day }); }
@@ -68,6 +68,6 @@ export class DaysPage {
   }
 
   async remove(day: Day): Promise<void> {
-    if (day.id && confirm(`Supprimer la journÃ©e du ${formatDay(day.date)} ?`)) await this.admin.remove('days', day.id);
+    if (day.id && confirm(`Supprimer la journée du ${formatDay(day.date)} ?`)) await this.admin.remove('days', day.id);
   }
 }

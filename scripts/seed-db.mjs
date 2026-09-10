@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Charge public/seed.json dans PostgreSQL.
  * Usage : DATABASE_URL=postgresql://... node scripts/seed-db.mjs
  */
@@ -30,7 +30,7 @@ async function upsert(table, rows) {
   const updates = cols.filter((c) => c !== 'id').map((c) => `"${c}"=excluded."${c}"`).join(', ');
   const sql = `insert into ${table} (${cols.map((c) => `"${c}"`).join(',')}) values ${chunks.join(',')} on conflict (id) do update set ${updates}`;
   await client.query(sql, values);
-  console.log(`  âœ“ ${table} (${rows.length})`);
+  console.log(`  ✓ ${table} (${rows.length})`);
 }
 
 const withTrip = (tripId) => (r) => ({ trip_id: tripId, ...r });
@@ -78,10 +78,10 @@ try {
   await upsert('japan101_items', japan101Sections.flatMap((s) => s.items.map((i) => ({ ...i, section_id: s.id }))));
 
   await client.query('commit');
-  console.log('\nâœ“ Seed terminÃ©.');
+  console.log('\n✓ Seed terminé.');
 } catch (e) {
   await client.query('rollback');
-  console.error('Ã‰chec seed :', e.message);
+  console.error('Échec seed :', e.message);
   process.exitCode = 1;
 } finally {
   await client.end();

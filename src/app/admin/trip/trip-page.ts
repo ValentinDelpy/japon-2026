@@ -1,4 +1,4 @@
-﻿import { ChangeDetectionStrategy, Component, effect, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ContentService } from '../../core/content.service';
 import { AdminService } from '../../core/admin.service';
@@ -9,7 +9,7 @@ import { Trip } from '../../core/models';
   imports: [FormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="admin-page-header"><h1>âœˆï¸ Voyage</h1></div>
+    <div class="admin-page-header"><h1>✈️ Voyage</h1></div>
 
     <form class="admin-form" (ngSubmit)="save()">
       <div class="form-grid">
@@ -17,13 +17,13 @@ import { Trip } from '../../core/models';
         <div class="field"><label>Sous-titre</label><input class="input" name="subtitle" [(ngModel)]="model.subtitle"></div>
         <div class="field"><label>Origine</label><input class="input" name="origin" [(ngModel)]="model.origin"></div>
         <div class="field"><label>Destination</label><input class="input" name="destination" [(ngModel)]="model.destination"></div>
-        <div class="field"><label>DÃ©but</label><input class="input" type="date" name="start_date" [(ngModel)]="model.start_date"></div>
+        <div class="field"><label>Début</label><input class="input" type="date" name="start_date" [(ngModel)]="model.start_date"></div>
         <div class="field"><label>Fin</label><input class="input" type="date" name="end_date" [(ngModel)]="model.end_date"></div>
         <div class="field"><label>Voyageurs</label><input class="input" type="number" name="travelers" [(ngModel)]="model.travelers"></div>
         <div class="field"><label>Devise</label><input class="input" name="currency" [(ngModel)]="model.currency"></div>
       </div>
       <div class="field"><label>Description</label><textarea class="textarea" name="description" [(ngModel)]="model.description"></textarea></div>
-      <div class="form-actions"><button class="btn btn-primary" type="submit" [disabled]="saving()">{{ saving() ? 'Enregistrementâ€¦' : 'Enregistrer' }}</button></div>
+      <div class="form-actions"><button class="btn btn-primary" type="submit" [disabled]="saving()">{{ saving() ? 'Enregistrement…' : 'Enregistrer' }}</button></div>
       @if (message()) { <p class="tag tag-ok">{{ message() }}</p> }
     </form>
   `,
@@ -49,7 +49,7 @@ export class TripPage {
     this.message.set(null);
     try {
       await this.admin.save('trips', { ...this.model, id: this.content.trip()?.id });
-      this.message.set('EnregistrÃ© âœ“');
+      this.message.set('Enregistré ✓');
     } catch (e) {
       this.message.set(e instanceof Error ? e.message : 'Erreur');
     } finally {

@@ -1,4 +1,4 @@
-﻿import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ContentService } from '../../core/content.service';
 import { AdminService } from '../../core/admin.service';
@@ -11,16 +11,16 @@ import { Photo } from '../../core/models';
   imports: [FormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="admin-page-header"><h1>ðŸ–¼ï¸ Photos</h1></div>
+    <div class="admin-page-header"><h1>🖼️ Photos</h1></div>
 
     <form class="admin-form mb-2" (ngSubmit)="upload()">
       <div class="form-grid">
         <div class="field"><label>Fichier</label><input class="input" type="file" accept="image/*" (change)="onFile($event)"></div>
         <div class="field"><label>Titre</label><input class="input" name="title" [(ngModel)]="title"></div>
         <div class="field"><label>Lieu</label><input class="input" name="location" [(ngModel)]="location"></div>
-        <div class="field"><label>CatÃ©gorie</label><input class="input" name="category" [(ngModel)]="category"></div>
+        <div class="field"><label>Catégorie</label><input class="input" name="category" [(ngModel)]="category"></div>
       </div>
-      <div class="form-actions"><button class="btn btn-primary" type="submit" [disabled]="!file || busy()">{{ busy() ? 'Envoiâ€¦' : 'Envoyer' }}</button></div>
+      <div class="form-actions"><button class="btn btn-primary" type="submit" [disabled]="!file || busy()">{{ busy() ? 'Envoi…' : 'Envoyer' }}</button></div>
       @if (message()) { <p class="tag" [class.tag-ok]="ok()" [class.tag-todo]="!ok()">{{ message() }}</p> }
     </form>
 
@@ -28,7 +28,7 @@ import { Photo } from '../../core/models';
       @for (p of photos; track p.id) {
         <div class="photo-item">
           <img class="photo-img loaded" [src]="url(p)" [alt]="p.title || ''">
-          <button class="photo-del" (click)="remove(p)" title="Supprimer">ðŸ—‘ï¸</button>
+          <button class="photo-del" (click)="remove(p)" title="Supprimer">🗑️</button>
         </div>
       } @empty { <p class="empty-state">Aucune photo.</p> }
     </div>
@@ -71,7 +71,7 @@ export class PhotosAdminPage {
         title: this.title || null, location: this.location || null, category: this.category || null,
         order_index: this.photos.length,
       });
-      this.ok.set(true); this.message.set('Photo ajoutÃ©e âœ“');
+      this.ok.set(true); this.message.set('Photo ajoutée ✓');
       this.file = null; this.title = this.location = this.category = '';
     } catch (e) {
       this.ok.set(false); this.message.set(e instanceof Error ? e.message : 'Erreur');
