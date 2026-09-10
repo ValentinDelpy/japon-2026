@@ -1,62 +1,107 @@
-# ⛩️ Little Domo Very Arigato — 日本の旅
+# ⛩️ Little Domo Very Arigatō — 日本の旅
 
-Application interactive de planification de voyage au Japon.
+Application personnelle (Angular + PostgreSQL/Supabase) pour préparer, suivre et documenter un voyage au Japon.
+Le site voyageur **et** le panneau d'administration sont alimentés par la **même base de données** (source unique de vérité).
 
-## Fonctionnalités
+## Stack
 
-- **Dashboard** : Vue d'ensemble avec carte interactive, statistiques, budget, timeline
-- **Itinéraire** : Tableau complet des données du spreadsheet, cartes de synthèse par ville
-- **Fiches Voyage** : Guides détaillés pour chaque destination (activités, restos, anecdotes, conseils)
-- **Impression** : Vue calendrier + carte, optimisée pour l'impression PDF
-
-## Données en temps réel
-
-L'application se connecte automatiquement au Google Spreadsheet pour récupérer les données en temps réel.
-Le taux de change EUR → JPY est mis à jour automatiquement via une API externe.
-
-### Configuration du Spreadsheet
-
-Le spreadsheet doit être **publié sur le web** (Fichier → Partager → Publier sur le web) pour que l'application puisse le lire.
-
-L'ID du spreadsheet est configuré dans `js/data.js` :
-```javascript
-const SHEET_ID = '1ZOze3lbKEsa-nJpt30hhA8rlrZlkC0y295NkH_GLnJ4';
-```
-
-## Déploiement sur GitHub Pages
-
-1. Créer un repository GitHub
-2. Pousser tous les fichiers du projet
-3. Aller dans Settings → Pages
-4. Sélectionner la branche `main` et le dossier `/ (root)`
-5. Le site sera accessible à `https://votre-username.github.io/nom-du-repo/`
-
-## Structure du projet
+- **Frontend** : Angular 20 (standalone components, signals, routing lazy, TypeScript strict).
+- **Backend/DB** : Supabase (PostgreSQL + Auth + Storage). Pas de serveur à maintenir.
+- **Données** : `public/seed.json` généré depuis l'ancienne app, puis poussé vers PostgreSQL.
 
 ```
-├── index.html          # Point d'entrée SPA
-├── css/
-│   └── style.css       # Styles (design system japonais)
-├── js/
-│   ├── app.js          # Router, initialisation, menu mobile
-│   ├── data.js         # Service de données (Google Sheets + taux de change)
-│   ├── destinations.js # Base de données des guides de voyage
-│   └── pages.js        # Renderers des 4 pages
-└── README.md
+ADMIN (/admin) ──▶ PostgreSQL (Supabase) ──▶ Angular (site voyageur)
 ```
 
-## Technologies
+## Structure
 
-- Vanilla HTML/CSS/JS (aucune dépendance de build)
-- Leaflet.js (cartes interactives, via CDN)
-- Google Sheets API (gviz endpoint, lecture seule)
-- API de taux de change (open.er-api.com)
-- Google Fonts (Noto Serif JP, DM Sans, Space Mono)
+```
+src/app/
+  core/          modèles, services (auth, contenu, thème, change, progression), garde admin
+  layout/        shell voyageur + shell admin
+  features/      dashboard, itinerary, timeline, travel-sheets, statistics, packing,
+                 checklist, logistics, restaurants, phrasebook, culture, moodboard,
+                 photos, weather, japan-101, surprise, print
+  admin/         login, overview, trip, stops, days, activities, reservations, content
+supabase/migrations/0001_init.sql   schéma + RLS + storage
+scripts/
+  migrate-existing-data.mjs         extrait l'ancien site → public/seed.json
+  seed-supabase.mjs                 pousse seed.json → PostgreSQL
+css/style.css                       design system (partagé, inclus dans le build Angular)
+```
 
-## Responsive
+## Démarrage (mode démo, sans backend)
 
-L'application est entièrement responsive avec :
-- Sidebar fixe sur desktop
-- Menu hamburger sur mobile/tablette
-- Grilles adaptatives pour les cartes et statistiques
-- Vue impression optimisée
+```bash
+npm install
+npm start            # http://localhost:4200
+```
+
+Sans configuration Supabase, l'app lit `public/seed.json` (mode démo, lecture seule dans l'admin).
+
+## Configuration Supabase
+
+1. Créer un projet sur https://supabase.com.
+2. Exécuter `supabase/migrations/0001_init.sql` (SQL Editor).
+3. Renseigner `src/environments/environment.ts` :
+   ```ts
+   supabaseUrl: 'https://xxxx.supabase.co',
+   supabaseAnonKey: '<clé anon publique>',
+   ```
+4. Créer un utilisateur dans **Authentication → Users** (email + mot de passe).
+5. Lui donner les droits admin :
+   ```sql
+   insert into admin_users (user_id) values ('<uid de l’utilisateur>');
+   ```
+6. Importer les données :
+   ```bash
+   SUPABASE_URL=https://xxxx.supabase.co \
+   SUPABASE_SERVICE_ROLE_KEY=<clé service_role> \
+   node scripts/seed-supabase.mjs
+   ```
+
+La clé `service_role` est **secrète** : elle ne doit jamais être mise dans le code ni commitée.
+
+## Migration du contenu existant
+
+`scripts/migrate-existing-data.mjs` lit le Google Sheet public + `js/destinations.js` + `js/pages-new.js`
+et produit `public/seed.json` (destinations, restos, étapes, journées, activités, transports,
+hébergements, réservations, souvenirs, packing, check-list, phrases, agenda, moodboard, météo,
+logistique, Japon 101, surprises).
+
+```bash
+node scripts/migrate-existing-data.mjs
+```
+
+## Commandes
+
+| Commande | Rôle |
+|---|---|
+| `npm start` | serveur de dev |
+| `npm run build` | build production dans `dist/ldva/browser` |
+| `npm test` | tests unitaires (Karma) |
+
+## Déploiement (GitHub Pages)
+
+```bash
+npm run build -- --base-href /japon-2026/
+# publier dist/ldva/browser sur la branche gh-pages
+```
+
+Le backend (Supabase) est hébergé séparément ; le front reste statique.
+
+## Sécurité
+
+- RLS activée sur toutes les tables : **lecture publique**, **écriture réservée aux admins** (`admin_users`).
+- Le bucket Storage `photos` est public en lecture, protégé en écriture.
+- La sécurité réelle est côté PostgreSQL/RLS, pas seulement via le guard Angular.
+
+## Modèle de données (extrait)
+
+`trips`, `destinations` (+ `destination_highlights`, `destination_fun_facts`), `stops`, `days`,
+`activities`, `transport_legs`, `accommodations`, `reservations`, `restaurants`, `souvenirs`,
+`packing_categories`/`packing_items`, `checklist_phases`/`checklist_tasks`, `phrases`,
+`cultural_events`, `moodboard_sections`/`moodboard_images`, `photos`, `weather_info`,
+`logistics_sections`/`logistics_items`, `japan101_sections`/`japan101_items`, `surprise_items`.
+
+Les données dérivées (timeline, statistiques, dashboard) sont **calculées** à partir de ces tables, jamais dupliquées.

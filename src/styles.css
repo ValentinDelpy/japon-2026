@@ -1,0 +1,72 @@
+/* Compléments Angular (le design system principal est css/style.css). */
+
+:root { color-scheme: light; }
+[data-theme="dark"] { color-scheme: dark; }
+
+router-outlet { display: contents; }
+a { cursor: pointer; }
+
+/* ── Formulaires admin ── */
+.field { display: flex; flex-direction: column; gap: 5px; margin-bottom: 14px; }
+.field > label { font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--ink3); }
+.input, .select, .textarea {
+  width: 100%; padding: 10px 12px; border: 1.5px solid var(--border); border-radius: 10px;
+  background: var(--surface); font-family: 'Outfit', sans-serif; font-size: .85rem; color: var(--ink);
+  transition: border-color .2s;
+}
+.input:focus, .select:focus, .textarea:focus { outline: none; border-color: var(--accent); }
+.textarea { resize: vertical; min-height: 84px; }
+.form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0 16px; }
+.form-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 8px; }
+
+/* ── Tables admin ── */
+.admin-table { width: 100%; border-collapse: collapse; font-size: .82rem; }
+.admin-table th { text-align: left; padding: 10px 12px; font-size: .6rem; text-transform: uppercase; letter-spacing: .07em; color: var(--ink3); border-bottom: 1px solid var(--border); background: var(--surface2); font-weight: 700; }
+.admin-table td { padding: 9px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.admin-table tr:hover td { background: var(--surface2); }
+.row-actions { display: flex; gap: 6px; justify-content: flex-end; }
+.icon-action { background: none; border: none; cursor: pointer; font-size: .95rem; padding: 4px 6px; border-radius: 8px; }
+.icon-action:hover { background: var(--surface3); }
+
+/* ── Divers ── */
+.btn-sm { padding: 6px 12px; font-size: .74rem; }
+.btn-danger { background: var(--accent2); color: #fff; }
+.btn-danger:hover { background: var(--blush-d); }
+.btn-ghost { background: none; border: 1px solid var(--border); color: var(--ink2); }
+.btn-ghost:hover { background: var(--surface2); }
+.empty-state { text-align: center; padding: 40px 20px; color: var(--ink3); }
+.tag { display: inline-block; padding: 2px 9px; border-radius: 20px; font-size: .62rem; font-weight: 700; background: var(--surface2); color: var(--ink2); }
+.tag-ok { background: var(--sage-l); color: var(--sage); }
+.tag-todo { background: var(--amber-l); color: var(--amber); }
+.muted { color: var(--ink3); }
+.spacer { flex: 1; }
+.toast { position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%); background: var(--ink); color: var(--bg); padding: 10px 18px; border-radius: 10px; font-size: .82rem; font-weight: 600; z-index: 5000; box-shadow: var(--shadow-lg); animation: fadeInUp .2s ease; }
+.toast-error { background: var(--accent2); color: #fff; }
+
+/* Composants routés */
+.route-view > * { display: block; }
+
+/* ── Admin shell ── */
+.admin-layout { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
+.admin-sidebar { background: var(--sidebar-bg); border-right: 1px solid var(--border); display: flex; flex-direction: column; position: sticky; top: 0; height: 100vh; }
+.admin-brand { display: flex; align-items: center; gap: 10px; padding: 18px; color: var(--ink); border-bottom: 1px solid var(--border); }
+.admin-brand strong { display: block; font-size: .95rem; }
+.admin-brand small { color: var(--ink3); font-size: .7rem; }
+.admin-nav { display: flex; flex-direction: column; gap: 2px; padding: 12px 10px; flex: 1; overflow-y: auto; }
+.admin-nav a { display: block; padding: 9px 12px; border-radius: 10px; color: var(--ink2); font-size: .85rem; font-weight: 500; }
+.admin-nav a:hover { background: var(--surface2); color: var(--ink); }
+.admin-nav a.active { background: var(--accent-l); color: var(--accent); font-weight: 600; }
+.admin-sidebar-footer { padding: 12px 10px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 2px; }
+.admin-link { display: block; width: 100%; text-align: left; padding: 8px 12px; border: none; background: none; color: var(--ink2); font-size: .8rem; border-radius: 8px; cursor: pointer; }
+.admin-link:hover { background: var(--surface2); color: var(--ink); }
+.admin-main { min-width: 0; display: flex; flex-direction: column; }
+.admin-topbar { display: flex; align-items: center; gap: 10px; padding: 12px 24px; border-bottom: 1px solid var(--border); background: var(--surface); position: sticky; top: 0; z-index: 10; }
+.admin-content { padding: 24px; max-width: 1200px; width: 100%; }
+.admin-page-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+.admin-page-header h1 { font-size: 1.35rem; }
+@media (max-width: 860px) {
+  .admin-layout { grid-template-columns: 1fr; }
+  .admin-sidebar { position: static; height: auto; }
+  .admin-nav { flex-direction: row; flex-wrap: wrap; }
+  .admin-content { padding: 16px; }
+}
