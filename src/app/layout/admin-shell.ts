@@ -50,6 +50,8 @@ export class AdminShell {
     { path: 'overview', icon: '📊', label: "Vue d'ensemble" },
     { path: 'trip', icon: '✈️', label: 'Voyage' },
     { path: 'stops', icon: '📍', label: 'Étapes' },
+    { path: 'accommodations', icon: '🏨', label: 'Hébergements' },
+    { path: 'transport', icon: '🚄', label: 'Transports' },
     { path: 'days', icon: '📅', label: 'Journées' },
     { path: 'activities', icon: '🎯', label: 'Activités' },
     { path: 'reservations', icon: '🎫', label: 'Réservations' },
@@ -60,6 +62,12 @@ export class AdminShell {
     { path: 'weather', icon: '🌤️', label: 'Météo' },
     { path: 'surprise', icon: '🎲', label: 'Surprise' },
     { path: 'photos', icon: '🖼️', label: 'Photos' },
+    { path: 'destinations', icon: '🏙️', label: 'Destinations' },
+    { path: 'packing', icon: '🎒', label: 'Packing' },
+    { path: 'checklist', icon: '✅', label: 'Check-list' },
+    { path: 'moodboard', icon: '📸', label: 'Moodboard' },
+    { path: 'japan101', icon: '🇯🇵', label: 'Japon 101' },
+    { path: 'logistics', icon: '🚉', label: 'Logistique' },
     { path: 'content', icon: '📝', label: 'Contenu' },
   ];
 

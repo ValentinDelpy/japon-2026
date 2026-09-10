@@ -18,7 +18,7 @@ import { ENTITIES, EntityConfig } from './entity-config';
         <form class="admin-form mb-2" (ngSubmit)="save()">
           <div class="form-grid">
             @for (f of cfg.fields; track f.key) {
-              <div class="field" [style.grid-column]="f.type === 'textarea' ? '1 / -1' : null">
+              <div class="field" [style.grid-column]="(f.type === 'textarea' || f.full) ? '1 / -1' : null">
                 <label>{{ f.label }}</label>
                 @switch (f.type) {
                   @case ('textarea') { <textarea class="textarea" [name]="f.key" [(ngModel)]="draft[f.key]"></textarea> }
@@ -27,6 +27,12 @@ import { ENTITIES, EntityConfig } from './entity-config';
                   @case ('select') {
                     <select class="select" [name]="f.key" [(ngModel)]="draft[f.key]">
                       @for (o of f.options ?? []; track o) { <option [ngValue]="o">{{ o || '—' }}</option> }
+                    </select>
+                  }
+                  @case ('ref') {
+                    <select class="select" [name]="f.key" [(ngModel)]="draft[f.key]">
+                      <option [ngValue]="null">—</option>
+                      @for (o of f.optionsFrom ? f.optionsFrom(content.content()) : []; track o.value) { <option [ngValue]="o.value">{{ o.label }}</option> }
                     </select>
                   }
                   @case ('checkbox') {
@@ -71,7 +77,7 @@ import { ENTITIES, EntityConfig } from './entity-config';
 })
 export class EntityEditorPage {
   readonly admin = inject(AdminService);
-  private readonly content = inject(ContentService);
+  readonly content = inject(ContentService);
   private readonly route = inject(ActivatedRoute);
 
   readonly config: EntityConfig | undefined = ENTITIES[this.route.snapshot.data['entity']];

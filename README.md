@@ -121,6 +121,25 @@ Le backend (Supabase) est hébergé séparément ; le front reste statique.
 - Le bucket Storage `photos` est public en lecture, protégé en écriture.
 - La sécurité réelle est côté PostgreSQL/RLS, pas seulement via le guard Angular.
 
+## Administration (`/admin`)
+
+Accès via le sceau « 印 Administration » (sidebar / menu mobile) ou `/admin`.
+Protégé par Supabase Auth + RLS ; en mode démo l'accès est en lecture seule.
+
+Couvre **tout** le contenu du voyage :
+
+- **Voyage** : nom, dates, origine/destination, voyageurs, devise.
+- **Étapes & hébergements** : villes, dates, nuits, hôtels, prix, réservations.
+- **Transports** : trajets (depuis/vers une étape), mode, horaires, durée, prix.
+- **Journées & activités** : date, lieu, titre, heure, catégorie, coût, lien.
+- **Réservations** : centralisées (hôtel/resto/transport/activité).
+- **Destinations** : fiches (intro, conseils, highlights, fun facts, image, coordonnées).
+- **Restaurants · Souvenirs · Phrases · Agenda culturel · Météo · Surprise** : CRUD complet.
+- **Packing · Check-list · Moodboard · Japon 101 · Logistique** : éditeurs imbriqués (catégories + éléments).
+- **Photos** : upload/suppression dans Supabase Storage.
+
+Les données dérivées (dashboard, timeline, statistiques) sont **calculées** depuis ces tables.
+
 ## Modèle de données (extrait)
 
 `trips`, `destinations` (+ `destination_highlights`, `destination_fun_facts`), `stops`, `days`,
