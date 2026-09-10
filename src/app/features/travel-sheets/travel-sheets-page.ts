@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { ContentService } from '../../core/content.service';
 import { Destination } from '../../core/models';
 import { euro, formatRange, nightsLabel } from '../../core/format';
@@ -11,7 +12,7 @@ import { euro, formatRange, nightsLabel } from '../../core/format';
 
     <div class="guides-dest-list">
       @for (d of destinations(); track d.slug; let i = $index) {
-        <article class="guide-dest-card" [class.expanded]="open() === d.slug" (click)="toggle(d.slug)">
+        <article class="guide-dest-card" [id]="'sheet-' + d.slug" [class.expanded]="open() === d.slug" (click)="toggle(d.slug)">
           <div class="guide-dest-thumb" [style.background-image]="d.image_url ? 'url(' + d.image_url + ')' : null">
             <div class="guide-dest-num">{{ i + 1 }}</div>
           </div>
@@ -67,11 +68,22 @@ import { euro, formatRange, nightsLabel } from '../../core/format';
 })
 export class TravelSheetsPage {
   private readonly content = inject(ContentService);
+  private readonly route = inject(ActivatedRoute);
   readonly destinations = this.content.destinations;
   readonly open = signal<string | null>(null);
   readonly formatRange = formatRange;
   readonly nightsLabel = nightsLabel;
   readonly euro = euro;
+
+  constructor() {
+    const city = this.route.snapshot.queryParamMap.get('city');
+    if (!city) return;
+    const d = this.content.destinationByCity(city);
+    if (d) {
+      this.open.set(d.slug);
+      setTimeout(() => document.getElementById('sheet-' + d.slug)?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
+    }
+  }
 
   toggle(slug: string): void { this.open.set(this.open() === slug ? null : slug); }
 

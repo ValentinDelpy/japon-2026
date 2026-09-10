@@ -1,20 +1,16 @@
 import { Injectable, computed, signal } from '@angular/core';
-import { getSupabase, supabaseConfigured } from './supabase';
+import { getSupabase } from './supabase';
 import { Content, Destination, EMPTY_CONTENT } from './models';
-
-type Source = 'supabase' | 'seed';
 
 @Injectable({ providedIn: 'root' })
 export class ContentService {
   private readonly _content = signal<Content>(EMPTY_CONTENT);
   private readonly _loading = signal(false);
   private readonly _error = signal<string | null>(null);
-  private readonly _source = signal<Source>(supabaseConfigured() ? 'supabase' : 'seed');
 
   readonly content = this._content.asReadonly();
   readonly loading = this._loading.asReadonly();
   readonly error = this._error.asReadonly();
-  readonly source = this._source.asReadonly();
 
   readonly trip = computed(() => this._content().trip);
   readonly stops = computed(() => [...this._content().stops].sort((a, b) => a.order_index - b.order_index));
@@ -42,12 +38,14 @@ export class ContentService {
     return this.destinations().find((d) => n.includes(normalize(d.slug)) || normalize(d.name).includes(n) || n.includes(normalize(d.name)));
   }
 
+  /** Charge tout le voyage depuis PostgreSQL (Supabase). */
   async load(): Promise<void> {
+    const sb = getSupabase();
     this._loading.set(true);
     this._error.set(null);
     try {
-      const content = supabaseConfigured() ? await this.fromSupabase() : await this.fromSeed();
-      this._content.set(content);
+      if (!sb) throw new Error('Supabase non configuré : renseignez public/config.json.');
+      this._content.set(await this.fromSupabase(sb));
     } catch (e) {
       this._error.set(e instanceof Error ? e.message : String(e));
     } finally {
@@ -55,24 +53,20 @@ export class ContentService {
     }
   }
 
-  // ── Mode démo : seed.json généré par le script de migration ──
-  private async fromSeed(): Promise<Content> {
-    const res = await fetch('seed.json');
-    if (!res.ok) throw new Error('seed.json introuvable. Lancez `node scripts/migrate-existing-data.mjs`.');
-    const seed = (await res.json()) as Partial<Content>;
-    const restaurants = seed.restaurants ?? [];
-    const destinations = (seed.destinations ?? []).map((d) => ({
-      ...d,
-      highlights: d.highlights ?? [],
-      funFacts: d.funFacts ?? [],
-      restaurants: restaurants.filter((r) => r.destination_id === d.id),
-    }));
-    return { ...EMPTY_CONTENT, ...seed, destinations, restaurants } as Content;
+  /** Mise à jour optimiste de l'état local. */
+  update(recipe: (c: Content) => Content): void {
+    this._content.update(recipe);
   }
 
-  // ── Source de vérité : PostgreSQL via Supabase ──
-  private async fromSupabase(): Promise<Content> {
-    const sb = getSupabase()!;
+  /** Persiste une modification dans Supabase ; recharge si échec. */
+  async persist(table: string, id: string, patch: Record<string, unknown>): Promise<void> {
+    const sb = getSupabase();
+    if (!sb || !id) return;
+    const { error } = await sb.from(table).update(patch).eq('id', id);
+    if (error) { this._error.set(error.message); await this.load(); }
+  }
+
+  private async fromSupabase(sb: NonNullable<ReturnType<typeof getSupabase>>): Promise<Content> {
     const rows = async <T>(table: string): Promise<T[]> => {
       const { data, error } = await sb.from(table).select('*');
       if (error) throw new Error(`${table}: ${error.message}`);

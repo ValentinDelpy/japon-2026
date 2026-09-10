@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { ContentService } from '../../core/content.service';
-import { ProgressStore } from '../../core/progress.store';
+import { ChecklistTask } from '../../core/models';
 
 @Component({
   selector: 'app-checklist-page',
@@ -14,7 +14,7 @@ import { ProgressStore } from '../../core/progress.store';
     </div>
 
     <div class="checklist-phases">
-      @for (phase of phases; track phase.id ?? phase.label) {
+      @for (phase of phases(); track phase.id ?? phase.label) {
         <div class="cl-phase" [class.cl-phase-done]="doneIn(phase) === phase.tasks.length">
           <div class="cl-phase-header" [style.border-left]="'3px solid ' + (phase.color || 'var(--accent)')">
             <span class="cl-phase-icon">{{ phase.icon }}</span><span class="cl-phase-label">{{ phase.label }}</span>
@@ -22,8 +22,8 @@ import { ProgressStore } from '../../core/progress.store';
           </div>
           <ul class="cl-tasks">
             @for (task of phase.tasks; track task.id ?? task.label) {
-              <li class="cl-task" [class.cl-done]="checkedFor(task.id)" (click)="toggle(task.id)">
-                <span class="packing-checkbox">{{ checkedFor(task.id) ? '✅' : '☐' }}</span>
+              <li class="cl-task" [class.cl-done]="task.done" (click)="toggle(task)">
+                <span class="packing-checkbox">{{ task.done ? '✅' : '☐' }}</span>
                 <span class="cl-task-label">{{ task.label }} @if (task.link) { <a class="cl-link" [href]="task.link" target="_blank" (click)="$event.stopPropagation()">↗</a> }</span>
               </li>
             }
@@ -36,15 +36,21 @@ import { ProgressStore } from '../../core/progress.store';
 })
 export class ChecklistPage {
   private readonly content = inject(ContentService);
-  private readonly progress = inject(ProgressStore);
-  readonly phases = this.content.content().checklistPhases;
-  private readonly state = this.progress.state('checklist');
+  readonly phases = computed(() => this.content.content().checklistPhases);
 
-  readonly total = computed(() => this.phases.reduce((s, p) => s + p.tasks.length, 0));
-  readonly checked = computed(() => { const s = this.state(); return this.phases.reduce((sum, p) => sum + p.tasks.filter((t) => t.id && s[t.id]).length, 0); });
+  readonly total = computed(() => this.phases().reduce((s, p) => s + p.tasks.length, 0));
+  readonly checked = computed(() => this.phases().reduce((sum, p) => sum + p.tasks.filter((t) => t.done).length, 0));
   readonly pct = computed(() => (this.total() ? Math.round((this.checked() / this.total()) * 100) : 0));
 
-  checkedFor(id?: string): boolean { return !!(id && this.state()[id]); }
-  doneIn(phase: { tasks: { id?: string }[] }): number { const s = this.state(); return phase.tasks.filter((t) => t.id && s[t.id]).length; }
-  toggle(id?: string): void { if (id) this.progress.toggle('checklist', id); }
+  doneIn(phase: { tasks: ChecklistTask[] }): number { return phase.tasks.filter((t) => t.done).length; }
+
+  toggle(task: ChecklistTask): void {
+    if (!task.id) return;
+    const value = !task.done;
+    this.content.update((c) => ({
+      ...c,
+      checklistPhases: c.checklistPhases.map((p) => ({ ...p, tasks: p.tasks.map((t) => (t.id === task.id ? { ...t, done: value } : t)) })),
+    }));
+    void this.content.persist('checklist_tasks', task.id, { done: value });
+  }
 }

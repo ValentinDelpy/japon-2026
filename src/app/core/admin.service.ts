@@ -1,14 +1,12 @@
 import { Injectable, inject } from '@angular/core';
 import type { SupabaseClient } from '@supabase/supabase-js';
-import { getSupabase, supabaseConfigured } from './supabase';
+import { getSupabase } from './supabase';
 import { ContentService } from './content.service';
 
-/** Écritures admin : nécessite Supabase configuré (RLS admin). */
+/** Écritures admin : nécessite une session authentifiée (RLS). */
 @Injectable({ providedIn: 'root' })
 export class AdminService {
   private readonly content = inject(ContentService);
-
-  get enabled(): boolean { return supabaseConfigured(); }
 
   async save(table: string, row: Record<string, unknown>): Promise<void> {
     const sb = getSupabase();

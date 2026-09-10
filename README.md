@@ -30,14 +30,15 @@ scripts/
 css/style.css                       design system (partagé, inclus dans le build Angular)
 ```
 
-## Démarrage (mode démo, sans backend)
+## Démarrage
 
 ```bash
 npm install
 npm start            # http://localhost:4200
 ```
 
-Sans configuration Supabase, l'app lit `public/seed.json` (mode démo, lecture seule dans l'admin).
+L'application lit **exclusivement** Supabase (aucun mode démo). Renseignez
+`public/config.json` (voir ci-dessous) : sans clé, l'app affiche une erreur de configuration.
 
 ## Configuration Supabase
 

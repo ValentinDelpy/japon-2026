@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { ContentService } from '../../core/content.service';
-import { ProgressStore } from '../../core/progress.store';
+import { Souvenir } from '../../core/models';
 
 @Component({
   selector: 'app-restaurants-page',
@@ -39,8 +39,8 @@ import { ProgressStore } from '../../core/progress.store';
           <div class="restos-city-header"><span class="restos-city-name">{{ group.city }}</span></div>
           <div class="souvenirs-grid">
             @for (s of group.items; track s.id ?? s.name) {
-              <div class="souvenir-card" [class.souvenir-checked]="checkedFor(s.id)" (click)="toggleSouvenir(s.id)">
-                <div class="souvenir-check">{{ checkedFor(s.id) ? '✅' : '☐' }}</div>
+              <div class="souvenir-card" [class.souvenir-checked]="s.bought" (click)="toggleSouvenir(s)">
+                <div class="souvenir-check">{{ s.bought ? '✅' : '☐' }}</div>
                 <div class="souvenir-icon">{{ s.icon || '🎁' }}</div>
                 <div class="souvenir-body">
                   <div class="souvenir-name">{{ s.name }}</div>
@@ -59,11 +59,9 @@ import { ProgressStore } from '../../core/progress.store';
 })
 export class RestaurantsPage {
   private readonly content = inject(ContentService);
-  private readonly progress = inject(ProgressStore);
 
   readonly tab = signal<'restos' | 'souvenirs'>('restos');
   readonly filter = signal('all');
-  private readonly souvenirState = this.progress.state('souvenirs');
 
   readonly types = computed(() => [...new Set(this.content.restaurants().map((r) => r.type).filter((t): t is string => !!t))].sort());
 
@@ -75,8 +73,12 @@ export class RestaurantsPage {
 
   readonly souvenirGroups = computed(() => groupBy(this.content.content().souvenirs, (s) => s.city || 'Autre'));
 
-  checkedFor(id?: string): boolean { return !!(id && this.souvenirState()[id]); }
-  toggleSouvenir(id?: string): void { if (id) this.progress.toggle('souvenirs', id); }
+  toggleSouvenir(s: Souvenir): void {
+    if (!s.id) return;
+    const value = !s.bought;
+    this.content.update((c) => ({ ...c, souvenirs: c.souvenirs.map((x) => (x.id === s.id ? { ...x, bought: value } : x)) }));
+    void this.content.persist('souvenirs', s.id, { bought: value });
+  }
 }
 
 function groupBy<T>(list: T[], keyFn: (x: T) => string): { city: string; items: T[] }[] {

@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { AuthService } from '../../core/auth.service';
 
 @Component({
   selector: 'app-login-page',
-  imports: [FormsModule, RouterLink],
+  imports: [FormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="login-wrap">
@@ -15,11 +15,10 @@ import { AuthService } from '../../core/auth.service';
         <p class="muted" style="margin-bottom:16px">Little Domo Very Arigatō</p>
 
         @if (!auth.canUseBackend) {
-          <div class="notice">Supabase n'est pas configuré : l'admin est accessible en mode démo (lecture seule).</div>
-          <a class="btn btn-primary" style="width:100%" routerLink="/admin">Entrer en mode démo</a>
+          <div class="notice">Supabase n'est pas configuré. Renseignez <code>public/config.json</code> (URL + clé publishable).</div>
         } @else {
-          <div class="field"><label>Email</label><input class="input" type="email" name="email" [(ngModel)]="email" required></div>
-          <div class="field"><label>Mot de passe</label><input class="input" type="password" name="password" [(ngModel)]="password" required></div>
+          <div class="field"><label>Email</label><input class="input" type="email" name="email" [(ngModel)]="email" required autocomplete="username"></div>
+          <div class="field"><label>Mot de passe</label><input class="input" type="password" name="password" [(ngModel)]="password" required autocomplete="current-password"></div>
           @if (error()) { <p class="error">{{ error() }}</p> }
           <button class="btn btn-primary" style="width:100%" type="submit" [disabled]="loading()">{{ loading() ? 'Connexion…' : 'Se connecter' }}</button>
         }
@@ -31,7 +30,8 @@ import { AuthService } from '../../core/auth.service';
     .login-wrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; background: var(--bg); }
     .login-card { width: 100%; max-width: 360px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-xl); padding: 28px; box-shadow: var(--shadow-lg); text-align: center; }
     .login-card h1 { font-size: 1.3rem; }
-    .notice { background: var(--amber-l); color: var(--amber-dark); border-radius: 10px; padding: 10px 12px; font-size: .78rem; margin-bottom: 14px; text-align: left; }
+    .notice { background: var(--amber-l); color: var(--amber-dark); border-radius: 10px; padding: 10px 12px; font-size: .78rem; text-align: left; }
+    .notice code { font-family: 'Space Mono', monospace; font-size: .74rem; }
     .error { color: var(--accent2); font-size: .8rem; margin-bottom: 10px; }
   `],
 })

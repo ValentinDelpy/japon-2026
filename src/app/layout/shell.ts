@@ -123,6 +123,7 @@ export class Shell {
   readonly groups: NavGroup[] = [
     { label: 'Voyage', items: [
       { path: 'dashboard', icon: '⛩️', label: 'Dashboard' },
+      { path: 'today', icon: '📍', label: "Aujourd'hui" },
       { path: 'itinerary', icon: '🗺️', label: 'Itinéraire' },
       { path: 'timeline', icon: '📅', label: 'Timeline' },
       { path: 'sheets', icon: '📖', label: 'Fiches Voyage' },
@@ -148,9 +149,9 @@ export class Shell {
 
   readonly bottomItems: NavItem[] = [
     { path: 'dashboard', icon: '⛩️', label: 'Accueil' },
+    { path: 'today', icon: '📍', label: "Aujourd'hui" },
     { path: 'timeline', icon: '📅', label: 'Timeline' },
     { path: 'itinerary', icon: '🗺️', label: 'Itinéraire' },
-    { path: 'sheets', icon: '📖', label: 'Fiches' },
   ];
 
   readonly daysLeft = computed(() => {

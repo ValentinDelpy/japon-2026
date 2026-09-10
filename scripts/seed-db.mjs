@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Charge public/seed.json dans PostgreSQL.
  * Usage : DATABASE_URL=postgresql://... node scripts/seed-db.mjs
  */
@@ -11,7 +11,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const url = process.env.DATABASE_URL || process.env.DB_URL;
 if (!url) { console.error('DATABASE_URL manquant.'); process.exit(1); }
 
-const seed = JSON.parse(fs.readFileSync(path.join(ROOT, 'public', 'seed.json'), 'utf8'));
+const seed = JSON.parse(fs.readFileSync(path.join(ROOT, 'supabase', 'seed.json'), 'utf8'));
 const client = new pg.Client({ connectionString: url, ssl: { rejectUnauthorized: false } });
 
 async function upsert(table, rows) {
@@ -30,7 +30,7 @@ async function upsert(table, rows) {
   const updates = cols.filter((c) => c !== 'id').map((c) => `"${c}"=excluded."${c}"`).join(', ');
   const sql = `insert into ${table} (${cols.map((c) => `"${c}"`).join(',')}) values ${chunks.join(',')} on conflict (id) do update set ${updates}`;
   await client.query(sql, values);
-  console.log(`  ✓ ${table} (${rows.length})`);
+  console.log(`  âœ“ ${table} (${rows.length})`);
 }
 
 const withTrip = (tripId) => (r) => ({ trip_id: tripId, ...r });
@@ -78,10 +78,10 @@ try {
   await upsert('japan101_items', japan101Sections.flatMap((s) => s.items.map((i) => ({ ...i, section_id: s.id }))));
 
   await client.query('commit');
-  console.log('\n✓ Seed terminé.');
+  console.log('\nâœ“ Seed terminÃ©.');
 } catch (e) {
   await client.query('rollback');
-  console.error('Échec seed :', e.message);
+  console.error('Ã‰chec seed :', e.message);
   process.exitCode = 1;
 } finally {
   await client.end();

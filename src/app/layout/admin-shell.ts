@@ -33,7 +33,6 @@ import { ThemeService } from '../core/theme.service';
           <span class="muted">{{ content.trip()?.title ?? 'Voyage' }}</span>
           <span class="spacer"></span>
           @if (auth.user(); as u) { <span class="tag">{{ u.email }}</span> }
-          @if (content.source() === 'seed') { <span class="tag tag-todo">Mode démo (seed.json)</span> }
         </header>
         <div class="admin-content"><router-outlet /></div>
       </main>

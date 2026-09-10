@@ -9,6 +9,7 @@ export const routes: Routes = [
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
       { path: 'dashboard', loadComponent: () => import('./features/dashboard/dashboard-page').then((m) => m.DashboardPage) },
+      { path: 'today', loadComponent: () => import('./features/today/today-page').then((m) => m.TodayPage) },
       { path: 'itinerary', loadComponent: () => import('./features/itinerary/itinerary-page').then((m) => m.ItineraryPage) },
       { path: 'timeline', loadComponent: () => import('./features/timeline/timeline-page').then((m) => m.TimelinePage) },
       { path: 'sheets', loadComponent: () => import('./features/travel-sheets/travel-sheets-page').then((m) => m.TravelSheetsPage) },

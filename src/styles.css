@@ -46,6 +46,17 @@ a { cursor: pointer; }
 /* Composants routés */
 .route-view > * { display: block; }
 
+/* Carte : remplit la hauteur de la rangée (dashboard) */
+.dash-split .map-container { display: flex; flex-direction: column; }
+.dash-split .map-container #dash-map { flex: 1; height: auto; min-height: 440px; }
+@media (max-width: 860px) { .dash-split .map-container #dash-map { min-height: 300px; } }
+
+/* Villes cliquables (homepage → fiches voyage) */
+.card-city-link { color: var(--ink); text-decoration: none; border-bottom: 1px solid transparent; transition: color .2s, border-color .2s; }
+.card-city-link:hover { color: var(--accent); border-bottom-color: var(--accent); }
+.card-hero-exp-city { text-decoration: none; }
+.card-hero-cta { font-size: .62rem; font-weight: 600; opacity: .85; margin-left: 6px; letter-spacing: .06em; }
+
 /* ── Admin shell ── */
 .admin-layout { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
 .admin-sidebar { background: var(--sidebar-bg); border-right: 1px solid var(--border); display: flex; flex-direction: column; position: sticky; top: 0; height: 100vh; }

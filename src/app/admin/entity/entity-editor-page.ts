@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+﻿import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { AdminService } from '../../core/admin.service';
@@ -12,7 +12,6 @@ import { ENTITIES, EntityConfig } from './entity-config';
   template: `
     @if (config; as cfg) {
       <div class="admin-page-header"><h1>{{ cfg.icon }} {{ cfg.title }}</h1><span class="spacer"></span><button class="btn btn-primary btn-sm" (click)="add()">+ Nouveau</button></div>
-      @if (!admin.enabled) { <div class="notice">Mode démo : les modifications ne sont pas enregistrées.</div> }
 
       @if (formOpen()) {
         <form class="admin-form mb-2" (ngSubmit)="save()">
@@ -26,12 +25,12 @@ import { ENTITIES, EntityConfig } from './entity-config';
                   @case ('date') { <input class="input" type="date" [name]="f.key" [(ngModel)]="draft[f.key]"> }
                   @case ('select') {
                     <select class="select" [name]="f.key" [(ngModel)]="draft[f.key]">
-                      @for (o of f.options ?? []; track o) { <option [ngValue]="o">{{ o || '—' }}</option> }
+                      @for (o of f.options ?? []; track o) { <option [ngValue]="o">{{ o || 'â€”' }}</option> }
                     </select>
                   }
                   @case ('ref') {
                     <select class="select" [name]="f.key" [(ngModel)]="draft[f.key]">
-                      <option [ngValue]="null">—</option>
+                      <option [ngValue]="null">â€”</option>
                       @for (o of f.optionsFrom ? f.optionsFrom(content.content()) : []; track o.value) { <option [ngValue]="o.value">{{ o.label }}</option> }
                     </select>
                   }
@@ -55,11 +54,11 @@ import { ENTITIES, EntityConfig } from './entity-config';
               <tr>
                 @for (col of cfg.columns; track col.key) { <td>{{ row[col.key] }}</td> }
                 <td><div class="row-actions">
-                  <button class="icon-action" (click)="edit(row)" title="Modifier">✏️</button>
-                  <button class="icon-action" (click)="remove(row)" title="Supprimer">🗑️</button>
+                  <button class="icon-action" (click)="edit(row)" title="Modifier">âœï¸</button>
+                  <button class="icon-action" (click)="remove(row)" title="Supprimer">ðŸ—‘ï¸</button>
                 </div></td>
               </tr>
-            } @empty { <tr><td [attr.colspan]="cfg.columns.length + 1" class="empty-state">Aucun élément.</td></tr> }
+            } @empty { <tr><td [attr.colspan]="cfg.columns.length + 1" class="empty-state">Aucun Ã©lÃ©ment.</td></tr> }
           </tbody>
         </table>
       </div>
@@ -114,6 +113,6 @@ export class EntityEditorPage {
 
   async remove(row: Record<string, any>): Promise<void> {
     if (!this.config || !row['id']) return;
-    if (confirm('Supprimer cet élément ?')) await this.admin.remove(this.config.table, row['id'] as string);
+    if (confirm('Supprimer cet Ã©lÃ©ment ?')) await this.admin.remove(this.config.table, row['id'] as string);
   }
 }

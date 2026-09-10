@@ -74,7 +74,7 @@ declare const L: any;
                 <div class="card-head-row" (click)="toggleStop(stop)">
                   <div class="card-num-badge" [style.background]="color(i)">{{ i + 1 }}</div>
                   <div class="card-num-city">
-                    <div class="card-city">{{ stop.city }}</div>
+                    <a class="card-city card-city-link" [routerLink]="['/sheets']" [queryParams]="{ city: stop.city }" (click)="$event.stopPropagation()" title="Voir la fiche">{{ stop.city }}</a>
                     <div class="card-dates">{{ formatRange(stop.start_date, stop.end_date) }} · {{ nightsLabel(stop) }}</div>
                   </div>
                   <div class="card-right">
@@ -87,7 +87,7 @@ declare const L: any;
                     @if (destination(stop.city)?.image_url) {
                       <div class="card-hero-expanded" [style.background-image]="'url(' + destination(stop.city)!.image_url + ')'">
                         <div class="card-hero-exp-overlay"></div>
-                        <div class="card-hero-exp-city">{{ stop.city }} @if (destination(stop.city)?.name_jp) { <span class="card-hero-jp">{{ destination(stop.city)!.name_jp }}</span> }</div>
+                        <a class="card-hero-exp-city" [routerLink]="['/sheets']" [queryParams]="{ city: stop.city }" (click)="$event.stopPropagation()">{{ stop.city }} @if (destination(stop.city)?.name_jp) { <span class="card-hero-jp">{{ destination(stop.city)!.name_jp }}</span> } <span class="card-hero-cta">Fiche →</span></a>
                       </div>
                     }
                     @if (accommodation(stop.id); as a) {
@@ -117,9 +117,23 @@ declare const L: any;
                     @if (activitiesForStop(stop.id).length) {
                       <div class="act-section"><div class="lodge-title">Activités</div><div class="activity-pills">@for (a of activitiesForStop(stop.id); track a) { <span class="activity-pill">{{ a }}</span> }</div></div>
                     }
+                    @if (weatherPills(stop).length) {
+                      <div class="weather-mini-section">
+                        <div class="lodge-title">Météo (historique)</div>
+                        <div class="wx-day-row">
+                          @for (w of weatherPills(stop); track w.date) {
+                            <div class="wx-day-pill"><div class="wx-dp-date">{{ w.label }}</div><div class="wx-dp-icon">{{ w.icon }}</div><div class="wx-dp-high">{{ w.high }}°</div><div class="wx-dp-low">{{ w.low }}°</div><div class="wx-dp-rain">💧{{ w.rain }}%</div></div>
+                          }
+                        </div>
+                        @if (weatherForCity(stop.city)?.description; as desc) { <div class="wx-desc">{{ desc }}</div> }
+                      </div>
+                    }
                     @if (stop.notes) {
                       <div class="detail-row"><div class="detail-icon" style="background:var(--amber-l)">✦</div><div class="detail-content"><div class="detail-label">Note</div><div class="detail-value" style="font-style:italic">{{ stop.notes }}</div></div></div>
                     }
+                    <div class="card-cta-row">
+                      <a class="btn btn-secondary btn-sm" [routerLink]="['/sheets']" [queryParams]="{ city: stop.city }" (click)="$event.stopPropagation()">📖 Voir la fiche complète →</a>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -205,6 +219,7 @@ declare const L: any;
     .quick-link { display: flex; align-items: center; gap: 10px; padding: 14px 16px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg); color: var(--ink); font-weight: 600; font-size: .85rem; transition: border-color .2s, transform .2s; }
     .quick-link:hover { border-color: var(--accent); transform: translateY(-2px); }
     .quick-link-icon { font-size: 1.25rem; }
+    .card-cta-row { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); }
   `],
 })
 export class DashboardPage implements AfterViewInit, OnDestroy {
@@ -320,6 +335,30 @@ export class DashboardPage implements AfterViewInit, OnDestroy {
   destination(city: string) { return this.content.destinationByCity(city); }
   activitiesForStop(stopId?: string | null): string[] { return this.activities().filter((a) => a.stop_id === stopId).map((a) => a.title); }
 
+  private static readonly MONTHS = ['janv', 'févr', 'mars', 'avr', 'mai', 'juin', 'juil', 'août', 'sept', 'oct', 'nov', 'déc'];
+
+  weatherForCity(city: string) {
+    const n = city.toLowerCase();
+    return this.content.content().weather.find((w) => n.includes(w.city.toLowerCase()) || w.city.toLowerCase().includes(n));
+  }
+  private stopDates(stop: { start_date?: string | null; end_date?: string | null }): string[] {
+    if (!stop.start_date) return [];
+    const out: string[] = [];
+    const end = new Date((stop.end_date ?? stop.start_date) + 'T00:00:00');
+    for (const d = new Date(stop.start_date + 'T00:00:00'); d <= end; d.setDate(d.getDate() + 1)) {
+      out.push(`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`);
+    }
+    return out;
+  }
+  weatherPills(stop: { city: string; start_date?: string | null; end_date?: string | null }) {
+    const w = this.weatherForCity(stop.city);
+    if (!w) return [];
+    return this.stopDates(stop).map((date) => {
+      const d = new Date(date + 'T00:00:00');
+      return { date, label: `${d.getDate()} ${DashboardPage.MONTHS[d.getMonth()]}`, icon: w.icon || '🌤️', high: w.high ?? '—', low: w.low ?? '—', rain: w.rain ?? '—' };
+    });
+  }
+
   readonly openStop = signal<string | null>(null);
   readonly heroImage = computed(() => {
     const first = this.stops()[0];
@@ -334,9 +373,13 @@ export class DashboardPage implements AfterViewInit, OnDestroy {
   constructor() {
     effect(() => {
       const first = this.stops()[0];
-      if (first && this.openStop() === null) this.openStop.set(first.id ?? first.city);
+      if (first && !this.seeded) {
+        this.seeded = true;
+        this.openStop.set(first.id ?? first.city);
+      }
     });
   }
+  private seeded = false;
   isCurrent(stop: { start_date?: string | null; end_date?: string | null }): boolean {
     const today = new Date().toISOString().slice(0, 10);
     return (stop.start_date ?? '') <= today && today <= (stop.end_date ?? stop.start_date ?? '');
@@ -359,14 +402,32 @@ export class DashboardPage implements AfterViewInit, OnDestroy {
       if (!d?.lat || !d?.lng || seen.has(stop.city)) return;
       seen.add(stop.city);
       const coords: [number, number] = [d.lat, d.lng];
+      const dest = this.content.destinationByCity(stop.city);
+      const lodge = this.accommodation(stop.id);
+      const tr = this.transportFor(stop.id);
+      const acts = this.activitiesForStop(stop.id);
+      const wx = this.weatherForCity(stop.city);
+      const fiche = new URL('sheets?city=' + encodeURIComponent(stop.city), document.baseURI).href;
+      let popup = '<div class="popup-card">';
+      if (dest?.image_url) popup += `<div class="popup-img" style="background-image:url('${dest.image_url}')"></div>`;
+      popup += '<div class="popup-body">';
+      popup += `<div class="popup-title">${stop.city}${dest?.name_jp ? ' <span class="popup-jp">' + dest.name_jp + '</span>' : ''}</div>`;
+      popup += `<div class="popup-dates">📅 ${formatRange(stop.start_date, stop.end_date)} · ${nightsLabel(stop)}</div>`;
+      if (lodge) popup += `<div class="popup-detail">🏨 ${lodge.url ? `<a href="${lodge.url}" target="_blank" rel="noopener" class="cell-link">${lodge.name}</a>` : lodge.name}</div>`;
+      if (tr) popup += `<div class="popup-detail">🚄 ${tr.duration || tr.mode}${tr.price ? ' · ' + euro(tr.price) : ''}</div>`;
+      if (acts.length) popup += `<div class="popup-detail popup-activities">📍 ${acts.slice(0, 3).join(' · ')}</div>`;
+      if (wx) popup += `<div class="popup-detail">${wx.icon} ${wx.high}°C / ${wx.low}°C</div>`;
+      popup += `<a class="popup-cta" href="${fiche}">Voir la fiche complète →</a>`;
+      popup += '</div></div>';
       L.marker(coords, { icon: L.divIcon({ className: 'custom-marker-wrapper', html: `<div class="custom-marker" style="background:${this.color(idx)}">${idx + 1}</div>`, iconSize: [28, 28], iconAnchor: [14, 14] }) })
-        .addTo(this.map).bindPopup(`<div class="popup-body"><div class="popup-title">${stop.city}</div><div class="popup-dates">${formatRange(stop.start_date, stop.end_date)}</div></div>`);
+        .addTo(this.map).bindPopup(popup, { maxWidth: 280, className: 'custom-popup' });
       L.marker(coords, { icon: L.divIcon({ className: 'marker-label-wrapper', html: `<div class="marker-label">${stop.city}</div>`, iconSize: [100, 20], iconAnchor: [-18, 10] }), interactive: false }).addTo(this.map);
       pts.push(coords);
     });
     if (pts.length > 1) L.polyline(pts, { color: '#b23a2e', weight: 2.5, opacity: 0.6, dashArray: '8,8' }).addTo(this.map);
     if (pts.length) this.map.fitBounds(L.latLngBounds(pts), { padding: [40, 40] });
     else this.map.setView([36.2, 138.2], 6);
+    setTimeout(() => this.map?.invalidateSize(), 150);
   }
 }
 

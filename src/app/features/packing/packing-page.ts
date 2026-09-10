@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { ContentService } from '../../core/content.service';
-import { ProgressStore } from '../../core/progress.store';
+import { PackingItem } from '../../core/models';
 
 @Component({
   selector: 'app-packing-page',
@@ -14,15 +14,15 @@ import { ProgressStore } from '../../core/progress.store';
     </div>
 
     <div class="packing-grid">
-      @for (cat of categories; track cat.id ?? cat.label) {
+      @for (cat of categories(); track cat.id ?? cat.label) {
         <div class="packing-cat" [class.packing-cat-done]="catDone(cat)">
           <div class="packing-cat-header"><span class="packing-cat-icon">{{ cat.icon }}</span><span class="packing-cat-label">{{ cat.label }}</span><span class="packing-cat-count">{{ doneIn(cat) }}/{{ cat.items.length }}</span></div>
           <ul class="packing-items">
             @for (item of cat.items; track item.id ?? item.label) {
-              <li class="packing-item" [class.packing-done]="checkedFor(item.id)" [class.packing-required]="item.required" (click)="toggle(item.id)">
-                <span class="packing-checkbox">{{ checkedFor(item.id) ? '✅' : '☐' }}</span>
+              <li class="packing-item" [class.packing-done]="item.checked" [class.packing-required]="item.required" (click)="toggle(item)">
+                <span class="packing-checkbox">{{ item.checked ? '✅' : '☐' }}</span>
                 <span class="packing-item-label">{{ item.label }}</span>
-                @if (item.required && !checkedFor(item.id)) { <span class="packing-req-badge">!</span> }
+                @if (item.required && !item.checked) { <span class="packing-req-badge">!</span> }
               </li>
             }
           </ul>
@@ -34,19 +34,22 @@ import { ProgressStore } from '../../core/progress.store';
 })
 export class PackingPage {
   private readonly content = inject(ContentService);
-  private readonly progress = inject(ProgressStore);
-  readonly categories = this.content.content().packingCategories;
-  private readonly state = this.progress.state('packing');
+  readonly categories = computed(() => this.content.content().packingCategories);
 
-  readonly total = computed(() => this.categories.reduce((s, c) => s + c.items.length, 0));
-  readonly checked = computed(() => {
-    const s = this.state();
-    return this.categories.reduce((sum, c) => sum + c.items.filter((i) => i.id && s[i.id]).length, 0);
-  });
+  readonly total = computed(() => this.categories().reduce((s, c) => s + c.items.length, 0));
+  readonly checked = computed(() => this.categories().reduce((sum, c) => sum + c.items.filter((i) => i.checked).length, 0));
   readonly pct = computed(() => (this.total() ? Math.round((this.checked() / this.total()) * 100) : 0));
 
-  checkedFor(id?: string): boolean { return !!(id && this.state()[id]); }
-  doneIn(cat: { items: { id?: string }[] }): number { const s = this.state(); return cat.items.filter((i) => i.id && s[i.id]).length; }
-  catDone(cat: { items: { id?: string }[] }): boolean { return cat.items.length > 0 && this.doneIn(cat) === cat.items.length; }
-  toggle(id?: string): void { if (id) this.progress.toggle('packing', id); }
+  doneIn(cat: { items: PackingItem[] }): number { return cat.items.filter((i) => i.checked).length; }
+  catDone(cat: { items: PackingItem[] }): boolean { return cat.items.length > 0 && this.doneIn(cat) === cat.items.length; }
+
+  toggle(item: PackingItem): void {
+    if (!item.id) return;
+    const value = !item.checked;
+    this.content.update((c) => ({
+      ...c,
+      packingCategories: c.packingCategories.map((cat) => ({ ...cat, items: cat.items.map((i) => (i.id === item.id ? { ...i, checked: value } : i)) })),
+    }));
+    void this.content.persist('packing_items', item.id, { checked: value });
+  }
 }
