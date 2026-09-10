@@ -55,7 +55,7 @@ export interface Stop {
   city_jp?: string | null;
   start_date?: string | null;
   end_date?: string | null;
-  nights: number;
+  nights?: number;
   notes?: string | null;
   order_index: number;
 }
@@ -107,6 +107,7 @@ export interface Accommodation {
   name: string;
   alt_name?: string | null;
   url?: string | null;
+  alt_url?: string | null;
   address?: string | null;
   check_in?: string | null;
   check_out?: string | null;

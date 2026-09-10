@@ -106,14 +106,25 @@ réponses API Supabase (`freshness`, 1 jour) : les journées, activités, hôtel
 réservations, phrasebook et checklists restent consultables sans connexion. Les cochettes
 (packing/check-list/souvenirs) sont stockées en `localStorage`.
 
-## Déploiement (GitHub Pages)
+## Mise en ligne (production)
 
-```bash
-npm run build -- --base-href /japon-2026/
-# publier dist/ldva/browser sur la branche gh-pages
-```
+1. **Base de données** : créer un projet Supabase, puis exécuter dans le SQL Editor
+   `supabase/migrations/0001_init.sql` **puis** `0002_improvements.sql`.
+   Vérifier que RLS est active (lecture publique, écriture admin) et que le bucket `photos` existe.
+2. **Compte admin** : Authentication → Users → créer un utilisateur (email + mot de passe),
+   puis `insert into admin_users (user_id) values ('<uid>');`.
+3. **Variables** : renseigner `src/environments/environment.ts` (URL + clé anon publique).
+4. **Données** : `npm run seed` puis `SUPABASE_URL=... SUPABASE_SERVICE_ROLE_KEY=... npm run seed:supabase`.
+5. **Build + déploiement** :
+   ```bash
+   npm run build -- --base-href /japon-2026/
+   npx gh-pages -d dist/ldva/browser
+   ```
+   (ou publier `dist/ldva/browser` sur la branche `gh-pages`.)
 
-Le backend (Supabase) est hébergé séparément ; le front reste statique.
+Le backend (PostgreSQL + Auth + Storage) est hébergé par Supabase ; le front reste statique.
+Les écritures admin nécessitent une session authentifiée : la sécurité réelle est assurée par RLS,
+pas seulement par le guard Angular.
 
 ## Sécurité
 
@@ -137,6 +148,11 @@ Couvre **tout** le contenu du voyage :
 - **Restaurants · Souvenirs · Phrases · Agenda culturel · Météo · Surprise** : CRUD complet.
 - **Packing · Check-list · Moodboard · Japon 101 · Logistique** : éditeurs imbriqués (catégories + éléments).
 - **Photos** : upload/suppression dans Supabase Storage.
+- **Sauvegarde** : bouton « Exporter » (JSON complet du voyage) dans Contenu.
+
+Confort d'édition :
+- Les **nuits sont calculées automatiquement** depuis les dates d'étape (colonne générée).
+- L'**hébergement** associe un **nom** à un **lien** (choix principal + alternative).
 
 Les données dérivées (dashboard, timeline, statistiques) sont **calculées** depuis ces tables.
 

@@ -20,12 +20,13 @@ import { formatRange } from '../../core/format';
           <div class="field"><label>Ville (JP)</label><input class="input" name="city_jp" [(ngModel)]="s.city_jp"></div>
           <div class="field"><label>Début</label><input class="input" type="date" name="start_date" [(ngModel)]="s.start_date"></div>
           <div class="field"><label>Fin</label><input class="input" type="date" name="end_date" [(ngModel)]="s.end_date"></div>
-          <div class="field"><label>Nuits</label><input class="input" type="number" name="nights" [(ngModel)]="s.nights"></div>
         </div>
         <h3 style="margin:10px 0 8px;font-size:.9rem">Hébergement</h3>
         <div class="form-grid">
           <div class="field"><label>Nom</label><input class="input" name="acc_name" [(ngModel)]="acc.name"></div>
+          <div class="field"><label>Lien</label><input class="input" name="acc_url" [(ngModel)]="acc.url"></div>
           <div class="field"><label>Alternative</label><input class="input" name="acc_alt" [(ngModel)]="acc.alt_name"></div>
+          <div class="field"><label>Lien alternatif</label><input class="input" name="acc_alt_url" [(ngModel)]="acc.alt_url"></div>
           <div class="field"><label>Prix total (€)</label><input class="input" type="number" name="acc_price" [(ngModel)]="acc.price_total"></div>
           <div class="field"><label>Réservé</label><select class="select" name="acc_res" [(ngModel)]="acc.reserved"><option [ngValue]="true">Oui</option><option [ngValue]="false">Non</option></select></div>
         </div>
@@ -64,7 +65,7 @@ export class StopsPage {
   private accId: string | undefined;
 
   accommodation(stopId?: string | null): Accommodation | null { return this.content.accommodationForStop(stopId); }
-  add(): void { this.editing.set({ nights: 1, order_index: this.content.stops().length }); Object.keys(this.acc).forEach((k) => delete (this.acc as any)[k]); this.accId = undefined; }
+  add(): void { this.editing.set({ order_index: this.content.stops().length }); Object.keys(this.acc).forEach((k) => delete (this.acc as any)[k]); this.accId = undefined; }
 
   edit(stop: Stop): void {
     this.editing.set({ ...stop });

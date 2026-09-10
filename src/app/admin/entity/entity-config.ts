@@ -134,7 +134,8 @@ export const ENTITIES: Record<string, EntityConfig> = {
     fields: [
       { key: 'stop_id', label: 'Étape', type: 'ref', optionsFrom: stopOptions },
       { key: 'name', label: 'Nom' }, { key: 'alt_name', label: 'Alternative' },
-      { key: 'url', label: 'Lien', full: true }, { key: 'address', label: 'Adresse', full: true },
+      { key: 'url', label: 'Lien du nom', full: true }, { key: 'alt_url', label: 'Lien de l’alternative', full: true },
+      { key: 'address', label: 'Adresse', full: true },
       { key: 'check_in', label: 'Arrivée', type: 'date' }, { key: 'check_out', label: 'Départ', type: 'date' },
       { key: 'price_total', label: 'Prix total (€)', type: 'number' }, { key: 'price_per_person', label: 'Prix / pers. (€)', type: 'number' },
       { key: 'reservation_number', label: 'N° réservation' }, { key: 'reserved', label: 'Réservé', type: 'checkbox' },

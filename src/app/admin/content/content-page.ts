@@ -5,7 +5,7 @@ import { ContentService } from '../../core/content.service';
   selector: 'app-content-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="admin-page-header"><h1>📝 Contenu éditorial</h1></div>
+    <div class="admin-page-header"><h1>📝 Contenu éditorial</h1><span class="spacer"></span><button class="btn btn-secondary btn-sm" (click)="exportJson()">⬇ Exporter (sauvegarde)</button></div>
     <p class="muted mb-2">Contenu actuellement chargé depuis la base (lecture). L'édition fine de chaque collection est branchée sur les mêmes tables.</p>
 
     <div class="admin-cards">
@@ -24,6 +24,15 @@ import { ContentService } from '../../core/content.service';
 })
 export class ContentPage {
   private readonly content = inject(ContentService);
+
+  exportJson(): void {
+    const blob = new Blob([JSON.stringify(this.content.content(), null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `little-domo-${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
 
   readonly cards = computed(() => {
     const c = this.content.content();

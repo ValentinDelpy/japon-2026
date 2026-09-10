@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, computed, inject } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, computed, effect, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ContentService } from '../../core/content.service';
 import { euro, formatRange, nightsLabel } from '../../core/format';
@@ -63,17 +63,61 @@ declare const L: any;
       <div class="dashboard-grid dash-split">
         <div class="map-container"><div class="map-title-bar">🗾 Carte de l'itinéraire</div><div id="dash-map"></div></div>
         <div class="stops-panel">
-          <div class="stops-panel-header"><span class="stops-panel-title">Étapes <span class="stops-count">{{ stops().length }}</span></span><a class="text-sm" routerLink="/itinerary">Détail →</a></div>
+          <div class="stops-panel-header"><span class="stops-panel-title">Étapes <span class="stops-count">{{ stops().length }}</span></span><span class="stops-panel-hint">cliquer pour détailler</span></div>
           <div class="stops-list">
             @for (stop of stops(); track stop.id ?? stop.city; let i = $index) {
-              <div class="stop-card">
-                <div class="card-head-row">
+              <div class="stop-card" [class.expanded]="openStop() === (stop.id ?? stop.city)" [class.trip-current]="isCurrent(stop)">
+                <div class="card-strip" [style.background]="color(i)"></div>
+                <div class="card-head-row" (click)="toggleStop(stop)">
                   <div class="card-num-badge" [style.background]="color(i)">{{ i + 1 }}</div>
                   <div class="card-num-city">
                     <div class="card-city">{{ stop.city }}</div>
                     <div class="card-dates">{{ formatRange(stop.start_date, stop.end_date) }} · {{ nightsLabel(stop) }}</div>
                   </div>
-                  @if (accommodation(stop.id); as a) { <div class="card-price">{{ a.price_total ? euro(a.price_total) : '' }}</div> }
+                  <div class="card-right">
+                    @if (accommodation(stop.id)?.price_total) { <div class="card-price">{{ euro(accommodation(stop.id)!.price_total) }}</div> }
+                    <div class="card-expand-btn"><span class="arrow">▾</span></div>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <div class="card-body-inner">
+                    @if (destination(stop.city)?.image_url) {
+                      <div class="card-hero-expanded" [style.background-image]="'url(' + destination(stop.city)!.image_url + ')'">
+                        <div class="card-hero-exp-overlay"></div>
+                        <div class="card-hero-exp-city">{{ stop.city }} @if (destination(stop.city)?.name_jp) { <span class="card-hero-jp">{{ destination(stop.city)!.name_jp }}</span> }</div>
+                      </div>
+                    }
+                    @if (accommodation(stop.id); as a) {
+                      <div class="lodge-section">
+                        <div class="lodge-title">Hébergement</div>
+                        <div class="lodge-options">
+                          @if (a.url) {
+                            <a class="lodge-option main-opt" [href]="a.url" target="_blank" rel="noopener"><span class="lodge-badge">Choix 1</span><span class="lodge-name">{{ a.name }}</span><span class="lodge-arrow">→</span></a>
+                          } @else {
+                            <div class="lodge-option main-opt no-link"><span class="lodge-badge">Choix 1</span><span class="lodge-name">{{ a.name }}</span></div>
+                          }
+                          @if (a.alt_name) {
+                            @if (a.alt_url) {
+                              <a class="lodge-option alt-opt" [href]="a.alt_url" target="_blank" rel="noopener"><span class="lodge-badge badge-alt">Alt.</span><span class="lodge-name">{{ a.alt_name }}</span><span class="lodge-arrow">→</span></a>
+                            } @else {
+                              <div class="lodge-option alt-opt no-link"><span class="lodge-badge badge-alt">Alt.</span><span class="lodge-name">{{ a.alt_name }}</span></div>
+                            }
+                          }
+                        </div>
+                        @if (a.reserved) { <div class="gd-reserve">✅ Réservé</div> }
+                      </div>
+                    }
+                    @if (transportFor(stop.id); as tr) {
+                      <div class="detail-row"><div class="detail-icon" style="background:var(--sky-l)">🚄</div>
+                        <div class="detail-content"><div class="detail-label">Trajet</div><div class="detail-value">{{ tr.duration || tr.mode }}{{ tr.price ? ' · ' + euro(tr.price) : '' }}</div></div></div>
+                    }
+                    @if (activitiesForStop(stop.id).length) {
+                      <div class="act-section"><div class="lodge-title">Activités</div><div class="activity-pills">@for (a of activitiesForStop(stop.id); track a) { <span class="activity-pill">{{ a }}</span> }</div></div>
+                    }
+                    @if (stop.notes) {
+                      <div class="detail-row"><div class="detail-icon" style="background:var(--amber-l)">✦</div><div class="detail-content"><div class="detail-label">Note</div><div class="detail-value" style="font-style:italic">{{ stop.notes }}</div></div></div>
+                    }
+                  </div>
                 </div>
               </div>
             }
@@ -270,6 +314,25 @@ export class DashboardPage implements AfterViewInit, OnDestroy {
   pct(a: number, b: number): number { return b ? Math.round((a / b) * 100) : 0; }
   accommodation(id?: string | null) { return this.content.accommodationForStop(id); }
   transportFor(stopId?: string | null) { return this.transportLegs().find((l) => l.to_stop_id === stopId); }
+  destination(city: string) { return this.content.destinationByCity(city); }
+  activitiesForStop(stopId?: string | null): string[] { return this.activities().filter((a) => a.stop_id === stopId).map((a) => a.title); }
+
+  readonly openStop = signal<string | null>(null);
+  toggleStop(stop: { id?: string; city: string }): void {
+    const key = stop.id ?? stop.city;
+    this.openStop.set(this.openStop() === key ? null : key);
+  }
+
+  constructor() {
+    effect(() => {
+      const first = this.stops()[0];
+      if (first && this.openStop() === null) this.openStop.set(first.id ?? first.city);
+    });
+  }
+  isCurrent(stop: { start_date?: string | null; end_date?: string | null }): boolean {
+    const today = new Date().toISOString().slice(0, 10);
+    return (stop.start_date ?? '') <= today && today <= (stop.end_date ?? stop.start_date ?? '');
+  }
 
   ngAfterViewInit(): void { setTimeout(() => this.initMap(), 0); }
   ngOnDestroy(): void { this.map?.remove(); }

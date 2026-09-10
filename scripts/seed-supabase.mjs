@@ -42,7 +42,7 @@ async function main() {
   await insert('destination_highlights', destinations.flatMap((d) => (d.highlights ?? []).map((text, i) => ({ destination_id: d.id, text, order_index: i }))));
   await insert('destination_fun_facts', destinations.flatMap((d) => (d.funFacts ?? []).map((text, i) => ({ destination_id: d.id, text, order_index: i }))));
   await insert('restaurants', restaurants.map(withTrip));
-  await insert('stops', stops.map(({ lodge, alt, price, pricePp, reserved, tickets, dur, priceTrip, ...s }) => withTrip(s)));
+  await insert('stops', stops.map(({ lodge, alt, price, pricePp, reserved, tickets, dur, priceTrip, nights, ...s }) => withTrip(s)));
   await insert('days', days.map(withTrip));
   await insert('activities', activities.map(withTrip));
   await insert('transport_legs', transportLegs.map(withTrip));

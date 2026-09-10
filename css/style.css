@@ -1475,3 +1475,97 @@ h1, h2, h3, h4 { font-family: 'Shippori Mincho', serif; font-weight: 600; letter
   .dash-hero::before, .dash-hero::after { display: none; }
   .dash-hero-main h1, .dash-hero-eyebrow, .dash-hero-dates, .dash-hero-count { color: #111 !important; }
 }
+
+/* ════════════════════════════════════════════════════════════════
+   V28 — ÉPURE & ART
+   Plus d'air, hairlines, hero éditorial clair, typo généreuse
+   ════════════════════════════════════════════════════════════════ */
+
+:root {
+  --bg: #f7f4ee;
+  --surface: #fffdf9;
+  --surface2: #f1ece2;
+  --surface3: #e9e2d4;
+  --border: #e7e0d2;
+  --border2: #d6cbb6;
+  --ink: #1a1815;
+  --ink2: #565048;
+  --ink3: #9a9285;
+  --r-sm: 2px; --r-md: 3px; --r-lg: 6px; --r-xl: 10px; --r: 3px;
+  --shadow-sm: 0 1px 2px rgba(26, 24, 21, .04);
+  --shadow-md: 0 8px 24px rgba(26, 24, 21, .06);
+}
+[data-theme="dark"] {
+  --bg: #0d0c0a; --surface: #15130f; --surface2: #1d1a15; --surface3: #262218;
+  --border: #282419; --border2: #3a3427;
+  --ink: #ece6da; --ink2: #a79f90; --ink3: #746c5f;
+}
+
+/* Rythme : beaucoup plus d'air */
+body { font-size: 15.5px; line-height: 1.7; }
+.page-container { padding: 44px 48px 100px; max-width: 1320px; }
+.page-header { margin-bottom: 36px; }
+h1 { font-weight: 500; letter-spacing: .005em; }
+h2, h3 { font-weight: 500; }
+.dashboard-grid { gap: 26px; margin-bottom: 36px; }
+.stats-row { gap: 14px; margin-bottom: 36px; }
+.mt-2 { margin-top: 28px; } .mt-3 { margin-top: 40px; } .mb-2 { margin-bottom: 28px; }
+
+/* Cartes : hairline, aucune ombre */
+.card-base, .map-container, .stops-panel, .budget-table-wrap, .budget-summary, .itinerary-full-table,
+.summary-card, .converter-card, .print-calendar, .recap-section, .packing-progress-bar-wrap,
+.packing-cat, .cl-phase, .logistique-card, .j101-section, .meteo-card, .meteo-packing-tip,
+.agenda-city-block, .resto-card, .souvenir-card, .phrase-card, .stats-big-card, .stats-fun-card,
+.surprise-card, .progress-strip, .stat-card, .home-panel {
+  box-shadow: none;
+}
+.stat-card, .stop-card, .guide-dest-card { box-shadow: none; border-color: var(--border); }
+
+/* Hero : éditorial clair, kanji en filigrane, filet vermillon */
+.dash-hero {
+  background: var(--surface); color: var(--ink);
+  border: 1px solid var(--border); border-radius: var(--r-lg); box-shadow: none;
+  padding: 40px 44px;
+}
+.dash-hero::before { opacity: .18; }
+.dash-hero::after { color: rgba(26, 24, 21, .045); font-size: 11rem; bottom: -60px; }
+[data-theme="dark"] .dash-hero::after { color: rgba(236, 230, 218, .05); }
+.dash-hero-main h1 { color: var(--ink); }
+.dash-hero-main h1::after { content: ''; display: block; width: 58px; height: 2px; background: var(--accent); margin-top: 16px; }
+.dash-hero-eyebrow { color: var(--accent); letter-spacing: .22em; }
+.dash-hero-dates { color: var(--ink3); }
+.dash-hero-side { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--r-md); }
+.dash-hero-count { color: var(--accent); font-size: 2.6rem; }
+
+/* Sidebar minimal */
+.nav-link { border-radius: 4px; }
+.nav-link.active { background: transparent; color: var(--sidebar-text-active); box-shadow: inset 2px 0 0 var(--accent); }
+.nav-group-label { letter-spacing: .2em; }
+.countdown-widget { background: transparent; border-color: var(--border); }
+
+/* Titres de section : filet fin, petite capitale */
+.map-title-bar, .stops-panel-header, .recap-header, .converter-header, .calendar-header {
+  background: transparent; border-bottom: 1px solid var(--border); padding: 16px 20px;
+}
+
+/* Étapes déroulantes (homepage) */
+.stops-panel { max-height: 620px; }
+.stops-list { padding: 10px; }
+.stop-card { border-radius: var(--r-md); }
+.stop-card.expanded { border-color: var(--border2); box-shadow: none; }
+.card-body { transition: max-height .5s var(--ease); }
+.card-body-inner { padding: 16px 18px 20px 20px; }
+.card-hero-expanded { height: 150px; border-radius: var(--r-sm); }
+.card-hero-exp-city { font-family: 'Shippori Mincho', serif; font-size: .95rem; }
+
+/* Boutons & champs : plus sobres */
+.btn { letter-spacing: .1em; }
+.input, .select, .textarea { border-radius: var(--r-sm); background: var(--surface); }
+.admin-form, .login-card { border-radius: var(--r-md); }
+
+/* Responsive */
+@media (max-width: 860px) {
+  .page-container { padding: 22px 18px calc(96px + env(safe-area-inset-bottom, 0px)); }
+  .dash-hero { padding: 26px 22px; }
+  .card-hero-expanded { height: 130px; }
+}

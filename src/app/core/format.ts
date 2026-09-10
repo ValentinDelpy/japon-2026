@@ -29,8 +29,17 @@ export function formatRange(start?: string | null, end?: string | null): string 
   return `${formatDay(start)} → ${formatDay(end)}`;
 }
 
-export function nightsLabel(stop: { nights: number }): string {
-  return stop.nights > 0 ? `${stop.nights + 1} nuits` : '1 nuit';
+export function nights(stop: { start_date?: string | null; end_date?: string | null; nights?: number }): number {
+  const s = toDate(stop.start_date);
+  const e = toDate(stop.end_date);
+  if (s && e) return Math.max(0, Math.round((e.getTime() - s.getTime()) / 86400000));
+  return stop.nights ?? 0;
+}
+
+export function nightsLabel(stop: { start_date?: string | null; end_date?: string | null; nights?: number }): string {
+  const n = nights(stop);
+  if (n === 0) return 'Journée';
+  return `${n} nuit${n > 1 ? 's' : ''}`;
 }
 
 export function euro(value?: number | null): string {
