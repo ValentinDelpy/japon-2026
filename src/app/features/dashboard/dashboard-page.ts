@@ -131,6 +131,19 @@ declare const L: any;
                     @if (stop.notes) {
                       <div class="detail-row"><div class="detail-icon" style="background:var(--amber-l)">✦</div><div class="detail-content"><div class="detail-label">Note</div><div class="detail-value" style="font-style:italic">{{ stop.notes }}</div></div></div>
                     }
+                    <div class="note-block">
+                      <div class="lodge-title">Note personnelle</div>
+                      @if (editingNote() === stop.city) {
+                        <textarea class="note-editor-ta" [value]="noteDraft()" (input)="onNoteInput($event)" placeholder="Votre note pour {{ stop.city }}…"></textarea>
+                        <div class="note-editor-actions">
+                          <button class="note-btn note-save" (click)="saveNote(stop.city)">Enregistrer</button>
+                          <button class="note-btn note-cancel" (click)="editingNote.set(null)">Annuler</button>
+                        </div>
+                      } @else {
+                        @if (noteFor(stop.city)) { <p class="note-display">{{ noteFor(stop.city) }}</p> }
+                        <button class="note-edit-btn" (click)="startNote(stop.city)">📝 {{ noteFor(stop.city) ? 'Modifier la note' : 'Ajouter une note' }}</button>
+                      }
+                    </div>
                     <div class="card-cta-row">
                       <a class="btn btn-secondary btn-sm" [routerLink]="['/sheets']" [queryParams]="{ city: stop.city }" (click)="$event.stopPropagation()">📖 Voir la fiche complète →</a>
                     </div>
@@ -360,6 +373,13 @@ export class DashboardPage implements AfterViewInit, OnDestroy {
   }
 
   readonly openStop = signal<string | null>(null);
+  readonly editingNote = signal<string | null>(null);
+  readonly noteDraft = signal('');
+
+  noteFor(city: string): string { return this.content.noteForCity(city); }
+  startNote(city: string): void { this.noteDraft.set(this.noteFor(city)); this.editingNote.set(city); }
+  onNoteInput(e: Event): void { this.noteDraft.set((e.target as HTMLTextAreaElement).value); }
+  async saveNote(city: string): Promise<void> { await this.content.saveNote(city, this.noteDraft()); this.editingNote.set(null); }
   readonly heroImage = computed(() => {
     const first = this.stops()[0];
     const url = first ? this.content.destinationByCity(first.city)?.image_url : null;

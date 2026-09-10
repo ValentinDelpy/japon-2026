@@ -57,6 +57,9 @@ a { cursor: pointer; }
 .card-hero-exp-city { text-decoration: none; }
 .card-hero-cta { font-size: .62rem; font-weight: 600; opacity: .85; margin-left: 6px; letter-spacing: .06em; }
 
+/* Note personnelle dans les étapes */
+.note-block { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); }
+
 /* ── Admin shell ── */
 .admin-layout { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
 .admin-sidebar { background: var(--sidebar-bg); border-right: 1px solid var(--border); display: flex; flex-direction: column; position: sticky; top: 0; height: 100vh; }

@@ -46,9 +46,7 @@ try {
   const t = withTrip(tripId);
 
   await upsert('trips', [trip]);
-  await upsert('destinations', destinations.map(({ highlights, funFacts, ...d }) => t(d)));
-  await upsert('destination_highlights', destinations.flatMap((d) => (d.highlights ?? []).map((text, i) => ({ destination_id: d.id, text, order_index: i }))));
-  await upsert('destination_fun_facts', destinations.flatMap((d) => (d.funFacts ?? []).map((text, i) => ({ destination_id: d.id, text, order_index: i }))));
+  await upsert('destinations', destinations.map(t));
   await upsert('restaurants', restaurants.map(t));
   await upsert('stops', stops.map(({ lodge, alt, price, pricePp, reserved, tickets, dur, priceTrip, nights, ...s }) => t(s)));
   await upsert('days', days.map(t));

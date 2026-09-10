@@ -313,11 +313,19 @@ export interface Content {
   logisticsSections: LogisticsSection[];
   japan101Sections: Japan101Section[];
   surpriseItems: SurpriseItem[];
+  notes: Note[];
+}
+
+export interface Note {
+  id?: string;
+  city: string;
+  body: string;
+  updated_at?: string;
 }
 
 export const EMPTY_CONTENT: Content = {
   trip: null, destinations: [], stops: [], days: [], activities: [], transportLegs: [],
   accommodations: [], reservations: [], restaurants: [], souvenirs: [], packingCategories: [],
   checklistPhases: [], phrases: [], culturalEvents: [], moodboardSections: [], photos: [],
-  weather: [], logisticsSections: [], japan101Sections: [], surpriseItems: [],
+  weather: [], logisticsSections: [], japan101Sections: [], surpriseItems: [], notes: [],
 };

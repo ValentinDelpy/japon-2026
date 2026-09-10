@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ContentService } from '../../core/content.service';
+import { WikimediaService } from '../../core/wikimedia.service';
 import { Destination } from '../../core/models';
 import { euro, formatRange, nightsLabel } from '../../core/format';
 
@@ -49,6 +50,15 @@ import { euro, formatRange, nightsLabel } from '../../core/format';
                   </ul></div>
                 }
                 @if (d.tips) { <div class="gd-section"><div class="gd-section-title">CONSEILS</div><div class="gd-tips">{{ d.tips }}</div></div> }
+                @if (galleries()[d.slug]?.length) {
+                  <div class="gd-section"><div class="gd-section-title">PHOTOS</div>
+                    <div class="gd-gallery">
+                      @for (img of galleries()[d.slug]; track img) {
+                        <div class="gd-gallery-img" [style.background-image]="'url(' + img + ')'" (click)="lightbox.set(img)"></div>
+                      }
+                    </div>
+                  </div>
+                }
               </div>
             }
           </div>
@@ -57,6 +67,13 @@ import { euro, formatRange, nightsLabel } from '../../core/format';
         <div class="empty-state">Aucune fiche destination.</div>
       }
     </div>
+
+    @if (lightbox(); as url) {
+      <div class="gd-lightbox" (click)="lightbox.set(null)">
+        <button class="gd-lightbox-close" (click)="lightbox.set(null)">×</button>
+        <img [src]="url" alt="">
+      </div>
+    }
   `,
   styles: [`
     :host { display: block; }
@@ -69,8 +86,11 @@ import { euro, formatRange, nightsLabel } from '../../core/format';
 export class TravelSheetsPage {
   private readonly content = inject(ContentService);
   private readonly route = inject(ActivatedRoute);
+  private readonly wiki = inject(WikimediaService);
   readonly destinations = this.content.destinations;
   readonly open = signal<string | null>(null);
+  readonly galleries = signal<Record<string, string[]>>({});
+  readonly lightbox = signal<string | null>(null);
   readonly formatRange = formatRange;
   readonly nightsLabel = nightsLabel;
   readonly euro = euro;
@@ -81,11 +101,24 @@ export class TravelSheetsPage {
     const d = this.content.destinationByCity(city);
     if (d) {
       this.open.set(d.slug);
+      this.loadGallery(d);
       setTimeout(() => document.getElementById('sheet-' + d.slug)?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
     }
   }
 
-  toggle(slug: string): void { this.open.set(this.open() === slug ? null : slug); }
+  toggle(slug: string): void {
+    const next = this.open() === slug ? null : slug;
+    this.open.set(next);
+    if (next) {
+      const d = this.destinations().find((x) => x.slug === next);
+      if (d) this.loadGallery(d);
+    }
+  }
+
+  private loadGallery(d: Destination): void {
+    if (this.galleries()[d.slug]) return;
+    void this.wiki.gallery(`${d.name} Japan`).then((imgs) => this.galleries.set({ ...this.galleries(), [d.slug]: imgs }));
+  }
 
   stopFor(d: Destination) {
     const n = d.name.toLowerCase();
