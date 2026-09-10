@@ -2,14 +2,16 @@ import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@a
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { ContentService } from '../core/content.service';
 import { ExchangeService } from '../core/exchange.service';
+import { SearchService } from '../core/search.service';
 import { ThemeService } from '../core/theme.service';
+import { CommandPalette } from './command-palette';
 
 interface NavItem { path: string; icon: string; label: string; }
 interface NavGroup { label: string; items: NavItem[]; }
 
 @Component({
   selector: 'app-shell',
-  imports: [RouterOutlet, RouterLink, RouterLinkActive],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, CommandPalette],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="mobile-overlay" [class.active]="menuOpen()" (click)="closeMenu()"></div>
@@ -45,6 +47,7 @@ interface NavGroup { label: string; items: NavItem[]; }
       }
 
       <div class="sidebar-footer">
+        <button class="sidebar-search" (click)="search.show()"><span class="ss-icon">⌕</span> Rechercher <kbd>Ctrl K</kbd></button>
         <a class="admin-seal" routerLink="/admin">
           <span class="admin-seal-mark">印</span>
           <span>Administration</span>
@@ -69,6 +72,7 @@ interface NavGroup { label: string; items: NavItem[]; }
       <header class="mobile-header">
         <span class="mobile-title"><span class="mobile-title-jp">⛩️</span> Little Domo</span>
         <div class="mobile-header-actions">
+          <button class="icon-btn" (click)="search.show()" aria-label="Rechercher">⌕</button>
           <a class="icon-btn admin-btn" routerLink="/admin" aria-label="Administration" title="Administration">印</a>
           <button class="icon-btn theme-btn theme-btn-mobile" (click)="theme.toggle()" aria-label="Changer de thème">
             <span class="theme-icon">{{ themeIcon() }}</span>
@@ -111,6 +115,8 @@ interface NavGroup { label: string; items: NavItem[]; }
         </button>
       </div>
     </nav>
+
+    <app-command-palette />
   `,
   styles: [':host { display: block; }'],
 })
@@ -118,6 +124,7 @@ export class Shell {
   readonly content = inject(ContentService);
   readonly exchange = inject(ExchangeService);
   readonly theme = inject(ThemeService);
+  readonly search = inject(SearchService);
   readonly menuOpen = signal(false);
 
   readonly groups: NavGroup[] = [
@@ -173,6 +180,10 @@ export class Shell {
 
   constructor() {
     void this.exchange.load();
+    window.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); this.search.toggle(); }
+      if (e.key === 'Escape') this.search.close();
+    });
   }
 
   openMenu(): void { this.menuOpen.set(true); document.body.style.overflow = 'hidden'; }

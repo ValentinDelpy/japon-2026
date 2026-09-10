@@ -1263,3 +1263,62 @@ h1, h2, h3, h4 { font-family: 'Shippori Mincho', serif; font-weight: 500; letter
   .dash-hero-overlay { display: none; }
   .dash-hero-main h1, .dash-hero-eyebrow, .dash-hero-dates, .dash-hero-count { color: #111 !important; }
 }
+
+/* ════════════════════════════════════════════════════════════════
+   B — POLISH UI/UX
+   Transitions, micro-interactions, focus, titres
+   ════════════════════════════════════════════════════════════════ */
+
+/* Transition de page */
+.route-view > * { animation: pageIn .35s var(--ease); }
+@keyframes pageIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+/* Titres de page : filet vermillon */
+.page-header h1 { position: relative; padding-bottom: 12px; }
+.page-header h1::after { content: ''; display: block; width: 44px; height: 2px; background: var(--accent); margin-top: 10px; }
+
+/* Navigation : micro-interactions */
+.nav-link { transition: background .18s var(--ease), color .18s var(--ease), padding-left .18s var(--ease); }
+.nav-link:hover { padding-left: 15px; }
+.nav-icon { transition: transform .18s var(--ease); }
+.nav-link:hover .nav-icon, .nav-link.active .nav-icon { transform: scale(1.06); }
+.bottom-nav-link { transition: color .18s, background .18s, transform .18s; }
+.bottom-nav-link:active { transform: scale(.94); }
+.bottom-nav-link.active .bottom-nav-icon { transform: translateY(-2px) scale(1.08); }
+
+/* Cartes : survol net */
+.resto-card, .phrase-card, .meteo-card, .logistique-card, .j101-section, .agenda-city-block,
+.packing-cat, .cl-phase, .summary-card, .stats-big-card, .stats-fun-card {
+  transition: transform .2s var(--ease), box-shadow .2s var(--ease), border-color .2s var(--ease);
+}
+.resto-card:hover, .phrase-card:hover, .meteo-card:hover, .logistique-card:hover,
+.summary-card:hover, .stats-big-card:hover, .stats-fun-card:hover {
+  transform: translateY(-3px); box-shadow: var(--shadow-md); border-color: var(--border2);
+}
+
+/* Focus accessible */
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+  outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px;
+}
+
+/* Pills arrondies */
+.dest-tag, .activity-pill, .quick-chip, .dtag, .tl-badge, .tag { border-radius: 999px; }
+
+/* Tableaux plus aérés */
+.admin-table td, .budget-table td, .iti-table td { padding-top: 12px; padding-bottom: 12px; }
+
+/* En-têtes de sections : petit label */
+.admin-page-header h1 { font-size: 1.35rem; }
+.admin-page-header h1::after { display: none; }
+
+/* Bouton recherche (sidebar) */
+.sidebar-search {
+  display: flex; align-items: center; gap: 10px; width: 100%;
+  margin-bottom: 10px; padding: 9px 12px; border-radius: var(--r-sm);
+  background: rgba(240, 233, 221, .06); border: 1px solid rgba(240, 233, 221, .10);
+  color: var(--sidebar-text); font: inherit; font-size: .8rem; font-weight: 600; cursor: pointer;
+  transition: background var(--t), color var(--t), border-color var(--t);
+}
+.sidebar-search:hover { background: rgba(240, 233, 221, .12); color: var(--sidebar-text-active); }
+.sidebar-search .ss-icon { font-size: .95rem; }
+.sidebar-search kbd { margin-left: auto; font-family: 'Space Mono', monospace; font-size: .6rem; opacity: .6; border: 1px solid rgba(240, 233, 221, .2); border-radius: 4px; padding: 1px 5px; }
