@@ -1620,8 +1620,7 @@ body { background-image: none; background-color: var(--bg); }
   border-radius: 0; background: var(--surface);
 }
 
-/* Hero cinématographique */
-.dash-hero {
+/* Hero cinématographique */.dash-hero {
   position: relative; display: block; padding: 0; min-height: 360px;
   border: none; border-radius: var(--r-xl); overflow: hidden; color: #fff;
   background-color: #17150f; background-size: cover; background-position: center;
