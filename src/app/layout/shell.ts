@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { filter, map } from 'rxjs';
 import { ContentService } from '../core/content.service';
 import { ExchangeService } from '../core/exchange.service';
 import { SearchService } from '../core/search.service';
@@ -69,7 +71,8 @@ interface NavGroup { label: string; items: NavItem[]; }
 
     <main class="main-content">
       <header class="mobile-header">
-        <span class="mobile-title"><span class="mobile-title-jp">⛩️</span> Little Domo</span>
+        <span class="mobile-title"><span class="mobile-title-jp">日</span><span class="mobile-title-text">Little Domo</span></span>
+        <span class="topbar-title">{{ pageTitle() }}</span>
         <div class="mobile-header-actions">
           <button class="icon-btn" (click)="search.show()" aria-label="Rechercher"><app-icon name="search" [size]="16" /></button>
           <a class="icon-btn admin-btn" routerLink="/admin" aria-label="Administration" title="Administration">印</a>
@@ -123,6 +126,18 @@ export class Shell {
   readonly theme = inject(ThemeService);
   readonly search = inject(SearchService);
   readonly menuOpen = signal(false);
+  private readonly router = inject(Router);
+
+  private readonly currentPath = toSignal(
+    this.router.events.pipe(
+      filter((e) => e instanceof NavigationEnd),
+      map(() => (this.router.url.split('?')[0].replace(/^\//, '').split('/')[0] || 'dashboard'))
+    ),
+    { initialValue: this.router.url.split('?')[0].replace(/^\//, '').split('/')[0] || 'dashboard' }
+  );
+  readonly pageTitle = computed(
+    () => this.groups.flatMap((g) => g.items).find((i) => i.path === this.currentPath())?.label ?? 'Little Domo'
+  );
 
   readonly groups: NavGroup[] = [
     { label: 'Voyage', items: [
