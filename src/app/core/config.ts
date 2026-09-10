@@ -7,6 +7,17 @@ export interface AppConfig {
 
 let cached: AppConfig | null = null;
 
+/** Config déjà chargée (ou null avant l'initialisation). */
+export function currentConfig(): AppConfig | null {
+  return cached;
+}
+
+/** URL publique du bucket Storage des photos. */
+export function storageUrl(bucket = 'photos'): string {
+  const base = cached?.supabaseUrl ?? environment.supabaseUrl;
+  return base ? `${base}/storage/v1/object/public/${bucket}/` : '';
+}
+
 /**
  * Configuration au runtime : lit `config.json` (non versionné) sinon `environment.ts`.
  * Permet de publier l'app et de renseigner la clé publique sans rebuild.

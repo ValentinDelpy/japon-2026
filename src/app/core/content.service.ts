@@ -2,6 +2,66 @@ import { Injectable, computed, signal } from '@angular/core';
 import { getSupabase } from './supabase';
 import { Content, Destination, EMPTY_CONTENT, Note } from './models';
 
+/** Données brutes telles que renvoyées par les tables PostgreSQL. */
+export interface RawContent {
+  trips: any[]; destinations: any[]; stops: any[]; days: any[]; activities: any[];
+  transportLegs: any[]; accommodations: any[]; reservations: any[]; restaurants: any[];
+  souvenirs: any[]; packingCategories: any[]; packingItems: any[]; checklistPhases: any[];
+  checklistTasks: any[]; phrases: any[]; culturalEvents: any[]; moodboardSections: any[];
+  moodboardImages: any[]; photos: any[]; weather: any[]; logisticsSections: any[];
+  logisticsItems: any[]; japan101Sections: any[]; japan101Items: any[]; surpriseItems: any[]; notes: any[];
+}
+
+const byOrder = <T extends { order_index?: number }>(list: T[]): T[] =>
+  [...list].sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0));
+
+const groupBy = <T>(list: T[], key: (x: T) => string): Record<string, T[]> =>
+  list.reduce<Record<string, T[]>>((acc, x) => { (acc[key(x)] ??= []).push(x); return acc; }, {});
+
+/**
+ * Assemble les tables brutes en modèle de domaine (fonction pure, testable).
+ * Les restaurants et les enfants (packing, checklist, moodboard…) sont rattachés à leur parent.
+ */
+export function assembleContent(raw: RawContent): Content {
+  const restaurantsByDest = groupBy(raw.restaurants, (r) => r.destination_id ?? '');
+  const itemsByCategory = groupBy(raw.packingItems, (i) => i.category_id);
+  const tasksByPhase = groupBy(raw.checklistTasks, (t) => t.phase_id);
+  const imagesBySection = groupBy(raw.moodboardImages, (i) => i.section_id);
+  const logisticsBySection = groupBy(raw.logisticsItems, (i) => i.section_id);
+  const japanBySection = groupBy(raw.japan101Items, (i) => i.section_id);
+
+  const destinations: Destination[] = byOrder(raw.destinations).map((d) => ({
+    ...d,
+    highlights: d.highlights ?? [],
+    funFacts: d.fun_facts ?? [],
+    restaurants: byOrder(restaurantsByDest[d.id] ?? []),
+  }));
+
+  return {
+    trip: raw.trips[0] ?? null,
+    destinations,
+    stops: byOrder(raw.stops),
+    days: byOrder(raw.days),
+    activities: byOrder(raw.activities),
+    transportLegs: byOrder(raw.transportLegs),
+    accommodations: byOrder(raw.accommodations),
+    reservations: byOrder(raw.reservations),
+    restaurants: byOrder(raw.restaurants),
+    souvenirs: byOrder(raw.souvenirs),
+    packingCategories: byOrder(raw.packingCategories).map((c) => ({ ...c, items: byOrder(itemsByCategory[c.id] ?? []) })),
+    checklistPhases: byOrder(raw.checklistPhases).map((p) => ({ ...p, tasks: byOrder(tasksByPhase[p.id] ?? []) })),
+    phrases: byOrder(raw.phrases),
+    culturalEvents: byOrder(raw.culturalEvents),
+    moodboardSections: byOrder(raw.moodboardSections).map((s) => ({ ...s, images: byOrder(imagesBySection[s.id] ?? []) })),
+    photos: byOrder(raw.photos),
+    weather: byOrder(raw.weather),
+    logisticsSections: byOrder(raw.logisticsSections).map((s) => ({ ...s, items: byOrder(logisticsBySection[s.id] ?? []) })),
+    japan101Sections: byOrder(raw.japan101Sections).map((s) => ({ ...s, items: byOrder(japanBySection[s.id] ?? []) })),
+    surpriseItems: byOrder(raw.surpriseItems),
+    notes: (raw.notes ?? []) as Note[],
+  };
+}
+
 @Injectable({ providedIn: 'root' })
 export class ContentService {
   private readonly _content = signal<Content>(EMPTY_CONTENT);
@@ -34,14 +94,13 @@ export class ContentService {
     return this._content().notes.find((n) => n.city === city)?.body ?? '';
   }
 
-  /** Charge tout le voyage depuis PostgreSQL (Supabase). */
   async load(): Promise<void> {
     const sb = getSupabase();
     this._loading.set(true);
     this._error.set(null);
     try {
       if (!sb) throw new Error('Supabase non configuré : renseignez public/config.json.');
-      this._content.set(await this.fromSupabase(sb));
+      this._content.set(assembleContent(await this.fetchRaw(sb)));
     } catch (e) {
       this._error.set(e instanceof Error ? e.message : String(e));
     } finally {
@@ -49,12 +108,10 @@ export class ContentService {
     }
   }
 
-  /** Mise à jour optimiste de l'état local. */
   update(recipe: (c: Content) => Content): void {
     this._content.update(recipe);
   }
 
-  /** Persiste une modification dans Supabase ; recharge si échec. */
   async persist(table: string, id: string, patch: Record<string, unknown>): Promise<void> {
     const sb = getSupabase();
     if (!sb || !id) return;
@@ -62,7 +119,6 @@ export class ContentService {
     if (error) { this._error.set(error.message); await this.load(); }
   }
 
-  /** Enregistre (ou supprime) la note personnelle d'une ville. */
   async saveNote(city: string, body: string): Promise<void> {
     const sb = getSupabase();
     const tripId = this.trip()?.id;
@@ -78,50 +134,31 @@ export class ContentService {
     if (error) this._error.set(error.message);
   }
 
-  private async fromSupabase(sb: NonNullable<ReturnType<typeof getSupabase>>): Promise<Content> {
-    const rows = async <T>(table: string): Promise<T[]> => {
+  private async fetchRaw(sb: NonNullable<ReturnType<typeof getSupabase>>): Promise<RawContent> {
+    const rows = async (table: string): Promise<any[]> => {
       const { data, error } = await sb.from(table).select('*');
       if (error) throw new Error(`${table}: ${error.message}`);
-      return (data ?? []) as T[];
+      return data ?? [];
     };
-
     const [
       trips, destinations, stops, days, activities, transportLegs, accommodations, reservations,
       restaurants, souvenirs, packingCategories, packingItems, checklistPhases, checklistTasks,
       phrases, culturalEvents, moodboardSections, moodboardImages, photos, weather,
       logisticsSections, logisticsItems, japan101Sections, japan101Items, surpriseItems, notes,
     ] = await Promise.all([
-      rows<any>('trips'), rows<any>('destinations'), rows<any>('stops'), rows<any>('days'),
-      rows<any>('activities'), rows<any>('transport_legs'), rows<any>('accommodations'),
-      rows<any>('reservations'), rows<any>('restaurants'), rows<any>('souvenirs'),
-      rows<any>('packing_categories'), rows<any>('packing_items'), rows<any>('checklist_phases'),
-      rows<any>('checklist_tasks'), rows<any>('phrases'), rows<any>('cultural_events'),
-      rows<any>('moodboard_sections'), rows<any>('moodboard_images'), rows<any>('photos'),
-      rows<any>('weather_info'), rows<any>('logistics_sections'), rows<any>('logistics_items'),
-      rows<any>('japan101_sections'), rows<any>('japan101_items'), rows<any>('surprise_items'),
-      rows<any>('trip_notes'),
+      rows('trips'), rows('destinations'), rows('stops'), rows('days'), rows('activities'),
+      rows('transport_legs'), rows('accommodations'), rows('reservations'), rows('restaurants'),
+      rows('souvenirs'), rows('packing_categories'), rows('packing_items'), rows('checklist_phases'),
+      rows('checklist_tasks'), rows('phrases'), rows('cultural_events'), rows('moodboard_sections'),
+      rows('moodboard_images'), rows('photos'), rows('weather_info'), rows('logistics_sections'),
+      rows('logistics_items'), rows('japan101_sections'), rows('japan101_items'), rows('surprise_items'),
+      rows('trip_notes'),
     ]);
-
-    const by = <T extends { order_index?: number }>(list: T[]) =>
-      [...list].sort((a, b) => (a.order_index ?? 0) - (b.order_index ?? 0));
-    const group = <T>(list: T[], key: (x: T) => string) =>
-      list.reduce<Record<string, T[]>>((acc, x) => { (acc[key(x)] ??= []).push(x); return acc; }, {});
-
     return {
-      trip: trips[0] ?? null,
-      destinations: by(destinations).map((d) => ({ ...d, highlights: d.highlights ?? [], funFacts: d.fun_facts ?? [] })),
-      stops: by(stops), days: by(days), activities: by(activities), transportLegs: by(transportLegs),
-      accommodations: by(accommodations), reservations: by(reservations), restaurants: by(restaurants),
-      souvenirs: by(souvenirs),
-      packingCategories: by(packingCategories).map((c) => ({ ...c, items: by(group(packingItems, (i) => i.category_id)[c.id] ?? []) })),
-      checklistPhases: by(checklistPhases).map((p) => ({ ...p, tasks: by(group(checklistTasks, (t) => t.phase_id)[p.id] ?? []) })),
-      phrases: by(phrases), culturalEvents: by(culturalEvents),
-      moodboardSections: by(moodboardSections).map((s) => ({ ...s, images: by(group(moodboardImages, (i) => i.section_id)[s.id] ?? []) })),
-      photos: by(photos), weather: by(weather),
-      logisticsSections: by(logisticsSections).map((s) => ({ ...s, items: by(group(logisticsItems, (i) => i.section_id)[s.id] ?? []) })),
-      japan101Sections: by(japan101Sections).map((s) => ({ ...s, items: by(group(japan101Items, (i) => i.section_id)[s.id] ?? []) })),
-      surpriseItems: by(surpriseItems),
-      notes: notes as Note[],
+      trips, destinations, stops, days, activities, transportLegs, accommodations, reservations,
+      restaurants, souvenirs, packingCategories, packingItems, checklistPhases, checklistTasks,
+      phrases, culturalEvents, moodboardSections, moodboardImages, photos, weather,
+      logisticsSections, logisticsItems, japan101Sections, japan101Items, surpriseItems, notes,
     };
   }
 }

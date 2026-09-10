@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ContentService } from '../../core/content.service';
-import { WikimediaService } from '../../core/wikimedia.service';
+import { WikimediaService, WikiSummary } from '../../core/wikimedia.service';
 import { Destination } from '../../core/models';
 import { euro, formatRange, nightsLabel } from '../../core/format';
 
@@ -32,6 +32,11 @@ import { euro, formatRange, nightsLabel } from '../../core/format';
 
             @if (open() === d.slug) {
               <div class="sheet-detail" (click)="$event.stopPropagation()">
+                @if (summaries()[d.slug]; as s) {
+                  <div class="gd-section"><div class="gd-section-title">PRÉSENTATION · WIKIPÉDIA</div><p class="gd-intro">{{ s.extract }}</p><a class="cell-link text-sm" [href]="s.pageUrl" target="_blank" rel="noopener">Lire sur Wikipédia ↗</a></div>
+                } @else if (summaries()[d.slug] === null) {
+                  <div class="gd-section"><div class="gd-section-title">PRÉSENTATION</div><p class="gd-intro muted">Aucun résumé Wikipédia trouvé.</p></div>
+                }
                 @if (d.highlights.length) {
                   <div class="gd-section"><div class="gd-section-title">À NE PAS MANQUER</div><ul class="gd-highlights">
                     @for (h of d.highlights; track h) { <li>{{ h }}</li> }
@@ -90,6 +95,7 @@ export class TravelSheetsPage {
   readonly destinations = this.content.destinations;
   readonly open = signal<string | null>(null);
   readonly galleries = signal<Record<string, string[]>>({});
+  readonly summaries = signal<Record<string, WikiSummary | null>>({});
   readonly lightbox = signal<string | null>(null);
   readonly formatRange = formatRange;
   readonly nightsLabel = nightsLabel;
@@ -102,6 +108,7 @@ export class TravelSheetsPage {
     if (d) {
       this.open.set(d.slug);
       this.loadGallery(d);
+      this.loadSummary(d);
       setTimeout(() => document.getElementById('sheet-' + d.slug)?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
     }
   }
@@ -111,13 +118,18 @@ export class TravelSheetsPage {
     this.open.set(next);
     if (next) {
       const d = this.destinations().find((x) => x.slug === next);
-      if (d) this.loadGallery(d);
+      if (d) { this.loadGallery(d); this.loadSummary(d); }
     }
   }
 
   private loadGallery(d: Destination): void {
     if (this.galleries()[d.slug]) return;
     void this.wiki.gallery(`${d.name} Japan`).then((imgs) => this.galleries.set({ ...this.galleries(), [d.slug]: imgs }));
+  }
+
+  private loadSummary(d: Destination): void {
+    if (this.summaries()[d.slug] !== undefined) return;
+    void this.wiki.summary(d.name).then((s) => this.summaries.set({ ...this.summaries(), [d.slug]: s }));
   }
 
   stopFor(d: Destination) {

@@ -6,10 +6,17 @@ export interface WikiImage {
   title: string;
 }
 
-/** Images depuis Wikimedia Commons (API CORS-friendly, gratuite, sourcée). */
+export interface WikiSummary {
+  extract: string;
+  pageUrl: string;
+  thumbnail?: string;
+}
+
+/** Images et résumés depuis Wikimedia (API CORS-friendly, gratuites, sourcées). */
 @Injectable({ providedIn: 'root' })
 export class WikimediaService {
   private readonly cache = new Map<string, Promise<WikiImage[]>>();
+  private readonly summaryCache = new Map<string, Promise<WikiSummary | null>>();
 
   images(query: string, limit = 8): Promise<WikiImage[]> {
     if (!query) return Promise.resolve([]);
@@ -20,6 +27,30 @@ export class WikimediaService {
 
   async gallery(query: string, limit = 6): Promise<string[]> {
     return (await this.images(query, limit)).map((i) => i.url);
+  }
+
+  /** Résumé Wikipédia (présentation auto-générée d'une destination). */
+  summary(title: string): Promise<WikiSummary | null> {
+    if (!title) return Promise.resolve(null);
+    if (!this.summaryCache.has(title)) this.summaryCache.set(title, this.fetchSummary(title));
+    return this.summaryCache.get(title)!;
+  }
+
+  private async fetchSummary(title: string): Promise<WikiSummary | null> {
+    try {
+      const res = await fetch(`https://fr.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(title)}?redirect=true`);
+      if (!res.ok) return null;
+      const d = await res.json();
+      const extract = String(d.extract ?? '').trim();
+      if (!extract) return null;
+      return {
+        extract,
+        pageUrl: d.content_urls?.desktop?.page ?? `https://fr.wikipedia.org/wiki/${encodeURIComponent(title)}`,
+        thumbnail: d.thumbnail?.source,
+      };
+    } catch {
+      return null;
+    }
   }
 
   private async fetchImages(query: string, limit: number): Promise<WikiImage[]> {

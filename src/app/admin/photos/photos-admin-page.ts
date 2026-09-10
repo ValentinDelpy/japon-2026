@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { ContentService } from '../../core/content.service';
 import { AdminService } from '../../core/admin.service';
 import { getSupabase } from '../../core/supabase';
-import { environment } from '../../../environments/environment';
+import { storageUrl } from '../../core/config';
 import { Photo } from '../../core/models';
 
 @Component({
@@ -52,7 +52,7 @@ export class PhotosAdminPage {
   readonly busy = signal(false);
   readonly message = signal<string | null>(null);
   readonly ok = signal(false);
-  private readonly base = environment.supabaseUrl ? `${environment.supabaseUrl}/storage/v1/object/public/photos/` : '';
+  private readonly base = storageUrl();
 
   url(p: Photo): string { return `${this.base}${p.storage_path}`; }
   onFile(e: Event): void { this.file = (e.target as HTMLInputElement).files?.[0] ?? null; }

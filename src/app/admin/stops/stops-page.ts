@@ -79,8 +79,9 @@ export class StopsPage {
     if (!s?.city) return;
     const tripId = this.content.trip()?.id;
     await this.admin.save('stops', { ...s, trip_id: tripId });
-    if (this.acc.name && s.id) {
-      await this.admin.save('accommodations', { ...this.acc, id: this.accId, stop_id: s.id, trip_id: tripId });
+    if (this.acc.name) {
+      const stopId = s.id ?? this.content.stops().find((x) => x.city === s.city)?.id;
+      if (stopId) await this.admin.save('accommodations', { ...this.acc, id: this.accId, stop_id: stopId, trip_id: tripId });
     }
     this.editing.set(null);
   }

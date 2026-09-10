@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { ContentService } from '../../core/content.service';
-import { environment } from '../../../environments/environment';
+import { storageUrl } from '../../core/config';
 import { Photo } from '../../core/models';
 
 @Component({
@@ -45,7 +45,7 @@ export class PhotosPage {
   private readonly content = inject(ContentService);
   readonly photos = this.content.content().photos;
   readonly lightbox = signal<Photo | null>(null);
-  private readonly base = environment.supabaseUrl ? `${environment.supabaseUrl}/storage/v1/object/public/photos/` : '';
+  private readonly base = storageUrl();
 
   readonly groups = computed(() => {
     const map = new Map<string, Photo[]>();
