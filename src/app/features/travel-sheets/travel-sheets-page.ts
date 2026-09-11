@@ -76,7 +76,7 @@ import { euro, formatRange, nightsLabel } from '../../core/format';
     @if (lightbox(); as url) {
       <div class="gd-lightbox" (click)="lightbox.set(null)">
         <button class="gd-lightbox-close" (click)="lightbox.set(null)">×</button>
-        <img [src]="url" alt="">
+            <img [src]="url" alt="" loading="lazy" decoding="async">
       </div>
     }
   `,

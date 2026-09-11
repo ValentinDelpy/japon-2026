@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ContentService } from '../../core/content.service';
 import { formatDay, nightsLabel } from '../../core/format';
@@ -135,6 +135,7 @@ import { resolveToday } from '../../core/today';
 })
 export class TodayPage {
   private readonly content = inject(ContentService);
+  private readonly destroyRef = inject(DestroyRef);
   private readonly now = signal(new Date());
 
   readonly formatDay = formatDay;
@@ -154,7 +155,8 @@ export class TodayPage {
   );
 
   constructor() {
-    setInterval(() => this.now.set(new Date()), 60000);
+    const tick = setInterval(() => this.now.set(new Date()), 60000);
+    this.destroyRef.onDestroy(() => clearInterval(tick));
   }
 
   isPast(time?: string | null): boolean {

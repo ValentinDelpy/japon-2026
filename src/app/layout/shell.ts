@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { filter, map } from 'rxjs';
@@ -135,6 +135,7 @@ export class Shell {
   readonly auth = inject(AuthService);
   readonly menuOpen = signal(false);
   private readonly router = inject(Router);
+  private readonly destroyRef = inject(DestroyRef);
 
   private readonly currentPath = toSignal(
     this.router.events.pipe(
@@ -201,10 +202,12 @@ export class Shell {
 
   constructor() {
     void this.exchange.load();
-    window.addEventListener('keydown', (e) => {
+    const onKeydown = (e: KeyboardEvent): void => {
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); this.search.toggle(); }
       if (e.key === 'Escape') this.search.close();
-    });
+    };
+    window.addEventListener('keydown', onKeydown);
+    this.destroyRef.onDestroy(() => window.removeEventListener('keydown', onKeydown));
   }
 
   openMenu(): void { this.menuOpen.set(true); document.body.style.overflow = 'hidden'; }

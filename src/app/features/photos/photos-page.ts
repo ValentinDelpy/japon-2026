@@ -33,7 +33,7 @@ import { Photo } from '../../core/models';
     @if (lightbox(); as p) {
       <div class="photo-lightbox active" (click)="lightbox.set(null)">
         <button class="photo-lb-close" (click)="lightbox.set(null)">×</button>
-        <div class="photo-lb-content"><img class="photo-lb-img" [src]="full(p)" [alt]="p.title || ''">
+        <div class="photo-lb-content"><img class="photo-lb-img" [src]="full(p)" [alt]="p.title || ''" decoding="async">
           <div class="photo-lb-caption"><span class="photo-lb-city">{{ p.location || p.category }}</span>@if (p.title) { <span class="photo-lb-name">{{ p.title }}</span> }</div>
         </div>
       </div>
