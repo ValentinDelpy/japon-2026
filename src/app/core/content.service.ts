@@ -134,7 +134,46 @@ export class ContentService {
     if (error) this._error.set(error.message);
   }
 
+  /**
+   * Récupère tout le contenu en un seul appel RPC.
+   * Repli automatique sur des requêtes table par table si la fonction
+   * `content_snapshot` n'est pas déployée (compatibilité ascendante).
+   */
   private async fetchRaw(sb: NonNullable<ReturnType<typeof getSupabase>>): Promise<RawContent> {
+    const { data, error } = await sb.rpc('content_snapshot');
+    if (error || !data || typeof data !== 'object') return this.fetchRawByTable(sb);
+    const s = data as Record<string, any[]>;
+    return {
+      trips: s['trips'] ?? [],
+      destinations: s['destinations'] ?? [],
+      stops: s['stops'] ?? [],
+      days: s['days'] ?? [],
+      activities: s['activities'] ?? [],
+      transportLegs: s['transport_legs'] ?? [],
+      accommodations: s['accommodations'] ?? [],
+      reservations: s['reservations'] ?? [],
+      restaurants: s['restaurants'] ?? [],
+      souvenirs: s['souvenirs'] ?? [],
+      packingCategories: s['packing_categories'] ?? [],
+      packingItems: s['packing_items'] ?? [],
+      checklistPhases: s['checklist_phases'] ?? [],
+      checklistTasks: s['checklist_tasks'] ?? [],
+      phrases: s['phrases'] ?? [],
+      culturalEvents: s['cultural_events'] ?? [],
+      moodboardSections: s['moodboard_sections'] ?? [],
+      moodboardImages: s['moodboard_images'] ?? [],
+      photos: s['photos'] ?? [],
+      weather: s['weather_info'] ?? [],
+      logisticsSections: s['logistics_sections'] ?? [],
+      logisticsItems: s['logistics_items'] ?? [],
+      japan101Sections: s['japan101_sections'] ?? [],
+      japan101Items: s['japan101_items'] ?? [],
+      surpriseItems: s['surprise_items'] ?? [],
+      notes: s['trip_notes'] ?? [],
+    };
+  }
+
+  private async fetchRawByTable(sb: NonNullable<ReturnType<typeof getSupabase>>): Promise<RawContent> {
     const rows = async (table: string): Promise<any[]> => {
       const { data, error } = await sb.from(table).select('*');
       if (error) throw new Error(`${table}: ${error.message}`);

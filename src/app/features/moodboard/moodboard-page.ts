@@ -47,7 +47,7 @@ interface Section {
     @if (lightbox(); as img) {
       <div class="mood-lightbox" (click)="lightbox.set(null)">
         <button class="mood-lb-close" (click)="lightbox.set(null)">×</button>
-        <img class="mood-lb-img" [src]="img.url" [alt]="img.title">
+          <img class="mood-lb-img" [src]="img.url" [alt]="img.title" decoding="async">
         <div class="mood-lb-caption">{{ img.title }} — <a [href]="img.pageUrl" target="_blank" rel="noopener">Wikimedia Commons ↗</a></div>
       </div>
     }

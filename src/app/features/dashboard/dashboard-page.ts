@@ -2,8 +2,7 @@ import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, computed,
 import { RouterLink } from '@angular/router';
 import { ContentService } from '../../core/content.service';
 import { euro, formatRange, nightsLabel } from '../../core/format';
-
-declare const L: any;
+import { loadLeaflet } from '../../core/leaflet';
 
 @Component({
   selector: 'app-dashboard-page',
@@ -405,12 +404,16 @@ export class DashboardPage implements AfterViewInit, OnDestroy {
     return (stop.start_date ?? '') <= today && today <= (stop.end_date ?? stop.start_date ?? '');
   }
 
-  ngAfterViewInit(): void { setTimeout(() => this.initMap(), 0); }
-  ngOnDestroy(): void { this.map?.remove(); }
+  ngAfterViewInit(): void { void this.initMap(); }
+  ngOnDestroy(): void { this.destroyed = true; this.map?.remove(); }
 
-  private initMap(): void {
+  private destroyed = false;
+
+  private async initMap(): Promise<void> {
     const el = document.getElementById('dash-map');
-    if (!el || typeof L === 'undefined') return;
+    if (!el) return;
+    const L = await loadLeaflet();
+    if (this.destroyed) return;
     this.map = L.map(el, { scrollWheelZoom: true });
     L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
       attribution: '© Esri · © OpenStreetMap', maxZoom: 16,

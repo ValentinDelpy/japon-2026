@@ -18,9 +18,7 @@
           "builder": "@angular/build:application",
           "options": {
             "browser": "src/main.ts",
-            "polyfills": [
-              "zone.js"
-            ],
+            "polyfills": [],
             "tsConfig": "tsconfig.app.json",
             "assets": [
               {
@@ -39,8 +37,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "750kB",
-                  "maximumError": "1MB"
+                  "maximumWarning": "680kB",
+                  "maximumError": "820kB"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -51,7 +49,7 @@
               "outputHashing": "all",
               "optimization": {
                 "scripts": true,
-                "fonts": true,
+                "fonts": false,
                 "styles": {
                   "minify": true,
                   "inlineCritical": false

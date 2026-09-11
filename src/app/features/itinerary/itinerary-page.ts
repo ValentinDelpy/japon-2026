@@ -2,8 +2,7 @@ import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, computed,
 import { ContentService } from '../../core/content.service';
 import { ExchangeService } from '../../core/exchange.service';
 import { euro, formatRange, nightsLabel } from '../../core/format';
-
-declare const L: any;
+import { loadLeaflet } from '../../core/leaflet';
 
 @Component({
   selector: 'app-itinerary-page',
@@ -63,9 +62,10 @@ export class ItineraryPage implements AfterViewInit, OnDestroy {
   });
 
   private map: any;
+  private destroyed = false;
 
-  ngAfterViewInit(): void { setTimeout(() => this.initMap(), 0); }
-  ngOnDestroy(): void { this.map?.remove(); }
+  ngAfterViewInit(): void { void this.initMap(); }
+  ngOnDestroy(): void { this.destroyed = true; this.map?.remove(); }
 
   onJpy(e: Event): void { const v = parseFloat((e.target as HTMLInputElement).value); this.jpy.set(Number.isFinite(v) ? v : null); }
   dest(city: string) { return this.content.destinationByCity(city); }
@@ -74,9 +74,11 @@ export class ItineraryPage implements AfterViewInit, OnDestroy {
     return this.content.content().activities.filter((a) => a.stop_id === stopId).map((a) => a.title);
   }
 
-  private initMap(): void {
+  private async initMap(): Promise<void> {
     const el = document.getElementById('iti-map');
-    if (!el || typeof L === 'undefined') return;
+    if (!el) return;
+    const L = await loadLeaflet();
+    if (this.destroyed) return;
     this.map = L.map(el, { scrollWheelZoom: true });
     L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
       attribution: '© Esri · © OpenStreetMap', maxZoom: 16,

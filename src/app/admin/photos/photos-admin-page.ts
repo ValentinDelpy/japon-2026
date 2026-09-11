@@ -27,7 +27,7 @@ import { Photo } from '../../core/models';
     <div class="photos-masonry">
       @for (p of photos; track p.id) {
         <div class="photo-item">
-          <img class="photo-img loaded" [src]="url(p)" [alt]="p.title || ''">
+          <img class="photo-img loaded" [src]="url(p)" [alt]="p.title || ''" loading="lazy" decoding="async">
           <button class="photo-del" (click)="remove(p)" title="Supprimer">🗑️</button>
         </div>
       } @empty { <p class="empty-state">Aucune photo.</p> }
