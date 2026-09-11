@@ -1,4 +1,8 @@
-name: Deploy to GitHub Pages
+name: Build & publish
+
+# GitHub Pages est configuré en « Deploy from a branch: main / (root) ».
+# On publie donc le build Angular à la RACINE de la branche main.
+# (On déclenche aussi le déploiement Actions pour couvrir ce mode.)
 
 on:
   push:
@@ -6,16 +10,17 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
 concurrency:
-  group: pages
+  group: publish
   cancel-in-progress: true
 
 jobs:
   build:
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -27,21 +32,27 @@ jobs:
 
       - run: npm ci
 
-      # Si les secrets sont définis, ils remplacent public/config.json (sinon le fichier committé est utilisé).
-      - name: Config runtime (optionnel)
-        env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
-        run: |
-          if [ -n "$SUPABASE_URL" ] && [ -n "$SUPABASE_ANON_KEY" ]; then
-            node -e "require('fs').writeFileSync('public/config.json', JSON.stringify({ supabaseUrl: process.env.SUPABASE_URL, supabaseAnonKey: process.env.SUPABASE_ANON_KEY }, null, 2))"
-          fi
-
       - name: Build
         run: npm run build -- --base-href /${{ github.event.repository.name }}/
 
-      - name: Fallback SPA (deep links sur GitHub Pages)
-        run: cp dist/ldva/browser/index.html dist/ldva/browser/404.html
+      - name: Fallback SPA + .nojekyll
+        run: |
+          cp dist/ldva/browser/index.html dist/ldva/browser/404.html
+          touch dist/ldva/browser/.nojekyll
+
+      - name: Publier le build à la racine
+        run: |
+          cd "$GITHUB_WORKSPACE"
+          # nettoyer les anciens artefacts (bundles hachés) avant de recopier
+          rm -f main-*.js polyfills-*.js chunk-*.js styles-*.css 3rdpartylicenses.txt \
+                ngsw.json ngsw-worker.js manifest.webmanifest favicon.ico 404.html .nojekyll index.html
+          rm -rf icons
+          cp -rf dist/ldva/browser/. .
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "chore: publish build [skip ci]" || echo "Rien à publier"
+          git push
 
       - uses: actions/configure-pages@v5
         with:
