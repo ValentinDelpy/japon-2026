@@ -1,0 +1,195 @@
+{
+  "configVersion": 1,
+  "timestamp": 1789113292381,
+  "index": "/japon-2026/index.html",
+  "assetGroups": [
+    {
+      "name": "app",
+      "installMode": "prefetch",
+      "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [
+        "/japon-2026/chunk-36QES76P.js",
+        "/japon-2026/chunk-3LN5LC2J.js",
+        "/japon-2026/chunk-3QNEDQWJ.js",
+        "/japon-2026/chunk-3QOFL7EB.js",
+        "/japon-2026/chunk-3VD7BPLX.js",
+        "/japon-2026/chunk-3WTNWC63.js",
+        "/japon-2026/chunk-427TUUUA.js",
+        "/japon-2026/chunk-5M7XDWTN.js",
+        "/japon-2026/chunk-6LOQHCBD.js",
+        "/japon-2026/chunk-7SXXIA4G.js",
+        "/japon-2026/chunk-APCGZ6PB.js",
+        "/japon-2026/chunk-B4SOYPAA.js",
+        "/japon-2026/chunk-COE5ALNH.js",
+        "/japon-2026/chunk-CWTNKIQA.js",
+        "/japon-2026/chunk-DMI6XIQB.js",
+        "/japon-2026/chunk-DMMPNR6Z.js",
+        "/japon-2026/chunk-EU6YKDYI.js",
+        "/japon-2026/chunk-GSPSZPJV.js",
+        "/japon-2026/chunk-J2NRNX2J.js",
+        "/japon-2026/chunk-JRGQKU5P.js",
+        "/japon-2026/chunk-KCLFQGZP.js",
+        "/japon-2026/chunk-KNH2TIWN.js",
+        "/japon-2026/chunk-KTOPYY5Z.js",
+        "/japon-2026/chunk-MEMIDRCR.js",
+        "/japon-2026/chunk-MN4OKLRA.js",
+        "/japon-2026/chunk-MR5Y4HIK.js",
+        "/japon-2026/chunk-NJEXCATV.js",
+        "/japon-2026/chunk-ODIWA4X7.js",
+        "/japon-2026/chunk-PDM6EHWT.js",
+        "/japon-2026/chunk-R36ONSES.js",
+        "/japon-2026/chunk-R5SQFMXI.js",
+        "/japon-2026/chunk-SEWOECV5.js",
+        "/japon-2026/chunk-TYBWFARC.js",
+        "/japon-2026/chunk-TZEUQORQ.js",
+        "/japon-2026/chunk-UQJFIDXI.js",
+        "/japon-2026/chunk-VVKFJBEA.js",
+        "/japon-2026/chunk-VVTHGSGQ.js",
+        "/japon-2026/chunk-WHXXBZWJ.js",
+        "/japon-2026/chunk-WVDSNSKC.js",
+        "/japon-2026/chunk-X7VL57TA.js",
+        "/japon-2026/chunk-YM2GTSEI.js",
+        "/japon-2026/chunk-YW7FTTYI.js",
+        "/japon-2026/chunk-ZLI5JV75.js",
+        "/japon-2026/favicon.ico",
+        "/japon-2026/index.html",
+        "/japon-2026/main-RL62PYUL.js",
+        "/japon-2026/manifest.webmanifest",
+        "/japon-2026/polyfills-5CFQRCPP.js",
+        "/japon-2026/styles-UIPKZMM4.css"
+      ],
+      "patterns": []
+    },
+    {
+      "name": "assets",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [
+        "/japon-2026/icons/icon.svg"
+      ],
+      "patterns": []
+    }
+  ],
+  "dataGroups": [
+    {
+      "name": "supabase-api",
+      "patterns": [
+        "https:\\/\\/[^/]*\\.supabase\\.co\\/rest\\/v1\\/.*"
+      ],
+      "strategy": "freshness",
+      "maxSize": 200,
+      "maxAge": 86400000,
+      "timeoutMs": 6000,
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "version": 1
+    },
+    {
+      "name": "google-fonts",
+      "patterns": [
+        "https:\\/\\/fonts\\.googleapis\\.com\\/.*",
+        "https:\\/\\/fonts\\.gstatic\\.com\\/.*"
+      ],
+      "strategy": "performance",
+      "maxSize": 40,
+      "maxAge": 2592000000,
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "version": 1
+    },
+    {
+      "name": "images-cdn",
+      "patterns": [
+        "https:\\/\\/images\\.unsplash\\.com\\/.*",
+        "https:\\/\\/upload\\.wikimedia\\.org\\/.*",
+        "https:\\/\\/server\\.arcgisonline\\.com\\/.*"
+      ],
+      "strategy": "performance",
+      "maxSize": 200,
+      "maxAge": 604800000,
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "version": 1
+    }
+  ],
+  "hashTable": {
+    "/japon-2026/chunk-36QES76P.js": "2d0742f9a0c607b12120663e99b7ca6db009b59d",
+    "/japon-2026/chunk-3LN5LC2J.js": "3b9bd4b40c7813cf10e45e5ffd42f8aff4fae056",
+    "/japon-2026/chunk-3QNEDQWJ.js": "1d594566fbd9ce38c3e8fcf4a1b803b15b2c331c",
+    "/japon-2026/chunk-3QOFL7EB.js": "7fda1cad1a119e0ace096fc3d2fd826543323fb5",
+    "/japon-2026/chunk-3VD7BPLX.js": "0630aefdda534e559fbc23efe6fe4a468317db71",
+    "/japon-2026/chunk-3WTNWC63.js": "728a698dc7c95ded7ff8433208b7dc94c0b78928",
+    "/japon-2026/chunk-427TUUUA.js": "0323202d4f36fa850c4d97dd8f2ec6c53a474ff5",
+    "/japon-2026/chunk-5M7XDWTN.js": "50d4e27595f0a70ad709303cdf3500633e5ae24c",
+    "/japon-2026/chunk-6LOQHCBD.js": "0cacfb3da1b11471efb81b084d7e856f3cd0c994",
+    "/japon-2026/chunk-7SXXIA4G.js": "ab334382e04f78b4dbbc0adf1775086a0221c2d4",
+    "/japon-2026/chunk-APCGZ6PB.js": "cd16c39d3aba6de6dc3d4a4869c26391d1f9aa19",
+    "/japon-2026/chunk-B4SOYPAA.js": "9c6eb51139e8c5421593316eafb68432873baad8",
+    "/japon-2026/chunk-COE5ALNH.js": "adb07c1b8a1702e35615d08a862a627971436867",
+    "/japon-2026/chunk-CWTNKIQA.js": "a774913c03bd4e4f559270fe7af94942b22ddcda",
+    "/japon-2026/chunk-DMI6XIQB.js": "b196ed94303e785af6788ffdc02feac40ddaeac0",
+    "/japon-2026/chunk-DMMPNR6Z.js": "e3a621d615e34dab2f3fe7c732e0e55d7c1e4708",
+    "/japon-2026/chunk-EU6YKDYI.js": "c4c90bd9c9ac74da35e11cb595c20e23988c7c83",
+    "/japon-2026/chunk-GSPSZPJV.js": "b7e056f1170deeaf8b1d30f5f864f5f29b146720",
+    "/japon-2026/chunk-J2NRNX2J.js": "86dfa62b965d517b0c0037c1b43a72f3bebb2c69",
+    "/japon-2026/chunk-JRGQKU5P.js": "b09cdaf90389005d303654479b368d52cdfd8a12",
+    "/japon-2026/chunk-KCLFQGZP.js": "3c7d052879f2bec786b992c243894b21c75ea703",
+    "/japon-2026/chunk-KNH2TIWN.js": "840b390306341d658abfb3f729ae5c74f5db142a",
+    "/japon-2026/chunk-KTOPYY5Z.js": "1d78bc95bcaedd51867bdfa3c1ef81018a46fdcd",
+    "/japon-2026/chunk-MEMIDRCR.js": "8a8f8a1e701f2daadc1a10a6e736e70bebeca230",
+    "/japon-2026/chunk-MN4OKLRA.js": "b3c167cf11e74e13ae553474032802eeb2ebb2d8",
+    "/japon-2026/chunk-MR5Y4HIK.js": "e62c817612f82a055df81c4a6a83e991f8d5a54c",
+    "/japon-2026/chunk-NJEXCATV.js": "277abb06742c624b371418a0037d7c2ca259b4f2",
+    "/japon-2026/chunk-ODIWA4X7.js": "4250d9c8b72ca78b3c3c3d67f629d4d08ac65db6",
+    "/japon-2026/chunk-PDM6EHWT.js": "5cfac65dc9ab488e145455f6bf35d910791db28a",
+    "/japon-2026/chunk-R36ONSES.js": "6c8406d7d27ffe1a20f0954a18b761d41a6984f3",
+    "/japon-2026/chunk-R5SQFMXI.js": "6b82e4e98cfa12c4812ed16bc24fe3feff08f9b7",
+    "/japon-2026/chunk-SEWOECV5.js": "cd2035b80ddf139c7d17e1395f72a2da1dea3b39",
+    "/japon-2026/chunk-TYBWFARC.js": "49757bb0fde37ebbd0b9dd9a23a6da015589d40f",
+    "/japon-2026/chunk-TZEUQORQ.js": "8e4b89820b90c0c55e9ed4772fa98a9d2e0b4fba",
+    "/japon-2026/chunk-UQJFIDXI.js": "b34b85636e4c82bb206cddd0a30a0a0ff0ba3d4e",
+    "/japon-2026/chunk-VVKFJBEA.js": "2097acb8abdbfb308849ae401cd2ceeb581745f8",
+    "/japon-2026/chunk-VVTHGSGQ.js": "9e018dd53f0b9fdc4f9f4ef7b836c93033319be1",
+    "/japon-2026/chunk-WHXXBZWJ.js": "704a3896c6d6971d2feac9e05d8a5b84f52e6649",
+    "/japon-2026/chunk-WVDSNSKC.js": "67e9324684caf5d0a3328990c209cd3caa4fbaf8",
+    "/japon-2026/chunk-X7VL57TA.js": "db76d92722fd4525977d0fac8f346f9bc2888908",
+    "/japon-2026/chunk-YM2GTSEI.js": "2908ab205f6190aa833d9cc1815c68e4b8ddab9f",
+    "/japon-2026/chunk-YW7FTTYI.js": "b6f72c3ede6069cda02727cd0d651fd75f8d5976",
+    "/japon-2026/chunk-ZLI5JV75.js": "fc9bddbbe621eaddd98d91737934c011b52897fe",
+    "/japon-2026/favicon.ico": "9c39f434fe1261f68c5e3eefdf734630d99c5670",
+    "/japon-2026/icons/icon.svg": "64b0ef278d6f17b5d1954687e3f899797cbeadb0",
+    "/japon-2026/index.html": "f95c345cb685e9f8f3534029d9f9dd2505215e4f",
+    "/japon-2026/main-RL62PYUL.js": "b1dec30123bbc1d0814f8d3abfb9d1d159128818",
+    "/japon-2026/manifest.webmanifest": "b8bc426e9f2c9e0c85545109a7f132b859e4d7ab",
+    "/japon-2026/polyfills-5CFQRCPP.js": "f2241e9a25858f895ce299d15f6f22e849e2fd72",
+    "/japon-2026/styles-UIPKZMM4.css": "cc78aa97b730499b633e3e194ba4d0c6692104e5"
+  },
+  "navigationUrls": [
+    {
+      "positive": true,
+      "regex": "^\\/.*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*\\.[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*\\/.*$"
+    }
+  ],
+  "navigationRequestStrategy": "performance"
+}
