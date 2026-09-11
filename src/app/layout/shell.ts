@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@a
 import { toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { filter, map } from 'rxjs';
+import { AuthService } from '../core/auth.service';
 import { ContentService } from '../core/content.service';
 import { ExchangeService } from '../core/exchange.service';
 import { SearchService } from '../core/search.service';
@@ -51,10 +52,16 @@ interface NavGroup { label: string; items: NavItem[]; }
 
       <div class="sidebar-footer">
         <button class="sidebar-search" (click)="search.show()"><app-icon class="ss-icon" name="search" [size]="15" /> Rechercher <kbd>Ctrl K</kbd></button>
-        <a class="admin-seal" routerLink="/admin">
-          <span class="admin-seal-mark">印</span>
-          <span>Administration</span>
-        </a>
+        <div class="sidebar-user">
+          <span class="sidebar-user-email">{{ auth.user()?.email }}</span>
+          <button class="icon-btn" (click)="auth.signOut()" title="Déconnexion" aria-label="Déconnexion"><app-icon name="logout" [size]="14" /></button>
+        </div>
+        @if (auth.isAdmin()) {
+          <a class="admin-seal" routerLink="/admin">
+            <span class="admin-seal-mark">印</span>
+            <span>Administration</span>
+          </a>
+        }
         <div class="exchange-widget">
           <span class="exchange-label">1 € → ¥</span>
           <span class="exchange-value">{{ exchange.rate() ? exchange.rate()!.toFixed(2) : '---' }}</span>
@@ -125,6 +132,7 @@ export class Shell {
   readonly exchange = inject(ExchangeService);
   readonly theme = inject(ThemeService);
   readonly search = inject(SearchService);
+  readonly auth = inject(AuthService);
   readonly menuOpen = signal(false);
   private readonly router = inject(Router);
 

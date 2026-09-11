@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../core/auth.service';
@@ -11,8 +11,8 @@ import { AuthService } from '../../core/auth.service';
     <div class="login-wrap">
       <form class="login-card" (ngSubmit)="submit()">
         <span class="logo-mark" style="margin:0 auto 12px">日</span>
-        <h1>Administration</h1>
-        <p class="muted" style="margin-bottom:16px">Little Domo Very Arigatō</p>
+        <h1>Little Domo</h1>
+        <p class="muted" style="margin-bottom:16px">Accès privé · Voyage au Japon</p>
 
         @if (!auth.canUseBackend) {
           <div class="notice">Supabase n'est pas configuré. Renseignez <code>public/config.json</code> (URL + clé publishable).</div>
@@ -43,13 +43,19 @@ export class LoginPage {
   readonly loading = signal(false);
   readonly error = signal<string | null>(null);
 
+  constructor() {
+    effect(() => {
+      if (this.auth.isAuthenticated()) void this.router.navigate(['/dashboard']);
+    });
+  }
+
   async submit(): Promise<void> {
     if (!this.auth.canUseBackend) return;
     this.loading.set(true);
     this.error.set(null);
     try {
       await this.auth.signIn(this.email, this.password);
-      await this.router.navigate(['/admin']);
+      await this.router.navigate(['/dashboard']);
     } catch (e) {
       this.error.set(e instanceof Error ? e.message : 'Connexion impossible');
     } finally {
@@ -57,3 +63,4 @@ export class LoginPage {
     }
   }
 }
+

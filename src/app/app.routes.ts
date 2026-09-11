@@ -1,11 +1,13 @@
 import { Routes } from '@angular/router';
 import { Shell } from './layout/shell';
-import { adminGuard } from './core/admin.guard';
+import { adminGuard, authGuard } from './core/admin.guard';
 
 export const routes: Routes = [
+  { path: 'login', loadComponent: () => import('./admin/login/login-page').then((m) => m.LoginPage) },
   {
     path: '',
     component: Shell,
+    canActivate: [authGuard],
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
       { path: 'dashboard', loadComponent: () => import('./features/dashboard/dashboard-page').then((m) => m.DashboardPage) },
@@ -29,14 +31,15 @@ export const routes: Routes = [
       { path: 'print', loadComponent: () => import('./features/print/print-page').then((m) => m.PrintPage) },
     ],
   },
-  { path: 'admin/login', loadComponent: () => import('./admin/login/login-page').then((m) => m.LoginPage) },
+  { path: 'admin/login', redirectTo: 'login' },
   {
     path: 'admin',
-    canActivate: [adminGuard],
+    canActivate: [authGuard, adminGuard],
     loadComponent: () => import('./layout/admin-shell').then((m) => m.AdminShell),
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'overview' },
       { path: 'overview', loadComponent: () => import('./admin/overview/overview-page').then((m) => m.OverviewPage) },
+      { path: 'users', loadComponent: () => import('./admin/users/users-page').then((m) => m.UsersPage) },
       { path: 'trip', loadComponent: () => import('./admin/trip/trip-page').then((m) => m.TripPage) },
       { path: 'days', loadComponent: () => import('./admin/days/days-page').then((m) => m.DaysPage) },
       { path: 'activities', loadComponent: () => import('./admin/activities/activities-page').then((m) => m.ActivitiesPage) },

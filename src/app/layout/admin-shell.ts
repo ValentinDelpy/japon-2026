@@ -48,6 +48,7 @@ export class AdminShell {
 
   readonly items: { path: string; icon: IconName; label: string }[] = [
     { path: 'overview', icon: 'chart', label: "Vue d'ensemble" },
+    { path: 'users', icon: 'user', label: 'Utilisateurs' },
     { path: 'trip', icon: 'route', label: 'Voyage' },
     { path: 'stops', icon: 'pin', label: 'Étapes' },
     { path: 'accommodations', icon: 'bed', label: 'Hébergements' },

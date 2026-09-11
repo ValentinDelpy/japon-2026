@@ -197,3 +197,15 @@ push sur `main` (ou manuellement via *Actions ? Run workflow*).
 - **CSP** stricte dans `src/index.html` : seules les sources nécessaires sont autorisées
   (Supabase, Wikimedia, OSM, polices, Leaflet). `object-src 'none'`.
 - HTTPS et en-têtes de base fournis par GitHub Pages.
+
+## Accès privé & gestion des comptes
+
+Depuis la v31, **l'ensemble du site nécessite une connexion** (plus seulement l'admin).
+- Sans session ? redirection vers `/login`.
+- L'admin (`/admin`) exige en plus le rôle **administrateur** (table `admin_users`).
+- **Pas d'inscription publique** : seuls les comptes créés par un admin peuvent se connecter.
+
+Créer/gérer les comptes : Admin ? **Utilisateurs** (email, mot de passe = 8, rôle admin).
+Techniquement, la création passe par des fonctions PostgreSQL `security definer`
+(`admin_create_user`, `admin_list_users`, `admin_set_admin`, `admin_delete_user`) qui vérifient
+`is_admin()` : **la clé service_role n'est jamais exposée au navigateur**.
