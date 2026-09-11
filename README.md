@@ -170,3 +170,30 @@ Les donnÃ©es dÃ©rivÃ©es (dashboard, timeline, statistiques) sont **calculÃ©es** 
 `logistics_sections`/`logistics_items`, `japan101_sections`/`japan101_items`, `surprise_items`.
 
 Les donnÃ©es dÃ©rivÃ©es (timeline, statistiques, dashboard) sont **calculÃ©es** Ã  partir de ces tables, jamais dupliquÃ©es.
+
+## Déploiement sécurisé (GitHub Pages + Actions)
+
+Le workflow `.github/workflows/deploy.yml` construit et publie l'app sur GitHub Pages à chaque
+push sur `main` (ou manuellement via *Actions ? Run workflow*).
+
+### Mise en place
+1. **Secrets du dépôt** (Settings ? Secrets and variables ? Actions) :
+   - `SUPABASE_URL` : `https://<projet>.supabase.co`
+   - `SUPABASE_ANON_KEY` : la clé **publishable/anon** (publique par nature)
+   Le workflow génère `public/config.json` à la volée : **aucune clé n'est versionnée**.
+2. **Pages** : Settings ? Pages ? *Source* = **GitHub Actions**.
+3. Pousser sur `main` ? l'app est publiée sur `https://<user>.github.io/<repo>/`.
+
+### Modèle de sécurité
+- **La sécurité réelle vient de PostgreSQL (RLS)**, pas de GitHub Pages (hébergement statique).
+- La clé publishable est **publique** : elle est de toute façon envoyée au navigateur.
+  Elle n'autorise que ce que les policies RLS permettent.
+- **Lecture publique**, **écriture réservée aux utilisateurs présents dans `admin_users`**
+  (vérifié : `anon` peut lire, `anon` ne peut pas écrire).
+- L'admin (`/admin`) est protégé par **Supabase Auth** + guard Angular + RLS (la base refuse
+  toute écriture sans session valide, même si on contourne le guard).
+- Le **mot de passe PostgreSQL** et la clé **service_role** ne doivent JAMAIS être dans le front
+  ni dans le repo. Les scripts `db:migrate` / `db:seed` utilisent `DATABASE_URL` en local uniquement.
+- **CSP** stricte dans `src/index.html` : seules les sources nécessaires sont autorisées
+  (Supabase, Wikimedia, OSM, polices, Leaflet). `object-src 'none'`.
+- HTTPS et en-têtes de base fournis par GitHub Pages.
