@@ -40,6 +40,9 @@ jobs:
       - name: Build
         run: npm run build -- --base-href /${{ github.event.repository.name }}/
 
+      - name: Fallback SPA (deep links sur GitHub Pages)
+        run: cp dist/ldva/browser/index.html dist/ldva/browser/404.html
+
       - uses: actions/configure-pages@v5
         with:
           enablement: true
