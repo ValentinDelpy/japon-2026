@@ -10,6 +10,7 @@ export interface HomeChapter {
   photo: string | null;
   dates: string;
   nights: number;
+  firstDayId: string | null;
   visited: string[];
   activities: Activity[];
   excursion: HomeExcursion | null;
@@ -51,6 +52,7 @@ export function buildHomeChapters(content: Content): HomeChapter[] {
       photo: dest?.image_url ?? null,
       dates: formatRange(stop.start_date, stop.end_date),
       nights: stop.nights ?? 0,
+      firstDayId: stopDays[0]?.id ?? null,
       visited,
       activities: acts,
       excursion,
