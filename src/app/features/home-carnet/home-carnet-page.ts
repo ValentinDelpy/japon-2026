@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { AdminService } from '../../core/admin.service';
 import { ContentService } from '../../core/content.service';
 import { EditModeService } from '../../core/edit-mode.service';
 import { Activity } from '../../core/models';
@@ -13,7 +14,10 @@ import { InlineEdit } from '../../shared/inline-edit';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     @if (trip(); as t) {
-      <section class="home-hero" [style.background-image]="heroPhoto() ? 'url(' + heroPhoto() + ')' : null">
+      <section class="home-hero">
+        @if (heroSrc(); as src) {
+          <img class="home-hero-img" [src]="src" [attr.srcset]="heroSrcset()" sizes="100vw" alt="" fetchpriority="high" decoding="async">
+        }
         <div class="home-hero-inner">
           <div class="home-eyebrow">Carnet de voyage · {{ t.subtitle }}</div>
           <h1>{{ t.origin }} <span>→</span> {{ t.destination }}</h1>
@@ -100,14 +104,38 @@ import { InlineEdit } from '../../shared/inline-edit';
                 }
               </div>
 
-              @if (c.activities.length) {
+              @if (c.activities.length || edit.active()) {
                 <div class="home-acts">
                   <div class="home-label">Activités</div>
                   <ul>
                     @for (a of c.activities; track a.id) {
-                      <li><app-inline-edit [value]="a.title" placeholder="Activité" (valueChange)="stageAct(a, { title: $event })">{{ a.title }}</app-inline-edit></li>
+                      <li>
+                        @if (edit.active()) {
+                          <app-inline-edit [value]="a.title" placeholder="Activité" (valueChange)="stageAct(a, { title: $event })">{{ a.title }}</app-inline-edit>
+                          <input class="inline-input" [ngModel]="a.link ?? ''" (ngModelChange)="stageActLink(a, $event)" placeholder="Lien (optionnel)" aria-label="Lien de l’activité">
+                        } @else if (a.link) {
+                          <a [href]="a.link" target="_blank" rel="noopener">{{ a.title }} ↗</a>
+                        } @else {
+                          {{ a.title }}
+                        }
+                      </li>
                     }
                   </ul>
+
+                  @if (edit.active()) {
+                    @if (addFor() === (c.stop.id ?? c.stop.city)) {
+                      <div class="activity-add">
+                        <input class="inline-input" [ngModel]="addTitle()" (ngModelChange)="addTitle.set($event)" placeholder="Titre de la nouvelle activité" aria-label="Titre de la nouvelle activité">
+                        <input class="inline-input" [ngModel]="addLink()" (ngModelChange)="addLink.set($event)" placeholder="Lien (optionnel)" aria-label="Lien de la nouvelle activité">
+                        <div class="activity-add-actions">
+                          <button type="button" class="edit-cancel" (click)="addFor.set(null)">Annuler</button>
+                          <button type="button" class="edit-save" (click)="addActivity(c)">Ajouter</button>
+                        </div>
+                      </div>
+                    } @else {
+                      <button type="button" class="activity-add-btn" (click)="startAdd(c)">+ Ajouter une activité</button>
+                    }
+                  }
                 </div>
               }
             </div>
@@ -120,8 +148,12 @@ import { InlineEdit } from '../../shared/inline-edit';
 export class HomeCarnetPage {
   readonly content = inject(ContentService);
   readonly edit = inject(EditModeService);
+  private readonly admin = inject(AdminService);
   readonly trip = this.content.trip;
   readonly euro = euro;
+  readonly addFor = signal<string | null>(null);
+  readonly addTitle = signal('');
+  readonly addLink = signal('');
 
   readonly chapters = computed<HomeChapter[]>(() => buildHomeChapters(this.content.content()));
 
@@ -129,11 +161,51 @@ export class HomeCarnetPage {
   readonly budget = computed(() => this.content.content().accommodations.reduce((n, a) => n + (a.price_total ?? 0), 0));
   readonly restaurants = computed(() => this.content.restaurants().length);
   readonly heroPhoto = computed(() => this.chapters().find((c) => c.photo)?.photo ?? null);
+  readonly heroSrc = computed(() => {
+    const url = this.heroPhoto();
+    if (!url) return null;
+    return /[?&]w=\d+/.test(url) ? url.replace(/([?&])w=\d+/, '$1w=2000') : url;
+  });
+  readonly heroSrcset = computed(() => {
+    const url = this.heroPhoto();
+    if (!url || !/[?&]w=\d+/.test(url)) return null;
+    const at = (w: number) => url.replace(/([?&])w=\d+/, `$1w=${w}`);
+    return [1200, 2000, 3200, 3840].map((w) => `${at(w)} ${w}w`).join(', ');
+  });
   readonly heroDates = computed(() => formatRange(this.trip()?.start_date, this.trip()?.end_date));
 
   stageDest(c: HomeChapter, patch: Record<string, unknown>): void { this.edit.stage('destinations', c.dest?.id, patch); }
   stageAcc(c: HomeChapter, patch: Record<string, unknown>): void { this.edit.stage('accommodations', c.acc?.id, patch); }
   stageAct(a: Activity, patch: Record<string, unknown>): void { this.edit.stage('activities', a.id, patch); }
+  stageActLink(a: Activity, value: string): void { this.edit.stage('activities', a.id, { link: value.trim() || null }); }
+
+  startAdd(c: HomeChapter): void {
+    this.addFor.set(c.stop.id ?? c.stop.city);
+    this.addTitle.set('');
+    this.addLink.set('');
+  }
+
+  async addActivity(c: HomeChapter): Promise<void> {
+    const title = this.addTitle().trim();
+    const tripId = this.content.trip()?.id;
+    if (!title || !c.firstDayId || !tripId) return;
+    const order = c.activities.reduce((m, a) => Math.max(m, a.order_index), -1) + 1;
+    try {
+      await this.admin.save('activities', {
+        trip_id: tripId,
+        day_id: c.firstDayId,
+        stop_id: c.stop.id ?? null,
+        title,
+        link: this.addLink().trim() || null,
+        order_index: order,
+      });
+      this.addFor.set(null);
+      this.addTitle.set('');
+      this.addLink.set('');
+    } catch (e) {
+      this.edit.error.set(e instanceof Error ? e.message : String(e));
+    }
+  }
 
   stagePrice(c: HomeChapter, value: string): void {
     const n = value.trim() === '' ? null : Number(value);

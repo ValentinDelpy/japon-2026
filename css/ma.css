@@ -218,9 +218,10 @@ h3 { font-size: 1.15rem; }
 .inline-textarea { min-height: 92px; resize: vertical; line-height: 1.6; }
 
 /* Carnet */
-.home-hero { position: relative; min-height: calc(100svh - 64px); display: flex; align-items: flex-end; color: #fff; background: var(--sumi) center/cover no-repeat; }
-.home-hero::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(20, 18, 14, .18) 0%, rgba(20, 18, 14, .55) 58%, rgba(20, 18, 14, .9) 100%); }
-.home-hero-inner { position: relative; z-index: 1; width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 40px 64px; }
+.home-hero { position: relative; min-height: calc(100svh - 64px); display: flex; align-items: flex-end; color: #fff; background: var(--sumi); overflow: hidden; }
+.home-hero-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+.home-hero::after { content: ''; position: absolute; inset: 0; z-index: 1; background: linear-gradient(180deg, rgba(20, 18, 14, .18) 0%, rgba(20, 18, 14, .55) 58%, rgba(20, 18, 14, .9) 100%); }
+.home-hero-inner { position: relative; z-index: 2; width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 40px 64px; }
 .home-eyebrow { font-size: .64rem; letter-spacing: .24em; text-transform: uppercase; color: rgba(255, 255, 255, .82); margin-bottom: 18px; }
 .home-hero h1 { font-family: 'Instrument Serif', 'Hiragino Mincho ProN', serif; font-weight: 400; font-size: clamp(3rem, 8.4vw, 7.4rem); line-height: .94; letter-spacing: -.02em; color: #fff; }
 .home-hero h1 span { color: #e7a79a; }
@@ -344,3 +345,14 @@ h3 { font-size: 1.15rem; }
 .home-rate { font-family: ui-monospace, monospace; font-size: .66rem; color: var(--ink3); white-space: nowrap; padding: 0 8px; }
 @media (max-width: 900px) { .home-rate { display: none; } }
 @media (max-width: 640px) { .home-current { display: none; } }
+/* ── Ajout / liens d'activités (édition inline) ── */
+.home-acts ul { flex-direction: column; gap: 10px; }
+.home-acts li { width: 100%; }
+.home-acts a { color: var(--accent); border-bottom: 1px solid currentColor; }
+.activity-add { margin-top: 14px; display: grid; gap: 8px; }
+.activity-add-actions { display: flex; justify-content: flex-end; gap: 8px; }
+.activity-add-actions .edit-cancel { color: var(--ink2); border-color: var(--line2); }
+.activity-add-actions .edit-save { background: var(--accent); border-color: var(--accent); color: #fff; }
+.activity-add-actions .edit-cancel, .activity-add-actions .edit-save { padding: 6px 10px; }
+.activity-add-btn { margin-top: 12px; border: 1px dashed var(--line2); background: transparent; color: var(--accent); border-radius: var(--r-sm); padding: 8px 12px; font: inherit; font-size: .68rem; letter-spacing: .08em; text-transform: uppercase; cursor: pointer; width: fit-content; }
+.activity-add-btn:hover { border-color: var(--accent); }
