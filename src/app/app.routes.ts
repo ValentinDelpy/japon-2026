@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { HomeShell } from './layout/home-shell';
 import { Shell } from './layout/shell';
 import { adminGuard, authGuard } from './core/admin.guard';
 
@@ -6,10 +7,19 @@ export const routes: Routes = [
   { path: 'login', loadComponent: () => import('./admin/login/login-page').then((m) => m.LoginPage) },
   {
     path: '',
+    component: HomeShell,
+    canActivate: [authGuard],
+    children: [
+      { path: '', pathMatch: 'full', redirectTo: () => { try { return localStorage.getItem('ldva.homeView') === 'atlas' ? 'atlas' : 'carnet'; } catch { return 'carnet'; } } },
+      { path: 'carnet', loadComponent: () => import('./features/home-carnet/home-carnet-page').then((m) => m.HomeCarnetPage) },
+      { path: 'atlas', loadComponent: () => import('./features/home-atlas/home-atlas-page').then((m) => m.HomeAtlasPage) },
+    ],
+  },
+  {
+    path: '',
     component: Shell,
     canActivate: [authGuard],
     children: [
-      { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
       { path: 'dashboard', loadComponent: () => import('./features/dashboard/dashboard-page').then((m) => m.DashboardPage) },
       { path: 'today', loadComponent: () => import('./features/today/today-page').then((m) => m.TodayPage) },
       { path: 'itinerary', loadComponent: () => import('./features/itinerary/itinerary-page').then((m) => m.ItineraryPage) },

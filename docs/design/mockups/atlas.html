@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Atlas — maquette disruptive</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+  :root{
+    --paper:#f6f1e8; --card:#fffdf9; --ink:#171410; --ink2:#544d43; --ink3:#6f685d;
+    --line:#e3dccd; --line2:#cfc5b3; --accent:#b2493a; --accent-l:#f6e8e2;
+    --soft:0 12px 34px rgba(70,52,32,.07); --r:10px; --r-sm:4px;
+    --serif:'Instrument Serif',Georgia,serif; --sans:'Instrument Sans',system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--sans);color:var(--ink);background:var(--paper);overflow:hidden;font-size:15px}
+  a{color:inherit;text-decoration:none}
+  #map{position:fixed;inset:0;z-index:0;background:#e9e6de}
+  .leaflet-container{font-family:var(--sans)}
+  .leaflet-control-attribution{background:rgba(243,239,231,.8)!important;font-size:9px!important}
+  .leaflet-tile{filter:saturate(.35) contrast(.96) brightness(1.03)}
+
+  .top{position:fixed;inset:0 0 auto;z-index:600;display:flex;align-items:center;justify-content:space-between;gap:20px;height:64px;padding:0 24px;background:rgba(246,241,232,.96);border-bottom:1px solid var(--line)}
+  .brand{font-family:var(--serif);font-size:1.22rem;display:flex;align-items:baseline;gap:10px}
+  .brand small{font-family:var(--sans);font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3)}
+  .top-actions{display:flex;align-items:center;gap:10px}
+  .btn{border:1px solid var(--line2);background:var(--card);padding:8px 12px;font:inherit;font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink2);cursor:pointer;border-radius:var(--r-sm)}
+  .btn-accent{background:var(--accent);border-color:var(--accent);color:#fff}
+  .avatar{width:30px;height:30px;border-radius:50%;background:var(--ink);color:var(--paper);display:grid;place-items:center;font-size:.6rem}
+
+  .atlas-title{position:fixed;top:88px;left:24px;z-index:500;pointer-events:none}
+  .atlas-title .eyebrow{font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;color:var(--ink3)}
+  .atlas-title h1{font-family:var(--serif);font-weight:400;font-size:2.8rem;line-height:1;letter-spacing:-.02em;margin-top:6px}
+  .atlas-title p{font-size:.72rem;letter-spacing:.08em;color:var(--ink3);margin-top:8px}
+
+  /* Panneau latéral */
+  .panel{position:fixed;top:88px;right:24px;bottom:110px;z-index:500;width:370px;background:rgba(255,253,249,.97);border:1px solid var(--line);box-shadow:var(--soft);padding:24px;overflow:auto;border-radius:var(--r)}
+  .panel-kicker{font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--accent)}
+  .panel h2{font-family:var(--serif);font-weight:400;font-size:2.4rem;line-height:1;margin:6px 0 4px}
+  .panel h2 span{font-size:1.1rem;color:var(--ink3);margin-left:8px}
+  .panel-sub{font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3)}
+  .panel-photo{aspect-ratio:16/10;background:#ddd center/cover no-repeat;margin:18px 0;border:1px solid var(--line)}
+  .label{font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ink3)}
+  .lodge{border-top:1px solid var(--line);padding-top:14px}
+  .lodge .name{font-family:var(--serif);font-size:1.3rem;margin:4px 0 2px}
+  .lodge .meta{font-size:.72rem;color:var(--ink3)}
+  .lodge a{display:inline-block;margin-top:10px;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);border-bottom:1px solid currentColor}
+  .panel-section{border-top:1px solid var(--line);margin-top:18px;padding-top:14px}
+  .panel-section ul{list-style:none;margin-top:8px;display:flex;flex-direction:column;gap:6px;font-size:.84rem;color:var(--ink2)}
+  .panel-section li::before{content:'—';color:var(--line2);margin-right:8px}
+  .panel-cta{display:flex;gap:8px;margin-top:20px}
+  .panel-cta .btn{flex:1;text-align:center}
+
+  /* Bandeau des étapes */
+  .strip{position:fixed;left:24px;right:418px;bottom:24px;z-index:500;display:flex;gap:10px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+  .strip::-webkit-scrollbar{display:none}
+  .stop-card{flex:0 0 auto;min-width:148px;background:rgba(255,253,249,.97);border:1px solid var(--line);padding:14px;text-align:left;font:inherit;cursor:pointer;border-radius:var(--r);transition:border-color .15s,box-shadow .15s}
+  .stop-card:hover{border-color:var(--line2)}
+  .stop-card.active{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+  .sc-num{font-family:var(--serif);font-size:.8rem;color:var(--accent)}
+  .sc-city{display:block;font-family:var(--serif);font-size:1.15rem;margin:3px 0 2px}
+  .sc-dates{display:block;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3)}
+  .sc-nights{display:block;font-size:.64rem;color:var(--ink3);margin-top:6px}
+
+  .today{position:fixed;left:50%;bottom:150px;transform:translateX(-50%);z-index:550;display:flex;align-items:center;gap:10px;background:var(--ink);color:var(--paper);padding:10px 18px;border-radius:var(--r-sm);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase}
+  .today b{font-family:var(--serif);font-weight:400;font-size:1.05rem;letter-spacing:0}
+
+  .atlas-marker span{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--card);border:1px solid var(--line2);color:var(--ink);font:600 11px var(--sans);box-shadow:0 3px 10px rgba(20,19,15,.18)}
+  .atlas-marker.active span{background:var(--accent);border-color:var(--accent);color:#fff}
+  .atlas-label{background:none!important;border:0!important;box-shadow:none!important;font-family:var(--serif)!important;font-size:13px!important;color:var(--ink)!important;padding:0!important}
+  .atlas-label::before{display:none!important}
+
+  /* Le sac */
+  .sac-panel{position:fixed;inset:0;z-index:800;background:var(--paper);padding:64px 40px 120px;display:none;overflow:auto}
+  .sac-panel.open{display:block}
+  .sac-head{display:flex;align-items:baseline;justify-content:space-between;max-width:1100px;margin:0 auto 36px}
+  .sac-head h3{font-family:var(--serif);font-weight:400;font-size:2.4rem}
+  .sac-grid{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
+  .sac-grid a{background:var(--paper);padding:24px 20px;display:flex;flex-direction:column;gap:6px}
+  .sac-grid a:hover{background:var(--card)}
+  .sac-grid span{font-family:var(--serif);font-size:.8rem;color:var(--accent)}
+  .sac-grid strong{font-family:var(--serif);font-weight:400;font-size:1.2rem}
+
+  @media (max-width:900px){
+    .atlas-title{display:none}
+    .panel{top:auto;left:0;right:0;bottom:0;width:auto;max-height:58vh;border-left:0;border-right:0;border-bottom:0;border-radius:0;padding:20px}
+    .strip{right:0;left:0;bottom:auto;top:76px;padding:0 12px}
+    .today{bottom:calc(58vh + 16px)}
+    .panel-photo{aspect-ratio:21/9}
+  }
+</style>
+</head>
+<body>
+
+<div id="map"></div>
+
+<header class="top">
+  <div class="brand">Little Domo <small>Atlas · Japon 2026</small></div>
+  <div class="top-actions">
+    <button class="btn" id="sac">Le sac · 16</button>
+    <span class="avatar">LD</span>
+  </div>
+</header>
+
+<div class="atlas-title">
+  <div class="eyebrow">Atlas du voyage</div>
+  <h1>Le Japon,<br>d’un point à l’autre</h1>
+  <p>9 bases · 17 nuits · 4 personnes</p>
+</div>
+
+<aside class="panel" id="panel"></aside>
+
+<div class="strip" id="strip"></div>
+
+<div class="today">J-28 · <b>Départ dans 28 jours</b></div>
+
+<div class="sac-panel" id="sacPanel">
+  <div class="sac-head"><h3>Le sac</h3><button class="btn" id="sacClose">Fermer</button></div>
+  <div class="sac-grid">
+    <a href="#"><span>01</span><strong>Itinéraire</strong></a>
+    <a href="#"><span>02</span><strong>Fiches voyage</strong></a>
+    <a href="#"><span>03</span><strong>Timeline</strong></a>
+    <a href="#"><span>04</span><strong>Statistiques</strong></a>
+    <a href="#"><span>05</span><strong>Packing list</strong></a>
+    <a href="#"><span>06</span><strong>Check-list</strong></a>
+    <a href="#"><span>07</span><strong>Logistique</strong></a>
+    <a href="#"><span>08</span><strong>Restos</strong></a>
+    <a href="#"><span>09</span><strong>Phrasebook</strong></a>
+    <a href="#"><span>10</span><strong>Agenda</strong></a>
+    <a href="#"><span>11</span><strong>Moodboard</strong></a>
+    <a href="#"><span>12</span><strong>Photos</strong></a>
+    <a href="#"><span>13</span><strong>Météo</strong></a>
+    <a href="#"><span>14</span><strong>Japon 101</strong></a>
+    <a href="#"><span>15</span><strong>Surprise</strong></a>
+    <a href="#"><span>16</span><strong>Impression</strong></a>
+  </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+const stops = [
+  { city:'Tokyo', jp:'東京', dates:'18 → 22 nov', nights:4, lodge:'Logement low cost', price:'329 €', img:'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=900&q=80&auto=format&fit=crop', coords:[35.6762,139.6503], acts:['Palais impérial','Tsukiji','Ueno · Nezu · Yanaka','Harajuku · Shibuya · Shinjuku'] },
+  { city:'Kanazawa', jp:'金沢', dates:'22 → 24 nov', nights:2, lodge:'Economics', price:'208 €', img:'https://images.unsplash.com/photo-1567767292278-a4f21aa2d36e?w=900&q=80&auto=format&fit=crop', coords:[36.5613,136.6562], acts:['Kenroku-en','Higashi Chaya','Marché Omichō','Nagamachi'] },
+  { city:'Takayama', jp:'高山', dates:'24 → 26 nov', nights:2, lodge:'Budget ok', price:'264 €', img:'https://images.unsplash.com/photo-1580533089532-54e9b8f62997?w=900&q=80&auto=format&fit=crop', coords:[36.1461,137.2522], acts:['Shirakawa-go','Sanmachi-suji','Hida-no-Sato','Bœuf de Hida'] },
+  { city:'Kyoto', jp:'京都', dates:'26 → 28 nov', nights:2, lodge:'Maison très cool', price:'477 €', img:'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=900&q=80&auto=format&fit=crop', coords:[35.0116,135.7681], acts:['Nara · Kasuga Taisha','Kyoto le matin','Shinkansen vers Hiroshima'] },
+  { city:'Hiroshima', jp:'広島', dates:'28 → 29 nov', nights:1, lodge:'Les économies bleues', price:'151 €', img:'https://images.unsplash.com/photo-1599922407858-a3d0e1e6b7de?w=900&q=80&auto=format&fit=crop', coords:[34.3853,132.4553], acts:['Mémorial de la paix','Parc de la Paix'] },
+  { city:'Miyajima', jp:'宮島', dates:'29 → 30 nov', nights:1, lodge:'Hôtel avec un bain', price:'641 €', img:'https://images.unsplash.com/photo-1505069446780-4ef442b5207f?w=900&q=80&auto=format&fit=crop', coords:[34.2959,132.3197], acts:['Itsukushima','Daishō-in','Coucher de soleil'] },
+  { city:'Osaka', jp:'大阪', dates:'30 nov → 02 déc', nights:2, lodge:'Economic', price:'156 €', img:'https://images.unsplash.com/photo-1590559899731-a382839e5549?w=900&q=80&auto=format&fit=crop', coords:[34.6937,135.5023], acts:['Kuromon Ichiba','Dōtonbori','Hōzenji Yokochō','Universal Studio'] },
+  { city:'Hakone', jp:'箱根', dates:'02 → 03 déc', nights:1, lodge:'Cool', price:'279 €', img:'https://images.unsplash.com/photo-1528164344705-47542687000d?w=900&q=80&auto=format&fit=crop', coords:[35.2324,139.1069], acts:['Owakudani','Onsen'] },
+  { city:'Tokyo', jp:'東京', dates:'03 → 05 déc', nights:2, lodge:'Correct bis', price:'276 €', img:'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=900&q=80&auto=format&fit=crop', coords:[35.6762,139.6503], acts:['Minato · TeamLab','Kimono Hasegawa','Nakano Broadway'] },
+];
+
+const map = L.map('map', { zoomControl:false, scrollWheelZoom:true, attributionControl:true }).setView([36.4,137.2], 5);
+L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+  attribution: '© Esri · © OpenStreetMap', maxZoom: 16,
+}).addTo(map);
+
+L.polyline(stops.map(s => s.coords), { color:'#b23a2e', weight:1.6, opacity:.55, dashArray:'6,7' }).addTo(map);
+
+const markers = stops.map((s, i) => {
+  const icon = L.divIcon({ className:'atlas-marker', html:`<span>${i+1}</span>`, iconSize:[30,30], iconAnchor:[15,15] });
+  const m = L.marker(s.coords, { icon }).addTo(map);
+  m.bindTooltip(s.city, { permanent:true, direction:'right', offset:[14,0], className:'atlas-label' });
+  m.on('click', () => select(i));
+  return m;
+});
+
+const panel = document.getElementById('panel');
+const strip = document.getElementById('strip');
+let active = -1;
+
+const renderPanel = (i) => {
+  const s = stops[i];
+  panel.innerHTML = `
+    <div class="panel-kicker">Chapitre ${String(i+1).padStart(2,'0')} · ${s.dates}</div>
+    <h2>${s.city}<span>${s.jp}</span></h2>
+    <div class="panel-sub">${s.nights} nuit${s.nights>1?'s':''} · base de logement</div>
+    <div class="panel-photo" style="background-image:url('${s.img}')"></div>
+    <div class="lodge">
+      <div class="label">Logement</div>
+      <div class="name">${s.lodge}</div>
+      <div class="meta">${s.price} · ${s.nights} nuit${s.nights>1?'s':''}</div>
+      <a href="#">Ouvrir l’annonce ↗</a>
+    </div>
+    <div class="panel-section">
+      <div class="label">Activités</div>
+      <ul>${s.acts.map(a => `<li>${a}</li>`).join('')}</ul>
+    </div>
+    <div class="panel-cta">
+      <button class="btn">Guide ↗</button>
+      <button class="btn btn-accent">Jour par jour →</button>
+    </div>`;
+};
+
+const select = (i) => {
+  active = i;
+  renderPanel(i);
+  document.querySelectorAll('.stop-card').forEach((c, k) => c.classList.toggle('active', k === i));
+  markers.forEach((m, k) => m.getElement()?.classList.toggle('active', k === i));
+  map.flyTo(stops[i].coords, Math.max(map.getZoom(), 6), { duration: .6 });
+};
+
+stops.forEach((s, i) => {
+  const b = document.createElement('button');
+  b.className = 'stop-card';
+  b.innerHTML = `<span class="sc-num">${String(i+1).padStart(2,'0')}</span><span class="sc-city">${s.city}</span><span class="sc-dates">${s.dates}</span><span class="sc-nights">${s.nights} nuit${s.nights>1?'s':''}</span>`;
+  b.addEventListener('click', () => select(i));
+  strip.appendChild(b);
+});
+
+select(0);
+
+const sac = document.getElementById('sac');
+const sacPanel = document.getElementById('sacPanel');
+document.getElementById('sacClose').addEventListener('click', () => sacPanel.classList.remove('open'));
+sac.addEventListener('click', () => sacPanel.classList.add('open'));
+</script>
+</body>
+</html>

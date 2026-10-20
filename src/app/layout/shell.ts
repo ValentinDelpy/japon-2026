@@ -163,6 +163,8 @@ export class Shell {
 
   readonly groups: NavGroup[] = [
     { label: 'Voyage', items: [
+      { path: 'carnet', icon: 'book', label: 'Carnet' },
+      { path: 'atlas', icon: 'map', label: 'Atlas' },
       { path: 'dashboard', icon: 'home', label: 'Dashboard' },
       { path: 'today', icon: 'pin', label: "Aujourd'hui" },
       { path: 'itinerary', icon: 'route', label: 'Itinéraire' },
@@ -190,7 +192,7 @@ export class Shell {
   ];
 
   readonly bottomItems: NavItem[] = [
-    { path: 'dashboard', icon: 'home', label: 'Accueil' },
+    { path: 'carnet', icon: 'home', label: 'Carnet' },
     { path: 'today', icon: 'pin', label: "Aujourd'hui" },
     { path: 'timeline', icon: 'calendar', label: 'Timeline' },
     { path: 'itinerary', icon: 'route', label: 'Itinéraire' },

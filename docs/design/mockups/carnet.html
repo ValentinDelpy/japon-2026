@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Carnet — maquette disruptive</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f6f1e8; --card:#fffdf9; --ink:#171410; --ink2:#544d43; --ink3:#6f685d;
+    --line:#e3dccd; --line2:#cfc5b3; --accent:#b2493a; --accent-l:#f6e8e2;
+    --soft:0 12px 34px rgba(70,52,32,.07); --soft-sm:0 3px 12px rgba(70,52,32,.05);
+    --r:10px; --r-sm:4px;
+    --serif:'Instrument Serif',Georgia,serif; --sans:'Instrument Sans',system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  ::selection{background:var(--accent);color:#fff}
+
+  /* Rail supérieur */
+  .top{position:fixed;inset:0 0 auto;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:20px;
+    height:64px;padding:0 28px;background:rgba(246,241,232,.94);border-bottom:1px solid var(--line)}
+  .brand{font-family:var(--serif);font-size:1.25rem;letter-spacing:.01em;display:flex;align-items:baseline;gap:10px}
+  .brand small{font-family:var(--sans);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3)}
+  .top-meta{font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3)}
+  .top-actions{display:flex;align-items:center;gap:12px}
+  .kbd{border:1px solid var(--line2);border-radius:3px;padding:5px 9px;font-size:.64rem;letter-spacing:.08em;color:var(--ink2);background:var(--card)}
+  .avatar{width:30px;height:30px;border-radius:50%;background:var(--ink);color:var(--paper);display:grid;place-items:center;font-size:.62rem;letter-spacing:.05em}
+
+  /* Hero plein cadre */
+  .hero{position:relative;min-height:100svh;display:flex;align-items:flex-end;color:#fff;
+    background:#111 center/cover no-repeat;background-image:linear-gradient(180deg,rgba(12,11,9,.15),rgba(12,11,9,.82)),url('https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=1800&q=80&auto=format&fit=crop')}
+  .hero::after{content:'';position:absolute;inset:auto 0 0;height:40%;background:linear-gradient(180deg,transparent,rgba(12,11,9,.55))}
+  .hero-inner{position:relative;z-index:2;width:100%;max-width:1280px;margin:0 auto;padding:0 40px 64px}
+  .eyebrow{font-size:.66rem;letter-spacing:.24em;text-transform:uppercase;color:rgba(255,255,255,.82);margin-bottom:18px}
+  .hero h1{font-family:var(--serif);font-weight:400;font-size:clamp(3.2rem,8.6vw,8rem);line-height:.92;letter-spacing:-.02em}
+  .hero h1 em{font-style:normal;color:#e7a79a}
+  .hero-foot{display:flex;flex-wrap:wrap;gap:8px 28px;margin-top:26px;font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.8)}
+  .scroll{position:absolute;right:40px;bottom:28px;z-index:3;font-size:.66rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.75);writing-mode:vertical-rl}
+
+  /* Journal */
+  .journal{max-width:1180px;margin:0 auto;padding:0 40px 160px}
+  .chapter{display:grid;grid-template-columns:250px 1fr;gap:64px;padding:96px 0;border-top:1px solid var(--line)}
+  .chapter:first-child{border-top:0}
+  .chapter-side{position:sticky;top:96px;align-self:start}
+  .chapter-num{font-family:var(--serif);font-size:5.4rem;line-height:.8;color:var(--accent)}
+  .chapter-city{font-family:var(--serif);font-size:1.7rem;margin-top:10px}
+  .chapter-dates{font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);margin-top:6px}
+  .chapter-kicker{font-size:.64rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+  .chapter-body h2{font-family:var(--serif);font-weight:400;font-size:clamp(2rem,4vw,3.4rem);line-height:1.02;letter-spacing:-.015em;margin-bottom:18px}
+  .chapter-body p{max-width:62ch;color:var(--ink2);font-size:1.02rem}
+  .acts{display:flex;flex-wrap:wrap;gap:8px;margin:22px 0 30px}
+  .acts span{border:1px solid var(--line);border-radius:var(--r-sm);padding:5px 10px;font-size:.72rem;color:var(--ink2);background:var(--card)}
+
+  /* Objets (cartes-polars) */
+  .objects{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:28px;align-items:start}
+  .polaroid{background:var(--card);border:1px solid var(--line);padding:10px 10px 16px;transform:rotate(var(--rot,0deg));box-shadow:var(--soft-sm);border-radius:2px}
+  .polaroid .photo{aspect-ratio:4/3;background:#ddd center/cover no-repeat;margin-bottom:12px}
+  .obj-label{font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ink3)}
+  .obj-name{font-family:var(--serif);font-size:1.18rem;margin:3px 0 2px}
+  .obj-meta{font-size:.74rem;color:var(--ink3)}
+  .obj-link{display:inline-block;margin-top:10px;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);border-bottom:1px solid currentColor;padding-bottom:1px}
+  .quote{font-family:var(--serif);font-size:1.35rem;line-height:1.35;color:var(--ink);border-left:2px solid var(--accent);padding-left:18px;margin:34px 0 0;max-width:56ch}
+
+  /* Rail des chapitres */
+  .dayrail{position:fixed;inset:auto 0 0;z-index:60;display:flex;align-items:center;gap:18px;height:62px;padding:0 24px;
+    background:rgba(246,241,232,.96);border-top:1px solid var(--line);overflow-x:auto;scrollbar-width:none}
+  .dayrail::-webkit-scrollbar{display:none}
+  .rail-track{display:flex;align-items:center;gap:18px;white-space:nowrap}
+  .rail-item{font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);display:flex;align-items:center;gap:7px}
+  .rail-item::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--line2)}
+  .rail-item.active{color:var(--accent)}
+  .rail-item.active::before{background:var(--accent);box-shadow:0 0 0 3px var(--accent-l)}
+  .rail-progress{margin-left:auto;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3)}
+
+  /* Le sac (outils) */
+  .sac{position:fixed;right:24px;bottom:86px;z-index:70;display:flex;align-items:center;gap:9px;padding:12px 16px;
+    background:var(--accent);color:#fff;border:0;border-radius:var(--r-sm);font:inherit;font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;cursor:pointer}
+  .sac b{font-weight:400;opacity:.7}
+  .sac-panel{position:fixed;inset:0;z-index:80;background:var(--paper);padding:64px 40px 120px;display:none;overflow:auto}
+  .sac-panel.open{display:block}
+  .sac-head{display:flex;align-items:baseline;justify-content:space-between;max-width:1100px;margin:0 auto 36px}
+  .sac-head h3{font-family:var(--serif);font-weight:400;font-size:2.4rem}
+  .sac-close{border:0;background:none;font:inherit;font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink2);cursor:pointer}
+  .sac-grid{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
+  .sac-grid a{background:var(--paper);padding:24px 20px;display:flex;flex-direction:column;gap:6px;transition:background .15s}
+  .sac-grid a:hover{background:var(--card)}
+  .sac-grid span{font-family:var(--serif);font-size:.8rem;color:var(--accent)}
+  .sac-grid strong{font-family:var(--serif);font-weight:400;font-size:1.2rem}
+
+  .reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
+  .reveal.in{opacity:1;transform:none}
+
+  /* Mode édition admin */
+  .edit-toggle{position:fixed;left:24px;bottom:86px;z-index:70;display:inline-flex;align-items:center;gap:8px;padding:10px 14px;
+    background:var(--card);border:1px solid var(--line2);border-radius:var(--r-sm);font:inherit;font-size:.66rem;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--ink2);cursor:pointer;box-shadow:var(--soft-sm)}
+  .edit-toggle:hover{border-color:var(--accent);color:var(--accent)}
+  .editbar{position:fixed;inset:0 0 auto;z-index:900;display:none;align-items:center;justify-content:space-between;gap:16px;padding:12px 24px;
+    background:var(--ink);color:var(--paper);font-size:.7rem;letter-spacing:.06em}
+  body.editing .editbar{display:flex}
+  body.editing .edit-toggle{display:none}
+  body.editing [data-edit]{outline:1px dashed rgba(178,73,58,.7);outline-offset:4px;background:rgba(178,73,58,.05);cursor:text;border-radius:2px}
+  body.editing [data-edit]:focus{outline:2px solid var(--accent);background:var(--card)}
+  body.editing .photo{cursor:pointer}
+  body.editing .photo::after{content:'Changer la photo';position:absolute;inset:auto 8px 8px;background:rgba(23,20,16,.72);color:#fff;
+    font-size:.56rem;letter-spacing:.12em;text-transform:uppercase;padding:6px 8px;text-align:center;border-radius:2px}
+  .editbar .actions{display:flex;gap:8px}
+  .editbar button{font:inherit;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;padding:7px 12px;border-radius:var(--r-sm);cursor:pointer}
+  .editbar .cancel{background:none;border:1px solid rgba(246,241,232,.35);color:var(--paper)}
+  .editbar .save{background:var(--accent);border:1px solid var(--accent);color:#fff}
+
+  @media (max-width:820px){
+    .top{padding:0 16px}.top-meta{display:none}.hero-inner{padding:0 18px 84px}.scroll{display:none}
+    .journal{padding:0 18px 150px}.chapter{grid-template-columns:1fr;gap:24px;padding:64px 0}
+    .chapter-side{position:static;display:flex;align-items:baseline;gap:14px}
+    .chapter-num{font-size:3.6rem}.chapter-city{font-size:1.3rem}.chapter-dates{margin:0}
+    .dayrail{height:58px;padding:0 14px}.rail-progress{display:none}
+    .sac{right:14px;bottom:76px}
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="brand">Little Domo <small>Very Arigatō</small></div>
+  <div class="top-meta">J-28 · 17 nov → 05 déc 2026 · 4 voyageurs</div>
+  <div class="top-actions"><span class="kbd">⌘K Rechercher</span><span class="avatar">LD</span></div>
+</header>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="eyebrow">Carnet de voyage · Japon 2026</div>
+    <h1>Toulouse <em>→</em> Tokyo</h1>
+    <div class="hero-foot"><span>17 novembre → 05 décembre</span><span>9 bases · 17 nuits</span><span>4 personnes</span></div>
+  </div>
+  <a class="scroll" href="#chapitre-1">Commencer</a>
+</section>
+
+<main class="journal">
+
+  <article class="chapter reveal" id="chapitre-1">
+    <aside class="chapter-side"><div class="chapter-num">01</div><div class="chapter-city" data-edit>Tokyo</div><div class="chapter-dates" data-edit>18 → 22 nov · 4 nuits</div></aside>
+    <div class="chapter-body">
+      <div class="chapter-kicker">Chapitre premier</div>
+      <h2 data-edit>La ville qui ne dort pas</h2>
+      <p data-edit>Quatre nuits pour prendre le pouls de Tokyo : le palais impérial au matin, les ruelles de Yanaka l’après-midi, les néons de Shinjuku le soir. On avance sans itinéraire rigide, d’un quartier à l’autre.</p>
+      <div class="acts"><span>Palais impérial</span><span>Tsukiji</span><span>Ueno · Nezu · Yanaka</span><span>Harajuku · Shibuya · Shinjuku</span></div>
+      <div class="objects">
+        <figure class="polaroid" style="--rot:-1.6deg">
+          <div class="photo" style="background-image:url('https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=900&q=80&auto=format&fit=crop')"></div>
+          <figcaption><div class="obj-label">Logement</div><div class="obj-name" data-edit>Logement low cost</div><div class="obj-meta" data-edit>Tokyo · 329 € · 4 nuits</div><a class="obj-link" href="#">Ouvrir l’annonce ↗</a></figcaption>
+        </figure>
+        <figure class="polaroid" style="--rot:1.8deg">
+          <div class="photo" style="background-image:url('https://images.unsplash.com/photo-1503899036084-c55cdd92da26?w=900&q=80&auto=format&fit=crop')"></div>
+          <figcaption><div class="obj-label">À ne pas manquer</div><div class="obj-name" data-edit>Tsukiji au matin</div><div class="obj-meta" data-edit>Petit-déjeuner sur le pouce</div><a class="obj-link" href="#">Voir la fiche ↗</a></figcaption>
+        </figure>
+      </div>
+      <p class="quote" data-edit>« On ne visite pas Tokyo. On s’y laisse prendre. »</p>
+    </div>
+  </article>
+
+  <article class="chapter reveal" id="chapitre-2">
+    <aside class="chapter-side"><div class="chapter-num">02</div><div class="chapter-city" data-edit>Kanazawa</div><div class="chapter-dates" data-edit>22 → 24 nov · 2 nuits</div></aside>
+    <div class="chapter-body">
+      <div class="chapter-kicker">Chapitre deux</div>
+      <h2 data-edit>Le jardin avant la ville</h2>
+      <p data-edit>Deux heures trente de train, puis le silence. Kenroku-en sous la pluie fine, les maisons de thé de Higashi Chaya, le marché d’Omichō. Kanazawa se traverse lentement.</p>
+      <div class="acts"><span>Kenroku-en</span><span>Higashi Chaya</span><span>Marché Omichō</span><span>Nagamachi</span></div>
+      <div class="objects">
+        <figure class="polaroid" style="--rot:1.2deg">
+          <div class="photo" style="background-image:url('https://images.unsplash.com/photo-1567767292278-a4f21aa2d36e?w=900&q=80&auto=format&fit=crop')"></div>
+          <figcaption><div class="obj-label">Logement</div><div class="obj-name" data-edit>Economics</div><div class="obj-meta" data-edit>Kanazawa · 208 € · 2 nuits</div><a class="obj-link" href="#">Ouvrir l’annonce ↗</a></figcaption>
+        </figure>
+      </div>
+    </div>
+  </article>
+
+  <article class="chapter reveal" id="chapitre-3">
+    <aside class="chapter-side"><div class="chapter-num">03</div><div class="chapter-city" data-edit>Takayama</div><div class="chapter-dates" data-edit>24 → 26 nov · 2 nuits</div></aside>
+    <div class="chapter-body">
+      <div class="chapter-kicker">Chapitre trois</div>
+      <h2 data-edit>Le village et la montagne</h2>
+      <p data-edit>Départ à 8h10 pour Shirakawa-go, ses toits de chaume et la lumière de novembre. Le soir, retour à Takayama : vieille ville, saké, bœuf de Hida.</p>
+      <div class="acts"><span>Shirakawa-go</span><span>Sanmachi-suji</span><span>Hida-no-Sato</span><span>Bœuf de Hida</span></div>
+      <div class="objects">
+        <figure class="polaroid" style="--rot:-2deg">
+          <div class="photo" style="background-image:url('https://images.unsplash.com/photo-1580533089532-54e9b8f62997?w=900&q=80&auto=format&fit=crop')"></div>
+          <figcaption><div class="obj-label">Logement</div><div class="obj-name" data-edit>Budget ok</div><div class="obj-meta" data-edit>Takayama · 264 € · 2 nuits</div><a class="obj-link" href="#">Ouvrir l’annonce ↗</a></figcaption>
+        </figure>
+        <figure class="polaroid" style="--rot:1.4deg">
+          <div class="photo" style="background-image:url('https://images.unsplash.com/photo-1611464908623-07f19927264e?w=900&q=80&auto=format&fit=crop')"></div>
+          <figcaption><div class="obj-label">Excursion</div><div class="obj-name" data-edit>Shirakawa-go</div><div class="obj-meta" data-edit>Bus · 1h15 depuis Kanazawa</div><a class="obj-link" href="#">Voir le trajet ↗</a></figcaption>
+        </figure>
+      </div>
+    </div>
+  </article>
+
+  <article class="chapter reveal" id="chapitre-4">
+    <aside class="chapter-side"><div class="chapter-num">04</div><div class="chapter-city" data-edit>Kyoto</div><div class="chapter-dates" data-edit>26 → 28 nov · 2 nuits</div></aside>
+    <div class="chapter-body">
+      <div class="chapter-kicker">Chapitre quatre</div>
+      <h2 data-edit>Le calme et les torii</h2>
+      <p data-edit>Kyoto le matin, Nara l’après-midi : Kasuga Taisha, les daims, le silence des allées. Le lendemain, shinkansen tôt pour Hiroshima et le mémorial de la paix.</p>
+      <div class="acts"><span>Nara · Kasuga Taisha</span><span>Kyoto le matin</span><span>Shinkansen vers Hiroshima</span></div>
+      <div class="objects">
+        <figure class="polaroid" style="--rot:2deg">
+          <div class="photo" style="background-image:url('https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=900&q=80&auto=format&fit=crop')"></div>
+          <figcaption><div class="obj-label">Logement</div><div class="obj-name" data-edit>Maison très cool</div><div class="obj-meta" data-edit>Kyoto · 477 € · 2 nuits</div><a class="obj-link" href="#">Ouvrir l’annonce ↗</a></figcaption>
+        </figure>
+        <figure class="polaroid" style="--rot:-1.2deg">
+          <div class="photo" style="background-image:url('https://images.unsplash.com/photo-1624601573012-efb68f3f150d?w=900&q=80&auto=format&fit=crop')"></div>
+          <figcaption><div class="obj-label">Excursion</div><div class="obj-name" data-edit>Nara</div><div class="obj-meta" data-edit>Train · 45 min · 9 €</div><a class="obj-link" href="#">Voir le trajet ↗</a></figcaption>
+        </figure>
+      </div>
+    </div>
+  </article>
+
+  <article class="chapter reveal" id="chapitre-5">
+    <aside class="chapter-side"><div class="chapter-num">05</div><div class="chapter-city" data-edit>Hiroshima</div><div class="chapter-dates" data-edit>28 → 29 nov · 1 nuit</div></aside>
+    <div class="chapter-body">
+      <div class="chapter-kicker">Chapitre cinq</div>
+      <h2 data-edit>La mémoire</h2>
+      <p data-edit>Une nuit, un lieu. Le mémorial de la paix, le parc, la rivière. On repart le lendemain vers Miyajima, le torii dans l’eau.</p>
+      <div class="acts"><span>Mémorial de la paix</span><span>Parc de la Paix</span></div>
+      <div class="objects">
+        <figure class="polaroid" style="--rot:-1.8deg">
+          <div class="photo" style="background-image:url('https://images.unsplash.com/photo-1599922407858-a3d0e1e6b7de?w=900&q=80&auto=format&fit=crop')"></div>
+          <figcaption><div class="obj-label">Logement</div><div class="obj-name" data-edit>Les économies bleues</div><div class="obj-meta" data-edit>Hiroshima · 151 € · 1 nuit</div><a class="obj-link" href="#">Ouvrir l’annonce ↗</a></figcaption>
+        </figure>
+      </div>
+    </div>
+  </article>
+
+  <article class="chapter reveal" id="chapitre-6">
+    <aside class="chapter-side"><div class="chapter-num">06</div><div class="chapter-city" data-edit>Miyajima</div><div class="chapter-dates" data-edit>29 → 30 nov · 1 nuit</div></aside>
+    <div class="chapter-body">
+      <div class="chapter-kicker">Chapitre six</div>
+      <h2 data-edit>Le torii dans l’eau</h2>
+      <p data-edit>Ferry, Itsukushima, Daishō-in. Une nuit sur l’île pour voir le torii au coucher du soleil et se perdre dans les ruelles.</p>
+      <div class="acts"><span>Itsukushima</span><span>Daishō-in</span><span>Coucher de soleil</span></div>
+      <div class="objects">
+        <figure class="polaroid" style="--rot:1.6deg">
+          <div class="photo" style="background-image:url('https://images.unsplash.com/photo-1505069446780-4ef442b5207f?w=900&q=80&auto=format&fit=crop')"></div>
+          <figcaption><div class="obj-label">Logement</div><div class="obj-name" data-edit>Hôtel avec un bain</div><div class="obj-meta" data-edit>Miyajima · 641 € · 1 nuit</div><a class="obj-link" href="#">Ouvrir l’annonce ↗</a></figcaption>
+        </figure>
+      </div>
+    </div>
+  </article>
+
+  <article class="chapter reveal" id="chapitre-7">
+    <aside class="chapter-side"><div class="chapter-num">07</div><div class="chapter-city" data-edit>Osaka</div><div class="chapter-dates" data-edit>30 nov → 02 déc · 2 nuits</div></aside>
+    <div class="chapter-body">
+      <div class="chapter-kicker">Chapitre sept</div>
+      <h2 data-edit>Manger, encore</h2>
+      <p data-edit>Kuromon Ichiba, Dōtonbori, Hōzenji Yokochō. Et une journée à Universal Studio pour couper le rythme.</p>
+      <div class="acts"><span>Kuromon Ichiba</span><span>Dōtonbori</span><span>Hōzenji Yokochō</span><span>Universal Studio</span></div>
+      <div class="objects">
+        <figure class="polaroid" style="--rot:-1.4deg">
+          <div class="photo" style="background-image:url('https://images.unsplash.com/photo-1590559899731-a382839e5549?w=900&q=80&auto=format&fit=crop')"></div>
+          <figcaption><div class="obj-label">Logement</div><div class="obj-name" data-edit>Economic</div><div class="obj-meta" data-edit>Osaka · 156 € · 2 nuits</div><a class="obj-link" href="#">Ouvrir l’annonce ↗</a></figcaption>
+        </figure>
+      </div>
+    </div>
+  </article>
+
+  <article class="chapter reveal" id="chapitre-8">
+    <aside class="chapter-side"><div class="chapter-num">08</div><div class="chapter-city" data-edit>Hakone</div><div class="chapter-dates" data-edit>02 → 03 déc · 1 nuit</div></aside>
+    <div class="chapter-body">
+      <div class="chapter-kicker">Chapitre huit</div>
+      <h2 data-edit>La vapeur et le Fuji</h2>
+      <p data-edit>Owakudani, les œufs noirs, la vue sur le mont Fuji si le ciel le veut. Une nuit pour respirer avant le retour à Tokyo.</p>
+      <div class="acts"><span>Owakudani</span><span>Onsen</span></div>
+      <div class="objects">
+        <figure class="polaroid" style="--rot:1.2deg">
+          <div class="photo" style="background-image:url('https://images.unsplash.com/photo-1528164344705-47542687000d?w=900&q=80&auto=format&fit=crop')"></div>
+          <figcaption><div class="obj-label">Logement</div><div class="obj-name" data-edit>Cool</div><div class="obj-meta" data-edit>Hakone · 279 € · 1 nuit</div><a class="obj-link" href="#">Ouvrir l’annonce ↗</a></figcaption>
+        </figure>
+      </div>
+    </div>
+  </article>
+
+  <article class="chapter reveal" id="chapitre-9">
+    <aside class="chapter-side"><div class="chapter-num">09</div><div class="chapter-city" data-edit>Tokyo</div><div class="chapter-dates" data-edit>03 → 05 déc · 2 nuits</div></aside>
+    <div class="chapter-body">
+      <div class="chapter-kicker">Chapitre neuf</div>
+      <h2 data-edit>Derniers néons</h2>
+      <p data-edit>Minato, TeamLab, un kimono, Nakano Broadway. Deux nuits pour refermer le carnet sans se presser.</p>
+      <div class="acts"><span>Minato · TeamLab</span><span>Kimono Hasegawa</span><span>Nakano Broadway</span></div>
+      <div class="objects">
+        <figure class="polaroid" style="--rot:-1.8deg">
+          <div class="photo" style="background-image:url('https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=900&q=80&auto=format&fit=crop')"></div>
+          <figcaption><div class="obj-label">Logement</div><div class="obj-name" data-edit>Correct bis</div><div class="obj-meta" data-edit>Tokyo · 276 € · 2 nuits</div><a class="obj-link" href="#">Ouvrir l’annonce ↗</a></figcaption>
+        </figure>
+      </div>
+      <p class="quote" data-edit>« Le voyage se termine, le carnet reste. »</p>
+    </div>
+  </article>
+
+</main>
+
+<nav class="dayrail" aria-label="Chapitres">
+  <div class="rail-track">
+    <span class="rail-item active">Tokyo</span><span class="rail-item">Kanazawa</span><span class="rail-item">Takayama</span>
+    <span class="rail-item">Kyoto</span><span class="rail-item">Hiroshima</span><span class="rail-item">Miyajima</span>
+    <span class="rail-item">Osaka</span><span class="rail-item">Hakone</span><span class="rail-item">Tokyo</span>
+  </div>
+  <span class="rail-progress">9 chapitres · 17 nuits</span>
+</nav>
+
+<button class="sac" id="sac">Le sac <b>16</b></button>
+<div class="sac-panel" id="sacPanel" role="dialog" aria-label="Outils">
+  <div class="sac-head"><h3>Le sac</h3><button class="sac-close" id="sacClose">Fermer</button></div>
+  <div class="sac-grid">
+    <a href="#"><span>01</span><strong>Itinéraire</strong></a>
+    <a href="#"><span>02</span><strong>Fiches voyage</strong></a>
+    <a href="#"><span>03</span><strong>Timeline</strong></a>
+    <a href="#"><span>04</span><strong>Statistiques</strong></a>
+    <a href="#"><span>05</span><strong>Packing list</strong></a>
+    <a href="#"><span>06</span><strong>Check-list</strong></a>
+    <a href="#"><span>07</span><strong>Logistique</strong></a>
+    <a href="#"><span>08</span><strong>Restos</strong></a>
+    <a href="#"><span>09</span><strong>Phrasebook</strong></a>
+    <a href="#"><span>10</span><strong>Agenda</strong></a>
+    <a href="#"><span>11</span><strong>Moodboard</strong></a>
+    <a href="#"><span>12</span><strong>Photos</strong></a>
+    <a href="#"><span>13</span><strong>Météo</strong></a>
+    <a href="#"><span>14</span><strong>Japon 101</strong></a>
+    <a href="#"><span>15</span><strong>Surprise</strong></a>
+    <a href="#"><span>16</span><strong>Impression</strong></a>
+  </div>
+</div>
+
+<button class="edit-toggle" id="editToggle">✎ Éditer</button>
+<div class="editbar" id="editbar">
+  <span>Mode édition · cliquez sur un texte ou une photo, puis enregistrez.</span>
+  <div class="actions"><button class="cancel" id="editCancel">Annuler</button><button class="save" id="editSave">Enregistrer</button></div>
+</div>
+
+<script>
+  const io = new IntersectionObserver((entries) => {
+    for (const e of entries) if (e.isIntersecting) e.target.classList.add('in');
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+
+  const sac = document.getElementById('sac');
+  const panel = document.getElementById('sacPanel');
+  const close = document.getElementById('sacClose');
+  sac.addEventListener('click', () => panel.classList.add('open'));
+  close.addEventListener('click', () => panel.classList.remove('open'));
+
+  const items = [...document.querySelectorAll('.rail-item')];
+  const chapters = [...document.querySelectorAll('.chapter')];
+  const railIo = new IntersectionObserver((entries) => {
+    for (const e of entries) {
+      if (!e.isIntersecting) continue;
+      const i = chapters.indexOf(e.target);
+      items.forEach((it, k) => it.classList.toggle('active', k === i));
+    }
+  }, { rootMargin: '-40% 0px -50% 0px' });
+  chapters.forEach((c) => railIo.observe(c));
+  items.forEach((it, i) => it.addEventListener('click', () => chapters[i]?.scrollIntoView({ behavior: 'smooth' })));
+
+  const setEditing = (on) => {
+    document.body.classList.toggle('editing', on);
+    document.querySelectorAll('[data-edit]').forEach((el) => { el.contentEditable = on ? 'true' : 'false'; });
+  };
+  document.getElementById('editToggle').addEventListener('click', () => setEditing(true));
+  document.getElementById('editCancel').addEventListener('click', () => setEditing(false));
+  document.getElementById('editSave').addEventListener('click', () => setEditing(false));
+</script>
+</body>
+</html>
