@@ -336,3 +336,11 @@ h3 { font-size: 1.15rem; }
   .home-brand { font-size: 1.08rem; }
   .home-toggle a { padding: 6px 9px; font-size: .6rem; }
 }
+/* ── Coque unique : outils sans sidebar ── */
+.home-toolbar { display: flex; align-items: center; gap: 14px; min-width: 0; }
+.home-back { font-size: .64rem; letter-spacing: .1em; text-transform: uppercase; color: var(--ink2); border-bottom: 1px solid transparent; white-space: nowrap; }
+.home-back:hover { color: var(--accent); border-color: currentColor; }
+.home-current { font-family: 'Instrument Serif', serif; font-size: 1.2rem; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.home-rate { font-family: ui-monospace, monospace; font-size: .66rem; color: var(--ink3); white-space: nowrap; padding: 0 8px; }
+@media (max-width: 900px) { .home-rate { display: none; } }
+@media (max-width: 640px) { .home-current { display: none; } }

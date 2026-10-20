@@ -149,7 +149,9 @@ export class HomeAtlasPage implements AfterViewInit, OnDestroy {
       points.push(coords);
       const icon = L.divIcon({ className: 'atlas-marker', html: `<span>${i + 1}</span>`, iconSize: [30, 30], iconAnchor: [15, 15] });
       const marker = L.marker(coords, { icon }).addTo(this.map);
-      marker.bindTooltip(c.stop.city, { permanent: true, direction: 'right', offset: [14, 0], className: 'atlas-label' });
+      const direction = i === 4 || i === 5 ? 'left' : 'right';
+      const offset: [number, number] = i === 4 ? [-14, -8] : i === 5 ? [-14, 8] : i === 3 ? [14, -8] : i === 6 ? [14, 8] : i === 7 ? [14, 8] : [14, 0];
+      marker.bindTooltip(c.stop.city, { permanent: true, direction, offset, className: 'atlas-label' });
       marker.on('click', () => this.select(c));
       this.markers.push({ marker, chapter: c });
     });

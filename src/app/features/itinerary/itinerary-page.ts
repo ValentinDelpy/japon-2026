@@ -173,8 +173,9 @@ export class ItineraryPage implements AfterViewInit, OnDestroy {
       L.marker(coords, {
         icon: L.divIcon({ className: 'custom-marker-wrapper', html: `<div class="custom-marker">${idx + 1}</div>`, iconSize: [28, 28], iconAnchor: [14, 14] }),
       }).addTo(this.map).bindPopup(`<div class="popup-body"><div class="popup-title">${stop.city}</div><div class="popup-dates">${formatRange(stop.start_date, stop.end_date)}</div></div>`);
+      const labelAnchor: [number, number] = idx === 4 ? [-18, -2] : idx === 5 ? [-18, 18] : idx === 3 ? [-18, -2] : idx === 6 ? [-18, 18] : [-18, 10];
       L.marker(coords, {
-        icon: L.divIcon({ className: 'marker-label-wrapper', html: `<div class="marker-label">${stop.city}</div>`, iconSize: [100, 20], iconAnchor: [-18, 10] }),
+        icon: L.divIcon({ className: 'marker-label-wrapper', html: `<div class="marker-label">${stop.city}</div>`, iconSize: [100, 20], iconAnchor: labelAnchor }),
         interactive: false,
       }).addTo(this.map);
       pts.push(coords);

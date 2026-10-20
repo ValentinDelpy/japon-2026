@@ -26,7 +26,7 @@
     },
     {
       "name": "images-cdn",
-      "urls": ["https://images.unsplash.com/**", "https://upload.wikimedia.org/**", "https://server.arcgisonline.com/**"],
+      "urls": ["https://images.unsplash.com/**", "https://upload.wikimedia.org/**", "https://thumb.wikimedia.org/**", "https://server.arcgisonline.com/**"],
       "cacheConfig": { "strategy": "performance", "maxSize": 200, "maxAge": "7d" }
     }
   ]
