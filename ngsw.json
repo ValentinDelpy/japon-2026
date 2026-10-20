@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1792516841109,
+  "timestamp": 1792521068541,
   "index": "/japon-2026/index.html",
   "assetGroups": [
     {
@@ -21,8 +21,8 @@
         "/japon-2026/chunk-5VX4BCO7.js",
         "/japon-2026/chunk-6A42O4PQ.js",
         "/japon-2026/chunk-6S3K3CSZ.js",
-        "/japon-2026/chunk-6VRBAU6O.js",
         "/japon-2026/chunk-7HRSJUSY.js",
+        "/japon-2026/chunk-7NPT43UQ.js",
         "/japon-2026/chunk-A2NTXSHD.js",
         "/japon-2026/chunk-AQ5KSOOD.js",
         "/japon-2026/chunk-AUUUN7CG.js",
@@ -52,20 +52,20 @@
         "/japon-2026/chunk-QFLNYIVB.js",
         "/japon-2026/chunk-QMT6KGWI.js",
         "/japon-2026/chunk-QVF3M6PT.js",
+        "/japon-2026/chunk-RF7XBBNO.js",
         "/japon-2026/chunk-UFG7HJIH.js",
         "/japon-2026/chunk-V6Z5ZE6O.js",
         "/japon-2026/chunk-VQEHZL4Z.js",
         "/japon-2026/chunk-VQUH2S4H.js",
         "/japon-2026/chunk-WTCOCIDA.js",
         "/japon-2026/chunk-XFEBPCFE.js",
-        "/japon-2026/chunk-ZIWH7CWJ.js",
         "/japon-2026/chunk-ZZ3QQWNB.js",
         "/japon-2026/favicon.ico",
         "/japon-2026/fonts.css",
         "/japon-2026/index.html",
-        "/japon-2026/main-JXQ32BDI.js",
+        "/japon-2026/main-3UNA6IN3.js",
         "/japon-2026/manifest.webmanifest",
-        "/japon-2026/styles-2QSDYD7Y.css"
+        "/japon-2026/styles-EH7JTLOY.css"
       ],
       "patterns": []
     },
@@ -106,6 +106,7 @@
       "patterns": [
         "https:\\/\\/images\\.unsplash\\.com\\/.*",
         "https:\\/\\/upload\\.wikimedia\\.org\\/.*",
+        "https:\\/\\/thumb\\.wikimedia\\.org\\/.*",
         "https:\\/\\/server\\.arcgisonline\\.com\\/.*"
       ],
       "strategy": "performance",
@@ -128,8 +129,8 @@
     "/japon-2026/chunk-5VX4BCO7.js": "81f1da1ffc986cc3febed187ddce91e745a24725",
     "/japon-2026/chunk-6A42O4PQ.js": "7961b7a41b495490ce70e77aa84e17d3c1525416",
     "/japon-2026/chunk-6S3K3CSZ.js": "e9c004ad9e2f3c6f1d0e1ea88bb0f62035a98f8b",
-    "/japon-2026/chunk-6VRBAU6O.js": "d61a6aa18fe68a729eee07a72c28fe8b01e6c2c6",
     "/japon-2026/chunk-7HRSJUSY.js": "1299dc03f4edcc520b7e739bed53b0be3694205b",
+    "/japon-2026/chunk-7NPT43UQ.js": "699b0b61b574c0693d5ba8e3cd96e5d5273884a9",
     "/japon-2026/chunk-A2NTXSHD.js": "bc09d60c90b5c2517a6e01848a5f0c7334f84b5b",
     "/japon-2026/chunk-AQ5KSOOD.js": "77ec9475491cf67dd2a687da37bb008e06f8ab8a",
     "/japon-2026/chunk-AUUUN7CG.js": "95db3674e24a6e0565dbd4157519ceb27912343f",
@@ -159,13 +160,13 @@
     "/japon-2026/chunk-QFLNYIVB.js": "f7f153bd207cb4c7c429017ba927033e744bd7a8",
     "/japon-2026/chunk-QMT6KGWI.js": "a234af1b0b7b684640aee423561e22f77432f4cb",
     "/japon-2026/chunk-QVF3M6PT.js": "83fe0142fb024131cec850c7bd9a11334e623e1f",
+    "/japon-2026/chunk-RF7XBBNO.js": "9a348b9531f84aabcf24765425cd4e832de136ca",
     "/japon-2026/chunk-UFG7HJIH.js": "92374235aab5dbed427a4b86fdc6f33a8dbe6f69",
     "/japon-2026/chunk-V6Z5ZE6O.js": "9919ed5c40fcb196886e8178bf1d07019a13abdf",
     "/japon-2026/chunk-VQEHZL4Z.js": "67d891a879ba7e6b7549a65992320c82fba1151d",
     "/japon-2026/chunk-VQUH2S4H.js": "7857ac2fbdb00cbb8e946fd53cf35239e6edc2ac",
     "/japon-2026/chunk-WTCOCIDA.js": "9e87600363f580fe49483f44f921b029f6afccdb",
     "/japon-2026/chunk-XFEBPCFE.js": "a963755604e2abfd0876b7294d92f7576a11be5d",
-    "/japon-2026/chunk-ZIWH7CWJ.js": "cd3a8db37203d157387af936e126a86eabfcc5d3",
     "/japon-2026/chunk-ZZ3QQWNB.js": "f78dfa9c52854d1d334168eb82c74c0d3353e60d",
     "/japon-2026/favicon.ico": "9c39f434fe1261f68c5e3eefdf734630d99c5670",
     "/japon-2026/fonts.css": "5b03266709c6265925725030bf922490802901a4",
@@ -174,10 +175,10 @@
     "/japon-2026/fonts/instrument-serif-normal-latin-ext.woff2": "5f17a8dd7749e855c05ca3ad18617b5d945c2247",
     "/japon-2026/fonts/instrument-serif-normal-latin.woff2": "37ddf465bbcc252776a37dcf28179a3ca590363b",
     "/japon-2026/icons/icon.svg": "64b0ef278d6f17b5d1954687e3f899797cbeadb0",
-    "/japon-2026/index.html": "fd5086fa89de7b1ae2e250e76e2da2582107c898",
-    "/japon-2026/main-JXQ32BDI.js": "bece69b15247c5f29ff3f8e8a8ee9fa3a6c77e7c",
+    "/japon-2026/index.html": "dc3adc856c7767a0b98569e96014b90e6f8a8482",
+    "/japon-2026/main-3UNA6IN3.js": "d03bfc53525f8e7f2a5c14419063d27f5fbb1659",
     "/japon-2026/manifest.webmanifest": "58c503c43d2ee3d00d681df9c7558af514a3c571",
-    "/japon-2026/styles-2QSDYD7Y.css": "1620a153dbe99baf15c2011676da818718c7edc5"
+    "/japon-2026/styles-EH7JTLOY.css": "e2da16647521f9b87cb8e8a268642c2e076c17b8"
   },
   "navigationUrls": [
     {
