@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, effect, inject, signal } from '@ang
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../core/auth.service';
+import { HomeViewService } from '../../core/home-view.service';
 
 @Component({
   selector: 'app-login-page',
@@ -38,6 +39,7 @@ import { AuthService } from '../../core/auth.service';
 export class LoginPage {
   readonly auth = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly homeView = inject(HomeViewService);
   email = '';
   password = '';
   readonly loading = signal(false);
@@ -45,7 +47,7 @@ export class LoginPage {
 
   constructor() {
     effect(() => {
-      if (this.auth.isAuthenticated()) void this.router.navigate(['/dashboard']);
+      if (this.auth.isAuthenticated()) void this.router.navigate(['/' + this.homeView.view()]);
     });
   }
 
@@ -55,7 +57,7 @@ export class LoginPage {
     this.error.set(null);
     try {
       await this.auth.signIn(this.email, this.password);
-      await this.router.navigate(['/dashboard']);
+      await this.router.navigate(['/' + this.homeView.view()]);
     } catch (e) {
       this.error.set(e instanceof Error ? e.message : 'Connexion impossible');
     } finally {
