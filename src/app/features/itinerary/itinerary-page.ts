@@ -89,7 +89,7 @@ import { loadLeaflet } from '../../core/leaflet';
     .iti-days { list-style: none; padding: 4px 18px 14px; }
     .iti-day { display: flex; gap: 14px; padding: 12px 0; border-bottom: 1px solid var(--border); }
     .iti-day:last-child { border-bottom: none; }
-    .iti-day-date { font-family: 'Space Mono', monospace; font-size: .72rem; color: var(--accent); min-width: 86px; padding-top: 2px; text-transform: capitalize; }
+    .iti-day-date { font-family: 'JetBrains Mono', monospace; font-size: .72rem; color: var(--accent); min-width: 86px; padding-top: 2px; text-transform: capitalize; }
     .iti-day-main { flex: 1; min-width: 0; }
     .iti-day-place { font-weight: 600; font-size: .92rem; }
     .iti-day-guide { margin-left: 8px; font-weight: 500; font-size: .78rem; }
@@ -179,7 +179,7 @@ export class ItineraryPage implements AfterViewInit, OnDestroy {
       }).addTo(this.map);
       pts.push(coords);
     });
-    if (pts.length > 1) L.polyline(pts, { color: '#4f46e5', weight: 2.5, opacity: 0.6, dashArray: '8,8' }).addTo(this.map);
+    if (pts.length > 1) L.polyline(pts, { color: '#b23a2e', weight: 2.5, opacity: 0.55, dashArray: '7,7' }).addTo(this.map);
     if (pts.length) this.map.fitBounds(L.latLngBounds(pts), { padding: [40, 40] });
     else this.map.setView([36.2, 138.2], 6);
   }

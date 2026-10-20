@@ -112,26 +112,26 @@ import { resolveToday } from '../../core/today';
     .live-progress-fill { height: 100%; background: var(--accent); border-radius: 4px; transition: width .6s var(--ease); }
     .next-card { background: var(--ink); color: var(--bg); border-radius: var(--r-lg); padding: 22px 26px; margin-bottom: 18px; }
     .next-label { font-size: .68rem; letter-spacing: .16em; text-transform: uppercase; opacity: .7; }
-    .next-time { font-family: 'Space Mono', monospace; font-size: 1.6rem; color: var(--seal-l); margin: 4px 0; }
-    .next-title { font-family: 'Shippori Mincho', serif; font-size: 1.35rem; }
+    .next-time { font-family: 'JetBrains Mono', monospace; font-size: 1.6rem; color: var(--seal-l); margin: 4px 0; }
+    .next-title { font-family: 'Instrument Serif', serif; font-size: 1.35rem; }
     .next-desc { opacity: .8; margin-top: 4px; }
-    .next-card-done .next-title { font-family: 'Outfit', sans-serif; }
+    .next-card-done .next-title { font-family: 'Instrument Sans', sans-serif; }
     .home-panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg); overflow: hidden; }
     .live-timeline { list-style: none; }
     .live-timeline li { display: flex; align-items: baseline; gap: 12px; padding: 12px 18px; border-bottom: 1px solid var(--border); }
     .live-timeline li:last-child { border-bottom: none; }
     .live-timeline li.done { opacity: .45; }
     .live-timeline li.next { background: var(--accent-l); }
-    .live-time { font-family: 'Space Mono', monospace; font-size: .82rem; color: var(--accent); min-width: 48px; }
+    .live-time { font-family: 'JetBrains Mono', monospace; font-size: .82rem; color: var(--accent); min-width: 48px; }
     .live-act { flex: 1; font-weight: 600; }
     .live-dur { font-size: .72rem; color: var(--ink3); }
     .live-lodge { padding: 16px 18px; }
-    .live-lodge-name { font-family: 'Shippori Mincho', serif; font-size: 1.1rem; }
+    .live-lodge-name { font-family: 'Instrument Serif', serif; font-size: 1.1rem; }
     .quick-links { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-top: 18px; }
     .quick-link { display: flex; align-items: center; gap: 10px; padding: 14px 16px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg); color: var(--ink); font-weight: 600; font-size: .85rem; transition: border-color .2s, transform .2s; }
     .quick-link:hover { border-color: var(--accent); transform: translateY(-2px); }
     .before-card { text-align: center; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-xl); padding: 48px 24px; }
-    .before-count { font-family: 'Shippori Mincho', serif; font-size: 3.4rem; color: var(--accent); line-height: 1; }
+    .before-count { font-family: 'Instrument Serif', serif; font-size: 3.4rem; color: var(--accent); line-height: 1; }
     .before-label { color: var(--ink3); margin: 8px 0 18px; }
   `],
 })

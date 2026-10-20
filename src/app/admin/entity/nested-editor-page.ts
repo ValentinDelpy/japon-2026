@@ -94,7 +94,7 @@ import { NESTED, NestedConfig } from './nested-config';
     .admin-form { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 18px; }
     .nested-parent { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg); margin-bottom: 14px; overflow: hidden; }
     .nested-head { display: flex; align-items: center; gap: 6px; padding: 12px 16px; background: var(--surface2); border-bottom: 1px solid var(--border); }
-    .nested-head strong { font-family: 'Shippori Mincho', serif; }
+    .nested-head strong { font-family: 'Instrument Serif', serif; }
     .nested-child-form { border-radius: 0; border: none; border-top: 1px solid var(--border); }
     .nested-add { margin: 10px 16px; }
     .checkbox-row { display: flex; align-items: center; gap: 8px; font-size: .85rem; }

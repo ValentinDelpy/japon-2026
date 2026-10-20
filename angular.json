@@ -28,7 +28,8 @@
             ],
             "styles": [
               "css/style.css",
-              "src/styles.css"
+              "src/styles.css",
+              "css/ma.css"
             ],
             "serviceWorker": "ngsw-config.json"
           },

@@ -88,7 +88,7 @@ export class StatisticsPage {
       if (stop) by.set(stop.city, (by.get(stop.city) ?? 0) + (a.price_total ?? 0));
     }
     const max = Math.max(1, ...[...by.values()]);
-    const colors = ['#4f46e5', '#e5484d', '#0f9d6e', '#c47d0a', '#0b8ac9', '#7c5cf0'];
+    const colors = ['#b23a2e', '#2e4a45', '#5f7a5a', '#9a7a34', '#3c5a6b', '#6d5a7a'];
     return [...by.entries()].sort((a, b) => b[1] - a[1]).map(([city, value], i) => ({ city, value, pct: Math.round((value / max) * 100), color: colors[i % colors.length] }));
   });
 }
