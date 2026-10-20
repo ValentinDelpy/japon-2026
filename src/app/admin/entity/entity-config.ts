@@ -4,6 +4,8 @@ export type FieldType = 'text' | 'textarea' | 'number' | 'date' | 'select' | 'ch
 
 export interface FieldDef {
   key: string;
+  /** Nom de colonne si différent de la clé du modèle assemblé (ex. funFacts → fun_facts). */
+  dbKey?: string;
   label: string;
   type?: FieldType;
   options?: string[];
@@ -23,6 +25,10 @@ export interface EntityConfig {
   fields: FieldDef[];
   rows: (c: Content) => any[];
   defaults?: Record<string, unknown>;
+  /** Colonnes hors formulaire à conserver telles quelles (ex. status). */
+  extraKeys?: string[];
+  /** false si la table n'a pas de colonne order_index (accommodations). */
+  order?: boolean;
 }
 
 const stopOptions = (c: Content) => c.stops.map((s) => ({ value: s.id as string, label: s.city }));
@@ -35,10 +41,11 @@ export const ENTITIES: Record<string, EntityConfig> = {
     fields: [
       { key: 'name', label: 'Nom' }, { key: 'name_jp', label: 'Nom japonais' }, { key: 'slug', label: 'Slug (clé)' },
       { key: 'image_url', label: 'Image (URL)', full: true },
+      { key: 'guide_url', label: 'Guide de la ville (URL)', full: true },
       { key: 'intro', label: 'Introduction', type: 'textarea' },
       { key: 'tips', label: 'Conseils', type: 'textarea' },
       { key: 'highlights', label: 'À ne pas manquer (une par ligne)', type: 'textarea', array: true },
-      { key: 'funFacts', label: 'Le saviez-vous ? (un par ligne)', type: 'textarea', array: true },
+      { key: 'funFacts', dbKey: 'fun_facts', label: 'Le saviez-vous ? (un par ligne)', type: 'textarea', array: true },
       { key: 'lat', label: 'Latitude', type: 'number' }, { key: 'lng', label: 'Longitude', type: 'number' },
     ],
     rows: (c) => c.destinations,
@@ -57,6 +64,7 @@ export const ENTITIES: Record<string, EntityConfig> = {
     ],
     rows: (c) => c.restaurants,
     defaults: { status: 'idea', favorite: false },
+    extraKeys: ['status'],
   },
   souvenirs: {
     table: 'souvenirs', title: 'Souvenirs', icon: '🛍️', singular: 'souvenir',
@@ -116,10 +124,11 @@ export const ENTITIES: Record<string, EntityConfig> = {
   },
   transport_legs: {
     table: 'transport_legs', title: 'Transports', icon: '🚄', singular: 'trajet',
-    columns: [{ key: 'mode', label: 'Mode' }, { key: 'duration', label: 'Durée' }, { key: 'price', label: 'Prix' }, { key: 'reserved', label: 'Réservé' }],
+    columns: [{ key: 'date', label: 'Date' }, { key: 'mode', label: 'Mode' }, { key: 'duration', label: 'Durée' }, { key: 'price', label: 'Prix' }, { key: 'reserved', label: 'Réservé' }],
     fields: [
       { key: 'from_stop_id', label: 'Depuis', type: 'ref', optionsFrom: stopOptions },
       { key: 'to_stop_id', label: 'Vers', type: 'ref', optionsFrom: stopOptions },
+      { key: 'date', label: 'Date', type: 'date' },
       { key: 'mode', label: 'Mode', type: 'select', options: ['train', 'shinkansen', 'metro', 'bus', 'avion', 'taxi', 'marche', 'ferry', 'autre'] },
       { key: 'departure_time', label: 'Départ' }, { key: 'arrival_time', label: 'Arrivée' }, { key: 'duration', label: 'Durée' },
       { key: 'line', label: 'Ligne' }, { key: 'reference', label: 'Référence' }, { key: 'price', label: 'Prix (€)', type: 'number' },
@@ -143,5 +152,6 @@ export const ENTITIES: Record<string, EntityConfig> = {
     ],
     rows: (c) => c.accommodations,
     defaults: { reserved: false },
+    order: false,
   },
 };

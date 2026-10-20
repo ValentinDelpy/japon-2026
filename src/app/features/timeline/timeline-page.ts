@@ -57,7 +57,9 @@ export class TimelinePage {
     let i = 0;
 
     for (const day of this.content.days()) {
-      const stop = stops.get(day.stop_id ?? '');
+      const stop = stops.get(day.base_stop_id ?? day.stop_id ?? '');
+      const visited = day.visited_place ?? stop?.city ?? '—';
+      const visitDest = this.content.destinationByCity(visited);
       const key = day.date.slice(0, 7);
       if (!groups.has(key)) {
         groups.set(key, { key, label: `${TimelinePage.MONTHS[+day.date.slice(5, 7) - 1]} ${day.date.slice(0, 4)}`, days: [] });
@@ -67,8 +69,8 @@ export class TimelinePage {
         label: formatDay(day.date),
         isToday: day.date === today,
         color: TimelinePage.COLORS[i % TimelinePage.COLORS.length],
-        city: stop?.city ?? '—',
-        jp: stop?.city_jp ?? this.content.destinationByCity(stop?.city)?.name_jp ?? '',
+        city: visited,
+        jp: visitDest?.name_jp ?? stop?.city_jp ?? '',
         activities: acts.filter((a) => a.day_id === day.id).sort((a, b) => (a.time ?? '99').localeCompare(b.time ?? '99')),
       });
       i++;

@@ -1,0 +1,195 @@
+{
+  "trip": {
+    "slug": "japon-2026",
+    "title": "Little Domo Very Arigatō",
+    "subtitle": "Toulouse → Tokyo · Nov — Déc 2026",
+    "origin": "Toulouse",
+    "destination": "Tokyo",
+    "start_date": "2026-11-17",
+    "end_date": "2026-12-05",
+    "travelers": 4
+  },
+  "destinations": {
+    "kanazawa": { "guide_url": "https://www.kanpai.fr/kanazawa" },
+    "takayama": { "guide_url": "https://www.kanpai.fr/takayama" }
+  },
+  "stops": [
+    {
+      "key": "tokyo-1",
+      "city": "Tokyo",
+      "city_jp": "東京",
+      "destination": "tokyo",
+      "check_in": "2026-11-18",
+      "check_out": "2026-11-22",
+      "notes": "Réservation Airbnb du 19 au 22 ; la nuit du 18/11 reste à confirmer.",
+      "accommodation": {
+        "name": "Logement low cost",
+        "url": "https://www.airbnb.fr/rooms/1630950853787826789?adults=4&check_in=2026-11-19&check_out=2026-11-22",
+        "price_total": 329,
+        "price_per_person": 82.25,
+        "reserved": true,
+        "notes": "Réservation Airbnb 19→22 : la nuit du 18/11 n'est pas couverte."
+      }
+    },
+    {
+      "key": "kanazawa",
+      "city": "Kanazawa",
+      "city_jp": "金沢",
+      "destination": "kanazawa",
+      "check_in": "2026-11-22",
+      "check_out": "2026-11-24",
+      "accommodation": {
+        "name": "Economics",
+        "url": "https://www.airbnb.fr/rooms/1320549756772486067?adults=4&check_in=2026-11-22&check_out=2026-11-24",
+        "price_total": 208,
+        "price_per_person": 52,
+        "reserved": true
+      }
+    },
+    {
+      "key": "takayama",
+      "city": "Takayama",
+      "city_jp": "高山",
+      "destination": "takayama",
+      "check_in": "2026-11-24",
+      "check_out": "2026-11-26",
+      "notes": "Base pour l'excursion à Shirakawa-go (24/11).",
+      "accommodation": {
+        "name": "Budget ok",
+        "url": "https://www.airbnb.fr/rooms/882277768231525821?adults=4&check_in=2026-11-24&check_out=2026-11-26",
+        "price_total": 264,
+        "price_per_person": 66,
+        "reserved": true
+      }
+    },
+    {
+      "key": "kyoto",
+      "city": "Kyoto",
+      "city_jp": "京都",
+      "destination": "kyoto",
+      "check_in": "2026-11-26",
+      "check_out": "2026-11-28",
+      "notes": "Base pour l'excursion à Nara (27/11).",
+      "accommodation": {
+        "name": "Maison très cool",
+        "url": "https://www.airbnb.fr/rooms/28142792?adults=4&check_in=2026-11-26&check_out=2026-11-28",
+        "price_total": 477,
+        "price_per_person": 119.25,
+        "reserved": true
+      }
+    },
+    {
+      "key": "hiroshima",
+      "city": "Hiroshima",
+      "city_jp": "広島",
+      "destination": "hiroshima",
+      "check_in": "2026-11-28",
+      "check_out": "2026-11-29",
+      "accommodation": {
+        "name": "Les économies bleues",
+        "url": "https://www.airbnb.fr/rooms/42844076?adults=4&check_in=2026-11-28&check_out=2026-11-29",
+        "price_total": 151,
+        "price_per_person": 37.75,
+        "reserved": true
+      }
+    },
+    {
+      "key": "miyajima",
+      "city": "Miyajima",
+      "city_jp": "宮島",
+      "destination": "miyajima",
+      "check_in": "2026-11-29",
+      "check_out": "2026-11-30",
+      "accommodation": {
+        "name": "Hôtel avec un bain",
+        "url": "https://www.booking.com/hotel/jp/kiyomori.fr.html?checkin=2026-11-29&checkout=2026-11-30&group_adults=4",
+        "price_total": 641,
+        "price_per_person": 160.25,
+        "reserved": false
+      }
+    },
+    {
+      "key": "osaka",
+      "city": "Osaka",
+      "city_jp": "大阪",
+      "destination": "osaka",
+      "check_in": "2026-11-30",
+      "check_out": "2026-12-02",
+      "notes": "Base pour Universal Studio (01/12).",
+      "accommodation": {
+        "name": "Economic",
+        "url": "https://www.airbnb.fr/rooms/1520901859190780092?adults=4&check_in=2026-11-30&check_out=2026-12-02",
+        "price_total": 156,
+        "price_per_person": 39,
+        "reserved": true
+      }
+    },
+    {
+      "key": "hakone",
+      "city": "Hakone",
+      "city_jp": "箱根",
+      "destination": "hakone",
+      "check_in": "2026-12-02",
+      "check_out": "2026-12-03",
+      "accommodation": {
+        "name": "Cool",
+        "alt_name": "Pas cher",
+        "url": "https://www.airbnb.fr/rooms/21375234?adults=4&check_in=2026-12-02&check_out=2026-12-03",
+        "alt_url": "https://www.airbnb.fr/rooms/23979788?adults=4&check_in=2026-12-02&check_out=2026-12-03",
+        "price_total": 279,
+        "price_per_person": 69.75,
+        "reserved": true
+      }
+    },
+    {
+      "key": "tokyo-2",
+      "city": "Tokyo",
+      "city_jp": "東京",
+      "destination": "tokyo",
+      "check_in": "2026-12-03",
+      "check_out": "2026-12-05",
+      "accommodation": {
+        "name": "Correct bis",
+        "url": "https://www.airbnb.fr/rooms/1377996509983924226?adults=4&check_in=2026-12-03&check_out=2026-12-05",
+        "price_total": 276,
+        "price_per_person": 69,
+        "reserved": true
+      }
+    }
+  ],
+  "days": [
+    { "date": "2026-11-17", "base": null, "visited": "Départ de Toulouse", "activities": ["Vol Toulouse → Tokyo"] },
+    { "date": "2026-11-18", "base": "tokyo-1", "visited": "Tokyo", "activities": ["Arrivée à Tokyo"] },
+    { "date": "2026-11-19", "base": "tokyo-1", "visited": "Tokyo — Résidence impériale", "activities": ["Palais impérial", "Tokyo Station", "Ginza"] },
+    { "date": "2026-11-20", "base": "tokyo-1", "visited": "Tokyo — Tsukiji et Nord-Est", "activities": ["Marché de Tsukiji", "Ueno", "Nezu", "Yanaka"] },
+    { "date": "2026-11-21", "base": "tokyo-1", "visited": "Tokyo — Harajuku, Shibuya, Shinjuku", "activities": ["Harajuku", "Shibuya", "Shinjuku"] },
+    { "date": "2026-11-22", "base": "kanazawa", "visited": "Kanazawa", "activities": ["Train Tokyo → Kanazawa", "Kenroku-en", "Higashi Chaya"] },
+    { "date": "2026-11-23", "base": "kanazawa", "visited": "Kanazawa", "activities": ["Marché Omichō", "Nagamachi", "Château de Kanazawa"] },
+    { "date": "2026-11-24", "base": "takayama", "visited": "Shirakawa-go", "activities": ["Village de Shirakawa-go", "Soirée à Takayama : vieille ville et bœuf de Hida"] },
+    { "date": "2026-11-25", "base": "takayama", "visited": "Takayama", "activities": ["Marché matinal", "Sanmachi-suji", "Hida-no-Sato"] },
+    { "date": "2026-11-26", "base": "kyoto", "visited": "Kyoto", "activities": ["Train Takayama → Kyoto"] },
+    { "date": "2026-11-27", "base": "kyoto", "visited": "Nara", "activities": ["Nara l'après-midi", "Kasuga Taisha"] },
+    { "date": "2026-11-28", "base": "hiroshima", "visited": "Kyoto → Hiroshima", "activities": ["Kyoto le matin", "Mémorial de la paix d'Hiroshima"] },
+    { "date": "2026-11-29", "base": "miyajima", "visited": "Miyajima", "activities": ["Itsukushima", "Daishō-in"] },
+    { "date": "2026-11-30", "base": "osaka", "visited": "Osaka", "activities": ["Kuromon Ichiba", "Dōtonbori", "Hōzenji Yokochō"] },
+    { "date": "2026-12-01", "base": "osaka", "visited": "Universal Studio", "activities": ["Universal Studio"] },
+    { "date": "2026-12-02", "base": "hakone", "visited": "Hakone", "activities": ["Owakudani"] },
+    { "date": "2026-12-03", "base": "tokyo-2", "visited": "Hakone → Tokyo", "activities": ["Minato", "TeamLab"] },
+    { "date": "2026-12-04", "base": "tokyo-2", "visited": "Tokyo", "activities": ["Kimono Hasegawa", "Nakano Broadway"] },
+    { "date": "2026-12-05", "base": null, "visited": "Départ de Tokyo", "activities": ["Vol Tokyo → Toulouse"] }
+  ],
+  "transports": [
+    { "from": null, "to": "tokyo-1", "date": "2026-11-18", "mode": "avion", "duration": "~13 h", "notes": "Vol Toulouse → Tokyo" },
+    { "from": "tokyo-1", "to": "kanazawa", "date": "2026-11-22", "mode": "train", "duration": "2h30", "price": 90, "reserved": true },
+    { "from": "kanazawa", "to": "takayama", "date": "2026-11-24", "mode": "bus", "duration": "1h15 + 50 min", "price": 30, "reserved": false, "notes": "Via Shirakawa-go. Départ Kanazawa 8h10, départ Shirakawa-go 14h45." },
+    { "from": "takayama", "to": "kyoto", "date": "2026-11-26", "mode": "train", "duration": "3h", "price": 65, "reserved": false },
+    { "from": "kyoto", "to": "kyoto", "date": "2026-11-27", "mode": "train", "duration": "45 min", "price": 9, "notes": "A/R Kyoto ↔ Nara" },
+    { "from": "kyoto", "to": "hiroshima", "date": "2026-11-28", "mode": "shinkansen", "duration": "2h", "reserved": false },
+    { "from": "hiroshima", "to": "miyajima", "date": "2026-11-29", "mode": "ferry", "duration": "45 min", "price": 70, "reserved": false },
+    { "from": "miyajima", "to": "osaka", "date": "2026-11-30", "mode": "train", "duration": "2h30", "price": 65, "reserved": false },
+    { "from": "osaka", "to": "hakone", "date": "2026-12-02", "mode": "train", "duration": "3h", "price": 90, "reserved": false },
+    { "from": "hakone", "to": "tokyo-2", "date": "2026-12-03", "mode": "train", "duration": "1h30", "price": 20, "reserved": false },
+    { "from": "tokyo-2", "to": null, "date": "2026-12-05", "mode": "train", "duration": "~1 h", "notes": "Transfert vers l'aéroport de Tokyo" },
+    { "from": "tokyo-2", "to": null, "date": "2026-12-05", "mode": "avion", "duration": "~13 h", "notes": "Vol Tokyo → Toulouse" }
+  ]
+}

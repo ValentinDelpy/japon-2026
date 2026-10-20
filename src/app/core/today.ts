@@ -56,7 +56,9 @@ export function resolveToday(input: TodayInput, now: Date): TodayContext {
   if (date > end) return { ...base, phase: 'after', progressPct: 100 };
 
   const day = sortedDays.find((d) => d.date === date) ?? null;
-  const stop = stops.find((s) => (s.start_date ?? '') <= date && date <= (s.end_date ?? s.start_date ?? '')) ?? null;
+  const baseId = day?.base_stop_id ?? day?.stop_id;
+  const dayBase = baseId ? stops.find((s) => s.id === baseId) : undefined;
+  const stop = dayBase ?? stops.find((s) => (s.start_date ?? '') <= date && date <= (s.end_date ?? s.start_date ?? '')) ?? null;
   const accommodation = stop ? accommodations.find((a) => a.stop_id === stop.id) ?? null : null;
   const todays = activities
     .filter((a) => a.day_id === day?.id)
