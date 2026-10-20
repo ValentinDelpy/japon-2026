@@ -2,7 +2,7 @@ name: Build & publish
 
 # GitHub Pages est configuré en « Deploy from a branch: main / (root) ».
 # On publie donc le build Angular à la RACINE de la branche main.
-# (On déclenche aussi le déploiement Actions pour couvrir ce mode.)
+# Pas de job deploy-pages : il entrait en conflit avec le déploiement de branche.
 
 on:
   push:
@@ -11,8 +11,6 @@ on:
 
 permissions:
   contents: write
-  pages: write
-  id-token: write
 
 concurrency:
   group: publish
@@ -43,7 +41,6 @@ jobs:
       - name: Publier le build à la racine
         run: |
           cd "$GITHUB_WORKSPACE"
-          # nettoyer les anciens artefacts (bundles hachés) avant de recopier
           rm -f main-*.js polyfills-*.js chunk-*.js styles-*.css 3rdpartylicenses.txt \
                 ngsw.json ngsw-worker.js manifest.webmanifest favicon.ico 404.html .nojekyll index.html
           rm -rf icons
@@ -53,21 +50,3 @@ jobs:
           git add -A
           git commit -m "chore: publish build [skip ci]" || echo "Rien à publier"
           git push
-
-      - uses: actions/configure-pages@v5
-        with:
-          enablement: true
-
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: dist/ldva/browser
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
