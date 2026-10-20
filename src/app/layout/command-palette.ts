@@ -61,7 +61,7 @@ const PAGES: Result[] = [
   styles: [`
     .cmd-overlay { position: fixed; inset: 0; z-index: 4000; background: rgba(10, 9, 7, .5); backdrop-filter: blur(6px); display: flex; align-items: flex-start; justify-content: center; padding: 12vh 20px 20px; }
     .cmd { width: 100%; max-width: 560px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg); box-shadow: var(--shadow-lg); overflow: hidden; }
-    .cmd-input { width: 100%; border: none; border-bottom: 1px solid var(--border); padding: 16px 18px; font-size: 1rem; background: transparent; color: var(--ink); outline: none; font-family: 'Outfit', sans-serif; }
+    .cmd-input { width: 100%; border: none; border-bottom: 1px solid var(--border); padding: 16px 18px; font-size: 1rem; background: transparent; color: var(--ink); outline: none; font-family: 'Instrument Sans', sans-serif; }
     .cmd-results { list-style: none; max-height: 50vh; overflow-y: auto; }
     .cmd-item { display: flex; align-items: center; gap: 12px; padding: 11px 18px; cursor: pointer; }
     .cmd-item.active { background: var(--accent-l); }

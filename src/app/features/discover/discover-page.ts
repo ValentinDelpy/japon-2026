@@ -56,7 +56,7 @@ interface Group { kind: string; title: string; items: Place[]; }
     .discover-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 14px 16px; box-shadow: var(--shadow-sm); transition: transform .2s var(--ease), box-shadow .2s var(--ease); }
     .discover-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
     .discover-kind { font-size: .6rem; text-transform: uppercase; letter-spacing: .1em; color: var(--accent); font-weight: 700; }
-    .discover-name { font-family: 'Shippori Mincho', serif; font-size: 1rem; margin: 3px 0 8px; }
+    .discover-name { font-family: 'Instrument Serif', serif; font-size: 1rem; margin: 3px 0 8px; }
     .discover-links { display: flex; flex-wrap: wrap; gap: 10px; font-size: .7rem; }
     .discover-links a { color: var(--ink3); }
     .discover-links a:hover { color: var(--accent); }

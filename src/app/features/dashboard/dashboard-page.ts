@@ -224,7 +224,7 @@ import { loadLeaflet } from '../../core/leaflet';
     .upcoming-list { display: flex; flex-direction: column; }
     .upcoming-row { display: flex; gap: 14px; padding: 12px 16px; border-bottom: 1px solid var(--border); }
     .upcoming-row:last-child { border-bottom: none; }
-    .upcoming-date { font-family: 'Space Mono', monospace; font-size: .8rem; font-weight: 700; color: var(--accent); flex-shrink: 0; }
+    .upcoming-date { font-family: 'JetBrains Mono', monospace; font-size: .8rem; font-weight: 700; color: var(--accent); flex-shrink: 0; }
     .upcoming-city { font-weight: 600; }
     .upcoming-acts { font-size: .76rem; color: var(--ink3); margin-top: 2px; }
     .quick-links { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-top: 24px; }

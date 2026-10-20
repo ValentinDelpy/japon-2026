@@ -1,0 +1,183 @@
+/* ════════════════════════════════════════════════════════════════
+   DIRECTION « MA » (間) — surcouche v3
+   Papier & encre · un seul accent vermillon · cartes maîtrisées
+   Chargée après style.css : affine sans casser l'existant.
+   ════════════════════════════════════════════════════════════════ */
+
+/* ─── Tokens · clair ─── */
+:root {
+  --bg: #f3efe7; --surface: #fffdf8; --surface2: #eae5db; --surface3: #e1dacc;
+  --border: #ded7c9; --border2: #c6bda9; --snow: #fffdf8; --white: #ffffff; --paper-warm: #faf6ee;
+  --ink: #14130f; --ink2: #4f4a42; --ink3: #6b655b;
+  --accent: #b23a2e; --accent-d: #8f2c22; --accent-l: #f2e4df;
+  --accent2: #2e4a45; --accent2-l: #e7eeec;
+  --vermillion: #b23a2e; --vermillion-l: #f2e4df;
+  --sage: #4f6a4a; --sage-l: #e9efe4; --sage-d: #3d5439;
+  --blush: #b23a2e; --blush-l: #f2e4df; --blush-d: #8f2c22;
+  --sky: #33505f; --sky-l: #e8eef1; --sky-d: #243c48;
+  --amber: #7a5f26; --amber-l: #f4eedd; --amber-d: #5f491b; --amber-dark: #5f491b;
+  --lavender: #5c4a6a; --lavender-l: #efe9f1;
+  --shadow-xs: none; --shadow-sm: 0 1px 2px rgba(20, 19, 15, .04);
+  --shadow-md: 0 10px 28px rgba(20, 19, 15, .08);
+  --shadow-lg: 0 20px 50px rgba(20, 19, 15, .12);
+  --shadow-xl: 0 28px 64px rgba(20, 19, 15, .16);
+  --r-sm: 2px; --r-md: 6px; --r-lg: 10px; --r-xl: 14px; --r: 6px;
+  --seal: #b23a2e; --seal-l: #d98a78; --sumi: #14130f;
+  --sidebar-bg: #14130f; --sidebar-border: rgba(240, 233, 221, .08);
+  --sidebar-text: rgba(240, 233, 221, .55); --sidebar-text-active: #f7f3ea;
+  --sidebar-active-bg: transparent; --sidebar-hover-bg: rgba(240, 233, 221, .06);
+  --header-bg: rgba(243, 239, 231, .88);
+  --sidebar-w: 244px; --ease: cubic-bezier(.22, 1, .36, 1); --t: .2s;
+}
+
+/* ─── Tokens · sakura (désaturé) ─── */
+[data-theme="sakura"] {
+  --bg: #f7f1ec; --surface: #fffbf7; --surface2: #f0e6e1; --surface3: #e7d9d2;
+  --border: #e4d6cf; --border2: #cfb8ae;
+  --ink: #1d1714; --ink2: #574a44; --ink3: #6f625c;
+  --accent: #a94b5a; --accent-d: #8a3745; --accent-l: #f5e6e8;
+  --seal: #a94b5a; --seal-l: #ce8a93;
+  --sidebar-bg: #1a1315; --sidebar-border: rgba(255, 235, 238, .08);
+  --header-bg: rgba(247, 241, 236, .88);
+}
+
+/* ─── Tokens · sombre ─── */
+[data-theme="dark"] {
+  --bg: #0e0d0b; --surface: #181611; --surface2: #211e17; --surface3: #2a261d;
+  --border: #2a261d; --border2: #3d372a; --snow: #181611; --white: #211e17; --paper-warm: #16140f;
+  --ink: #ede7db; --ink2: #a79f90; --ink3: #8c8374;
+  --accent: #d4644c; --accent-d: #e58f78; --accent-l: rgba(212, 100, 76, .14);
+  --accent2: #7fa3bd; --accent2-l: rgba(127, 163, 189, .14);
+  --vermillion: #d4644c; --vermillion-l: rgba(212, 100, 76, .14);
+  --shadow-xs: none; --shadow-sm: 0 1px 2px rgba(0, 0, 0, .40);
+  --shadow-md: 0 10px 28px rgba(0, 0, 0, .50);
+  --shadow-lg: 0 20px 50px rgba(0, 0, 0, .60);
+  --shadow-xl: 0 28px 64px rgba(0, 0, 0, .70);
+  --seal: #d4644c; --seal-l: #e58f78; --sumi: #0b0a08;
+  --sidebar-bg: #0b0a08; --sidebar-border: #221f18;
+  --header-bg: rgba(14, 13, 11, .86);
+}
+
+/* ─── Base typographique ─── */
+body {
+  font-family: 'Instrument Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 15.5px; line-height: 1.65;
+}
+h1, h2, h3, h4 {
+  font-family: 'Instrument Serif', 'Hiragino Mincho ProN', 'Yu Mincho', 'Noto Serif JP', serif;
+  font-weight: 400; letter-spacing: -.01em; line-height: 1.1;
+}
+h1 { font-size: clamp(2rem, 3.6vw, 3.1rem); }
+h2 { font-size: clamp(1.35rem, 2.4vw, 1.85rem); }
+h3 { font-size: 1.15rem; }
+.jp-accent { font-family: 'Instrument Serif', 'Hiragino Mincho ProN', 'Yu Mincho', serif; font-weight: 400; }
+.mono, .countdown-days, .exchange-value, .dash-hero-count { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+
+/* ─── Composition ─── */
+.page-container { padding: 56px 56px 110px; max-width: 1240px; }
+.page-header { margin-bottom: 40px; }
+.page-header h1 { padding-bottom: 0; }
+.page-header h1::after { width: 34px; height: 1px; background: var(--ink3); margin-top: 18px; }
+.page-header .subtitle, .page-header p.subtitle { color: var(--ink3); font-size: .95rem; max-width: 64ch; }
+.mt-2 { margin-top: 32px; } .mt-3 { margin-top: 44px; } .mb-2 { margin-bottom: 32px; }
+
+/* ─── Sidebar & navigation ─── */
+.sidebar { background: var(--sidebar-bg); border-right: 1px solid var(--sidebar-border); }
+.logo-mark { background: var(--accent); box-shadow: none; border-radius: 3px; }
+.logo-title { font-family: 'Instrument Serif', serif; font-size: 1.18rem; letter-spacing: .02em; }
+.sidebar .logo-title, .admin-brand strong { color: var(--sidebar-text-active); }
+.sidebar .logo-subtitle, .admin-brand small { color: var(--sidebar-text); }
+.logo-subtitle { letter-spacing: .06em; }
+.nav-group-label { letter-spacing: .22em; }
+.nav-link { border-radius: 2px; padding: 9px 12px; }
+.nav-link:hover { padding-left: 12px; }
+.nav-link.active { background: transparent; box-shadow: inset 2px 0 0 var(--accent); font-weight: 500; }
+.nav-link:hover .nav-icon, .nav-link.active .nav-icon { transform: none; }
+.countdown-widget { background: transparent; border: 1px solid rgba(240, 233, 221, .14); border-radius: 2px; }
+.countdown-days { font-family: 'Instrument Serif', serif; }
+.exchange-widget { background: transparent; border-color: rgba(240, 233, 221, .12); border-radius: 2px; }
+.sidebar-search, .icon-btn, .theme-btn, .admin-seal, .admin-seal-mark { border-radius: 2px; }
+.theme-btn { border-radius: 2px !important; }
+
+/* ─── Cartes : signature conservée, décor retiré ─── */
+.card-base, .map-container, .stops-panel, .budget-table-wrap, .budget-summary, .itinerary-full-table,
+.summary-card, .converter-card, .print-calendar, .recap-section, .packing-progress-bar-wrap,
+.packing-cat, .cl-phase, .logistique-card, .j101-section, .meteo-card, .meteo-packing-tip,
+.agenda-city-block, .resto-card, .souvenir-card, .phrase-card, .stats-big-card, .stats-fun-card,
+.surprise-card, .progress-strip, .stat-card, .home-panel, .stop-card, .guide-dest-card, .admin-form {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
+}
+.stat-card:hover, .stop-card:hover, .guide-dest-card:hover, .quick-link:hover, .admin-card:hover,
+.resto-card:hover, .phrase-card:hover, .meteo-card:hover, .logistique-card:hover,
+.summary-card:hover, .stats-big-card:hover, .stats-fun-card:hover {
+  transform: none; box-shadow: var(--shadow-md); border-color: var(--border2);
+}
+.map-title-bar, .stops-panel-header, .recap-header, .converter-header, .calendar-header {
+  background: transparent; border-bottom: 1px solid var(--border);
+  letter-spacing: .16em; font-size: .64rem;
+}
+
+/* ─── Décors retirés ─── */
+.logo-mark, .surprise-btn, .countdown-widget { background-image: none; }
+.surprise-btn { background: var(--accent); box-shadow: none; border-radius: var(--r-md); }
+.surprise-btn:hover { box-shadow: var(--shadow-md); }
+
+/* ─── Boutons, champs, chips ─── */
+.btn { border-radius: 2px; box-shadow: none; }
+.btn-primary { box-shadow: none; }
+.btn-primary:hover { box-shadow: none; }
+.dest-tag, .activity-pill, .quick-chip, .dtag, .tl-badge, .tag { border-radius: 2px; }
+.input, .select, .textarea, .phrase-search-input, .converter-input, .surprise-select { border-radius: 2px; }
+.input:focus, .select:focus, .textarea:focus { box-shadow: 0 0 0 3px var(--accent-l); }
+
+/* ─── Hero ─── */
+.dash-hero { border-radius: var(--r-lg); box-shadow: var(--shadow-sm); min-height: 380px; }
+.dash-hero-overlay { background: linear-gradient(180deg, rgba(12, 11, 9, .22) 0%, rgba(12, 11, 9, .58) 58%, rgba(12, 11, 9, .92) 100%); }
+.dash-hero-main h1 { font-family: 'Instrument Serif', serif; font-weight: 400; letter-spacing: .01em; }
+.dash-hero-side { border-radius: var(--r-md); background: rgba(20, 19, 15, .42); border: 1px solid rgba(255, 255, 255, .22); }
+
+/* ─── Tableaux ─── */
+.admin-table th, .iti-table th { background: transparent; }
+.admin-table td, .budget-table td, .iti-table td { border-bottom: 1px solid var(--border); }
+.admin-table tr:hover td { background: transparent; }
+
+/* ─── Nav mobile ─── */
+.bottom-nav { background: var(--bg); border-top: 1px solid var(--border); }
+.bottom-nav-link.active { background: transparent; color: var(--accent); }
+
+/* ─── Admin ─── */
+.admin-sidebar { background: var(--sidebar-bg); }
+.admin-nav a { border-radius: 2px; }
+.admin-nav a.active { background: transparent; box-shadow: inset 2px 0 0 var(--accent); }
+.admin-topbar { background: var(--bg); }
+
+/* ─── Statuts & jauges : sobriété ─── */
+.trip-status-banner { background: transparent; border: 1px solid var(--border); border-left: 2px solid var(--accent); color: var(--ink2); border-radius: 2px; }
+.tsb-before, .tsb-during, .tsb-after { background: transparent; border: 1px solid var(--border); border-left: 2px solid var(--accent); color: var(--ink2); }
+.tsb-text > strong:first-child { color: var(--ink); font-weight: 600; }
+.prog-fill-sage, .prog-fill-amber, .prog-fill-sky { background: var(--ink2); }
+.prog-fill-blush { background: var(--accent); }
+.packing-prog-fill { background: var(--accent); }
+.admin-seal { background: transparent; border-color: rgba(178, 58, 46, .35); color: var(--sidebar-text-active); }
+.admin-seal:hover { background: transparent; border-color: var(--seal); color: #fff; }
+.dash-hero { background-image: none; background-color: var(--sumi); }
+
+/* ─── Performance : pas de flou coûteux au scroll ─── */
+.mobile-header { background: var(--bg); backdrop-filter: none; -webkit-backdrop-filter: none; }
+.dash-hero-side { backdrop-filter: none; -webkit-backdrop-filter: none; }
+.guide-detail-overlay, .gd-lightbox, .cmd-overlay, .guide-close { backdrop-filter: none; -webkit-backdrop-filter: none; }
+
+/* ─── Motion ─── */
+.route-view > * { animation: fadeIn .25s var(--ease); }
+.nav-link, .bottom-nav-link, .icon-btn { transition: color .18s, background .18s, border-color .18s; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 860px) {
+  .page-container { padding: 28px 18px calc(96px + env(safe-area-inset-bottom, 0px)); }
+  .page-header { margin-bottom: 28px; }
+  .dash-hero { min-height: 320px; }
+}

@@ -31,7 +31,7 @@ import { AuthService } from '../../core/auth.service';
     .login-card { width: 100%; max-width: 360px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-xl); padding: 28px; box-shadow: var(--shadow-lg); text-align: center; }
     .login-card h1 { font-size: 1.3rem; }
     .notice { background: var(--amber-l); color: var(--amber-dark); border-radius: 10px; padding: 10px 12px; font-size: .78rem; text-align: left; }
-    .notice code { font-family: 'Space Mono', monospace; font-size: .74rem; }
+    .notice code { font-family: 'JetBrains Mono', monospace; font-size: .74rem; }
     .error { color: var(--accent2); font-size: .8rem; margin-bottom: 10px; }
   `],
 })

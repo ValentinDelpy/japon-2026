@@ -40,13 +40,13 @@ import { formatDay } from '../../core/format';
     :host { display: block; }
     .tl-acts-list { list-style: none; display: flex; flex-direction: column; gap: 4px; margin-top: 4px; }
     .tl-acts-list li { display: flex; gap: 10px; font-size: .78rem; color: var(--ink2); }
-    .tl-time { font-family: 'Space Mono', monospace; font-size: .72rem; color: var(--accent); flex-shrink: 0; min-width: 42px; }
+    .tl-time { font-family: 'JetBrains Mono', monospace; font-size: .72rem; color: var(--accent); flex-shrink: 0; min-width: 42px; }
   `],
 })
 export class TimelinePage {
   private readonly content = inject(ContentService);
 
-  private static readonly COLORS = ['#4f46e5', '#e5484d', '#0f9d6e', '#c47d0a', '#0b8ac9', '#7c5cf0', '#b0576a', '#5c7d63'];
+  private static readonly COLORS = ['#b23a2e', '#2e4a45', '#5f7a5a', '#9a7a34', '#3c5a6b', '#6d5a7a', '#8c8578', '#14130f'];
   private static readonly MONTHS = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
 
   readonly months = computed(() => {
