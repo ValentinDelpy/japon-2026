@@ -37,6 +37,7 @@ export interface Destination {
   slug: string;
   name: string;
   name_jp?: string | null;
+  guide_url?: string | null;
   image_url?: string | null;
   intro?: string | null;
   tips?: string | null;
@@ -63,6 +64,8 @@ export interface Stop {
 export interface Day {
   id?: string;
   stop_id?: string | null;
+  base_stop_id?: string | null;
+  visited_place?: string | null;
   date: string;
   title?: string | null;
   notes?: string | null;
@@ -90,6 +93,7 @@ export interface TransportLeg {
   from_stop_id?: string | null;
   to_stop_id?: string | null;
   mode?: string | null;
+  date?: string | null;
   departure_time?: string | null;
   arrival_time?: string | null;
   duration?: string | null;

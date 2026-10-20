@@ -32,6 +32,7 @@ import { euro, formatRange, nightsLabel } from '../../core/format';
 
             @if (open() === d.slug) {
               <div class="sheet-detail" (click)="$event.stopPropagation()">
+                @if (d.guide_url) { <div class="gd-section"><a class="cell-link text-sm" [href]="d.guide_url" target="_blank" rel="noopener">Guide de la ville ↗</a></div> }
                 @if (summaries()[d.slug]; as s) {
                   <div class="gd-section"><div class="gd-section-title">PRÉSENTATION · WIKIPÉDIA</div><p class="gd-intro">{{ s.extract }}</p><a class="cell-link text-sm" [href]="s.pageUrl" target="_blank" rel="noopener">Lire sur Wikipédia ↗</a></div>
                 } @else if (summaries()[d.slug] === null) {

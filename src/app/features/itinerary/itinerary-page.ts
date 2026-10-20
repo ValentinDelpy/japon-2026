@@ -1,7 +1,7 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, computed, inject, signal } from '@angular/core';
 import { ContentService } from '../../core/content.service';
 import { ExchangeService } from '../../core/exchange.service';
-import { euro, formatRange, nightsLabel } from '../../core/format';
+import { euro, formatDay, formatRange, nightsLabel } from '../../core/format';
 import { loadLeaflet } from '../../core/leaflet';
 
 @Component({
@@ -34,7 +34,11 @@ import { loadLeaflet } from '../../core/leaflet';
             <li><span class="s-label">Nuits</span><span class="s-value">{{ nightsLabel(stop) }}</span></li>
             @if (accommodation(stop.id); as a) {
               @if (a.price_total) { <li><span class="s-label">Logement</span><span class="s-value">{{ euro(a.price_total) }}</span></li> }
-              <li style="flex-direction:column;gap:3px"><span class="s-label">Hébergement</span><span class="text-sm">{{ a.name }}</span></li>
+              <li style="flex-direction:column;gap:3px"><span class="s-label">Hébergement</span>
+                @if (a.url) { <a class="text-sm cell-link" [href]="a.url" target="_blank" rel="noopener">{{ a.name }} ↗</a> }
+                @else { <span class="text-sm">{{ a.name }}</span> }
+                @if (a.alt_url) { <a class="text-sm muted" [href]="a.alt_url" target="_blank" rel="noopener">Alternative : {{ a.alt_name || 'voir' }}</a> }
+              </li>
             }
             @if (activitiesFor(stop.id).length) {
               <li style="flex-direction:column;gap:4px"><span class="s-label">Activités</span><span class="text-sm muted">{{ activitiesFor(stop.id).join(' · ') }}</span></li>
@@ -43,8 +47,59 @@ import { loadLeaflet } from '../../core/leaflet';
         </div>
       }
     </div>
+
+    <div class="map-container mb-2">
+      <div class="map-title-bar">📅 Jour par jour</div>
+      <ol class="iti-days" role="list">
+        @for (day of dayPlans(); track day.date) {
+          <li class="iti-day">
+            <div class="iti-day-date">{{ day.label }}</div>
+            <div class="iti-day-main">
+              <div class="iti-day-place">
+                {{ day.visited || '—' }}
+                @if (day.base) { <span class="muted">· nuit à {{ day.base }}</span> }
+                @if (day.guide) { <a class="cell-link iti-day-guide" [href]="day.guide" target="_blank" rel="noopener">Guide ↗</a> }
+              </div>
+              @if (day.transports.length) {
+                <div class="iti-day-legs">
+                  @for (t of day.transports; track t.id) { <span class="tag">{{ t.mode }} · {{ t.duration || '—' }}</span> }
+                </div>
+              }
+              @if (day.activities.length) {
+                <ul class="iti-day-acts">
+                  @for (a of day.activities; track a.id) {
+                    <li>
+                      @if (a.link) { <a [href]="a.link" target="_blank" rel="noopener">{{ a.title }} ↗</a> }
+                      @else { {{ a.title }} }
+                    </li>
+                  }
+                </ul>
+              }
+            </div>
+          </li>
+        } @empty {
+          <li class="empty-state">Aucune journée planifiée.</li>
+        }
+      </ol>
+    </div>
   `,
-  styles: [':host { display: block; } #iti-map { height: 440px; width: 100%; }'],
+  styles: [`
+    :host { display: block; }
+    #iti-map { height: 440px; width: 100%; }
+    .iti-days { list-style: none; padding: 4px 18px 14px; }
+    .iti-day { display: flex; gap: 14px; padding: 12px 0; border-bottom: 1px solid var(--border); }
+    .iti-day:last-child { border-bottom: none; }
+    .iti-day-date { font-family: 'Space Mono', monospace; font-size: .72rem; color: var(--accent); min-width: 86px; padding-top: 2px; text-transform: capitalize; }
+    .iti-day-main { flex: 1; min-width: 0; }
+    .iti-day-place { font-weight: 600; font-size: .92rem; }
+    .iti-day-guide { margin-left: 8px; font-weight: 500; font-size: .78rem; }
+    .iti-day-legs { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+    .iti-day-acts { list-style: none; display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 6px; font-size: .8rem; color: var(--ink2); }
+    @media (max-width: 640px) {
+      .iti-day { flex-direction: column; gap: 4px; }
+      .iti-day-date { min-width: 0; }
+    }
+  `],
 })
 export class ItineraryPage implements AfterViewInit, OnDestroy {
   readonly content = inject(ContentService);
@@ -53,6 +108,30 @@ export class ItineraryPage implements AfterViewInit, OnDestroy {
   readonly formatRange = formatRange;
   readonly nightsLabel = nightsLabel;
   readonly euro = euro;
+
+  readonly dayPlans = computed(() => {
+    const stops = new Map(this.content.stops().map((s) => [s.id, s]));
+    const acts = this.content.activities();
+    const legs = this.content.content().transportLegs;
+    const norm = (s: string) => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    return this.content.days().map((d) => {
+      const base = stops.get(d.base_stop_id ?? d.stop_id ?? '') ?? null;
+      const baseCity = base?.city ?? null;
+      const visited = d.visited_place ?? baseCity ?? '';
+      const nightBase = baseCity && !norm(visited).includes(norm(baseCity)) ? baseCity : null;
+      return {
+        date: d.date,
+        label: formatDay(d.date),
+        visited,
+        base: nightBase,
+        guide: this.content.destinationByCity(visited)?.guide_url
+          ?? (baseCity ? this.content.destinationByCity(baseCity)?.guide_url : null)
+          ?? null,
+        activities: acts.filter((a) => a.day_id === d.id).sort((a, b) => a.order_index - b.order_index),
+        transports: legs.filter((t) => t.date === d.date),
+      };
+    });
+  });
 
   readonly jpy = signal<number | null>(null);
   readonly jpyEur = computed(() => {

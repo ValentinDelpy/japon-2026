@@ -54,7 +54,7 @@ export class PrintPage {
     const stops = new Map(this.content.stops().map((s) => [s.id, s]));
     const events = new Map<string, string[]>();
     for (const d of days) {
-      const city = stops.get(d.stop_id ?? '')?.city;
+      const city = d.visited_place ?? stops.get(d.base_stop_id ?? d.stop_id ?? '')?.city;
       if (city && !events.has(d.date)) events.set(d.date, [city]);
     }
     const MONTHS = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];

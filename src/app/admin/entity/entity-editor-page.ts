@@ -13,6 +13,8 @@ import { ENTITIES, EntityConfig } from './entity-config';
     @if (config; as cfg) {
       <div class="admin-page-header"><h1>{{ cfg.icon }} {{ cfg.title }}</h1><span class="spacer"></span><button class="btn btn-primary btn-sm" (click)="add()">+ Nouveau</button></div>
 
+      @if (error(); as e) { <div class="notice">{{ e }}</div> }
+
       @if (formOpen()) {
         <form class="admin-form mb-2" (ngSubmit)="save()">
           <div class="form-grid">
@@ -81,6 +83,7 @@ export class EntityEditorPage {
 
   readonly config: EntityConfig | undefined = ENTITIES[this.route.snapshot.data['entity']];
   readonly formOpen = signal(false);
+  readonly error = signal<string | null>(null);
   draft: Record<string, any> = {};
   private editingId: string | undefined;
 
@@ -89,30 +92,49 @@ export class EntityEditorPage {
   add(): void {
     this.draft = { ...(this.config?.defaults ?? {}), trip_id: this.content.trip()?.id, order_index: this.rows().length };
     this.editingId = undefined;
+    this.error.set(null);
     this.formOpen.set(true);
   }
 
   edit(row: Record<string, any>): void {
     this.draft = { ...row };
     for (const f of this.config?.fields ?? []) {
+      if (f.dbKey && this.draft[f.key] === undefined) this.draft[f.key] = row[f.dbKey];
+    }
+    for (const f of this.config?.fields ?? []) {
       if (f.array && Array.isArray(this.draft[f.key])) this.draft[f.key] = this.draft[f.key].join('\n');
     }
     this.editingId = row['id'];
+    this.error.set(null);
     this.formOpen.set(true);
   }
 
   async save(): Promise<void> {
     if (!this.config) return;
-    const payload: Record<string, any> = { ...this.draft, id: this.editingId, trip_id: this.content.trip()?.id };
+    this.error.set(null);
+    // Liste blanche : seules les colonnes connues sont envoyées (évite funFacts/restaurants assemblés).
+    const payload: Record<string, any> = { id: this.editingId, trip_id: this.content.trip()?.id };
     for (const f of this.config.fields) {
-      if (f.array && typeof payload[f.key] === 'string') payload[f.key] = payload[f.key].split('\n').map((s: string) => s.trim()).filter(Boolean);
+      let v = this.draft[f.key];
+      if (f.array && typeof v === 'string') v = v.split('\n').map((s: string) => s.trim()).filter(Boolean);
+      if (v === '') v = null;
+      payload[f.dbKey ?? f.key] = v ?? null;
     }
-    await this.admin.save(this.config.table, payload);
-    this.formOpen.set(false);
+    if (this.config.order !== false) payload['order_index'] = this.draft['order_index'] ?? 0;
+    for (const key of this.config.extraKeys ?? []) payload[key] = this.draft[key] ?? null;
+    try {
+      await this.admin.save(this.config.table, payload);
+      this.formOpen.set(false);
+    } catch (e) {
+      this.error.set(e instanceof Error ? e.message : String(e));
+    }
   }
 
   async remove(row: Record<string, any>): Promise<void> {
     if (!this.config || !row['id']) return;
-    if (confirm('Supprimer cet élément ?')) await this.admin.remove(this.config.table, row['id'] as string);
+    if (!confirm('Supprimer cet élément ?')) return;
+    this.error.set(null);
+    try { await this.admin.remove(this.config.table, row['id'] as string); }
+    catch (e) { this.error.set(e instanceof Error ? e.message : String(e)); }
   }
 }

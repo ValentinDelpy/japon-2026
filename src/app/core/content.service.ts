@@ -1,5 +1,6 @@
-import { Injectable, computed, signal } from '@angular/core';
+import { Injectable, computed, inject, signal } from '@angular/core';
 import { getSupabase } from './supabase';
+import { ErrorReporter } from './error.service';
 import { Content, Destination, EMPTY_CONTENT, Note } from './models';
 
 /** Données brutes telles que renvoyées par les tables PostgreSQL. */
@@ -64,6 +65,7 @@ export function assembleContent(raw: RawContent): Content {
 
 @Injectable({ providedIn: 'root' })
 export class ContentService {
+  private readonly errors = inject(ErrorReporter);
   private readonly _content = signal<Content>(EMPTY_CONTENT);
   private readonly _loading = signal(false);
   private readonly _error = signal<string | null>(null);
@@ -100,7 +102,8 @@ export class ContentService {
     this._error.set(null);
     try {
       if (!sb) throw new Error('Supabase non configuré : renseignez public/config.json.');
-      this._content.set(assembleContent(await this.fetchRaw(sb)));
+      this._content.set(assembleContent(await this.withRetry(() => this.fetchRaw(sb))));
+      this.errors.clear();
     } catch (e) {
       this._error.set(e instanceof Error ? e.message : String(e));
     } finally {
@@ -134,6 +137,28 @@ export class ContentService {
     if (error) this._error.set(error.message);
   }
 
+  /** Une erreur réseau / 5xx est réessayable ; une erreur d'auth ou de schéma ne l'est pas. */
+  private isRetryable(error: unknown): boolean {
+    const msg = error instanceof Error ? error.message : String(error);
+    if (/\b(401|403|42501|permission denied|jwt|not authorized|invalid api key|could not find the function|PGRST202)\b/i.test(msg)) return false;
+    return true;
+  }
+
+  /** 3 tentatives au total, backoff 400/800 ms, uniquement sur erreurs transitoires. */
+  private async withRetry<T>(fn: () => Promise<T>, attempts = 3): Promise<T> {
+    let last: unknown;
+    for (let i = 0; i < attempts; i++) {
+      try { return await fn(); }
+      catch (e) {
+        last = e;
+        if (i === attempts - 1 || !this.isRetryable(e)) break;
+        if (typeof navigator !== 'undefined' && !navigator.onLine) break;
+        await new Promise((r) => setTimeout(r, 400 * (i + 1)));
+      }
+    }
+    throw last;
+  }
+
   /**
    * Récupère tout le contenu en un seul appel RPC.
    * Repli automatique sur des requêtes table par table si la fonction
@@ -141,7 +166,15 @@ export class ContentService {
    */
   private async fetchRaw(sb: NonNullable<ReturnType<typeof getSupabase>>): Promise<RawContent> {
     const { data, error } = await sb.rpc('content_snapshot');
-    if (error || !data || typeof data !== 'object') return this.fetchRawByTable(sb);
+    if (error) {
+      // Fonction absente (base pas encore migrée) → repli table par table.
+      if (error.code === 'PGRST202' || /could not find the function/i.test(error.message ?? '')) {
+        return this.fetchRawByTable(sb);
+      }
+      // Erreur réseau / serveur → remonter pour que withRetry réessaie.
+      throw new Error(error.message ?? 'Erreur de chargement des données');
+    }
+    if (!data || typeof data !== 'object') return this.fetchRawByTable(sb);
     const s = data as Record<string, any[]>;
     return {
       trips: s['trips'] ?? [],

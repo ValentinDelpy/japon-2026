@@ -12,13 +12,15 @@ import { formatDay } from '../../core/format';
   template: `
     <div class="admin-page-header"><h1>🎯 Activités</h1><span class="spacer"></span><button class="btn btn-primary btn-sm" (click)="add()">+ Nouvelle activité</button></div>
 
+    @if (error(); as e) { <div class="notice">{{ e }}</div> }
+
     @if (editing(); as a) {
       <form class="admin-form mb-2" (ngSubmit)="save()">
         <div class="form-grid">
           <div class="field"><label>Titre</label><input class="input" name="title" [(ngModel)]="a.title" required></div>
           <div class="field"><label>Journée</label><select class="select" name="day_id" [(ngModel)]="a.day_id">
             <option [ngValue]="null">—</option>
-            @for (d of content.days(); track d.id) { <option [ngValue]="d.id">{{ formatDay(d.date) }} — {{ stopName(d.stop_id) }}</option> }
+            @for (d of content.days(); track d.id) { <option [ngValue]="d.id">{{ formatDay(d.date) }} — {{ d.visited_place || stopName(d.base_stop_id ?? d.stop_id) }}</option> }
           </select></div>
           <div class="field"><label>Heure</label><input class="input" name="time" placeholder="09:00" [(ngModel)]="a.time"></div>
           <div class="field"><label>Catégorie</label><input class="input" name="category" [(ngModel)]="a.category"></div>
@@ -59,20 +61,37 @@ export class ActivitiesPage {
   readonly formatDay = formatDay;
   readonly editing = signal<Partial<Activity> | null>(null);
 
+  readonly error = signal<string | null>(null);
+
   readonly sorted = () => [...this.content.activities()].sort((a, b) => a.order_index - b.order_index);
   stopName(id?: string | null): string { return this.content.stops().find((s) => s.id === id)?.city ?? ''; }
-  dayLabel(id?: string | null): string { const d = this.content.days().find((x) => x.id === id); return d ? formatDay(d.date) : '—'; }
-  add(): void { this.editing.set({ order_index: this.content.activities().length }); }
+  dayLabel(id?: string | null): string {
+    const d = this.content.days().find((x) => x.id === id);
+    return d ? `${formatDay(d.date)} — ${d.visited_place || this.stopName(d.base_stop_id ?? d.stop_id) || '—'}` : '—';
+  }
+  add(): void { this.editing.set({}); }
   edit(a: Activity): void { this.editing.set({ ...a }); }
 
   async save(): Promise<void> {
     const a = this.editing();
     if (!a?.title) return;
-    await this.admin.save('activities', { ...a, trip_id: this.content.trip()?.id });
-    this.editing.set(null);
+    this.error.set(null);
+    const day = this.content.days().find((d) => d.id === a.day_id);
+    const stopId = day?.base_stop_id ?? day?.stop_id ?? null;
+    const dayActs = this.content.activities().filter((x) => x.day_id === a.day_id);
+    const order = a.id ? a.order_index : dayActs.reduce((m, x) => Math.max(m, x.order_index), -1) + 1;
+    try {
+      await this.admin.save('activities', { ...a, stop_id: stopId, order_index: order, trip_id: this.content.trip()?.id });
+      this.editing.set(null);
+    } catch (e) {
+      this.error.set(e instanceof Error ? e.message : String(e));
+    }
   }
 
   async remove(a: Activity): Promise<void> {
-    if (a.id && confirm(`Supprimer « ${a.title} » ?`)) await this.admin.remove('activities', a.id);
+    if (!a.id || !confirm(`Supprimer « ${a.title} » ?`)) return;
+    this.error.set(null);
+    try { await this.admin.remove('activities', a.id); }
+    catch (e) { this.error.set(e instanceof Error ? e.message : String(e)); }
   }
 }

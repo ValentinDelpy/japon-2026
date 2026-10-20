@@ -308,7 +308,9 @@ export class DashboardPage implements AfterViewInit, OnDestroy {
     const c = this.statusClass();
     if (c === 'tsb-during') {
       const today = new Date().toISOString().slice(0, 10);
-      const current = this.stops().find((s) => (s.start_date ?? '') <= today && today <= (s.end_date ?? s.start_date ?? ''));
+      const day = this.days().find((d) => d.date === today);
+      const current = (day?.base_stop_id ? this.stops().find((s) => s.id === day.base_stop_id) : null)
+        ?? this.stops().find((s) => (s.start_date ?? '') <= today && today <= (s.end_date ?? s.start_date ?? ''));
       return current ? ` · Actuellement à ${current.city}` : '';
     }
     if (c === 'tsb-after') return ' · Retour de Tokyo';
@@ -325,7 +327,7 @@ export class DashboardPage implements AfterViewInit, OnDestroy {
       .map((d) => ({
         date: d.date,
         short: `${d.date.slice(8, 10)}/${d.date.slice(5, 7)}`,
-        city: stopById.get(d.stop_id ?? '')?.city ?? '',
+        city: d.visited_place ?? stopById.get(d.base_stop_id ?? d.stop_id ?? '')?.city ?? '',
         activities: acts.filter((a) => a.day_id === d.id).map((a) => a.title),
       }));
   });
