@@ -4,6 +4,7 @@ import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } fro
 import { filter, map } from 'rxjs';
 import { AuthService } from '../core/auth.service';
 import { ContentService } from '../core/content.service';
+import { ErrorReporter } from '../core/error.service';
 import { ExchangeService } from '../core/exchange.service';
 import { SearchService } from '../core/search.service';
 import { ThemeService } from '../core/theme.service';
@@ -18,6 +19,11 @@ interface NavGroup { label: string; items: NavItem[]; }
   imports: [RouterOutlet, RouterLink, RouterLinkActive, CommandPalette, Icon],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
+    @if (offline()) { <div class="offline-banner" role="status">Hors ligne — données potentiellement périmées.</div> }
+    @if (errors.message(); as msg) {
+      <div class="error-toast" role="alert"><span>{{ msg }}</span><button type="button" (click)="errors.clear()" aria-label="Fermer">×</button></div>
+    }
+
     <div class="mobile-overlay" [class.active]="menuOpen()" (click)="closeMenu()"></div>
 
     <nav class="sidebar" [class.open]="menuOpen()">
@@ -125,7 +131,12 @@ interface NavGroup { label: string; items: NavItem[]; }
 
     <app-command-palette />
   `,
-  styles: [':host { display: block; }'],
+  styles: [`
+    :host { display: block; }
+    .offline-banner { position: fixed; top: 0; left: 0; right: 0; z-index: 200; background: var(--amber-l, #fdf0d5); color: var(--amber-dark, #7a4f00); text-align: center; font-size: .78rem; padding: 6px 12px; }
+    .error-toast { position: fixed; bottom: 84px; left: 50%; transform: translateX(-50%); z-index: 200; display: flex; align-items: center; gap: 12px; max-width: min(92vw, 520px); background: var(--seal, #b23a2e); color: #fff; border-radius: 10px; padding: 10px 14px; font-size: .82rem; box-shadow: 0 8px 24px rgba(0,0,0,.2); }
+    .error-toast button { background: none; border: none; color: #fff; font-size: 1.1rem; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; }
+  `],
 })
 export class Shell {
   readonly content = inject(ContentService);
@@ -133,7 +144,9 @@ export class Shell {
   readonly theme = inject(ThemeService);
   readonly search = inject(SearchService);
   readonly auth = inject(AuthService);
+  readonly errors = inject(ErrorReporter);
   readonly menuOpen = signal(false);
+  readonly offline = signal(!navigator.onLine);
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
 
@@ -207,7 +220,19 @@ export class Shell {
       if (e.key === 'Escape') this.search.close();
     };
     window.addEventListener('keydown', onKeydown);
-    this.destroyRef.onDestroy(() => window.removeEventListener('keydown', onKeydown));
+
+    const onNetwork = (): void => {
+      this.offline.set(!navigator.onLine);
+      if (navigator.onLine) this.refresh();
+    };
+    window.addEventListener('online', onNetwork);
+    window.addEventListener('offline', onNetwork);
+
+    this.destroyRef.onDestroy(() => {
+      window.removeEventListener('keydown', onKeydown);
+      window.removeEventListener('online', onNetwork);
+      window.removeEventListener('offline', onNetwork);
+    });
   }
 
   openMenu(): void { this.menuOpen.set(true); document.body.style.overflow = 'hidden'; }

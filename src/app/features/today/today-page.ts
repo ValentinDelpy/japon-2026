@@ -19,6 +19,7 @@ import { resolveToday } from '../../core/today';
                 <div class="live-day">Jour {{ c.dayIndex }} / {{ c.totalDays }}</div>
                 <h1>{{ c.stop?.city || 'En route' }}</h1>
                 <p class="live-date">{{ formatDay(c.date) }}</p>
+                @if (c.day?.visited_place; as v) { @if (v !== c.stop?.city) { <p class="live-visited">📍 {{ v }}</p> } }
               </div>
               <div class="live-progress"><div class="live-progress-fill" [style.width.%]="c.progressPct"></div></div>
             </div>
@@ -106,6 +107,7 @@ import { resolveToday } from '../../core/today';
     .live-day { font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; color: var(--ink3); }
     .live-hero h1 { font-size: clamp(1.7rem, 3.6vw, 2.6rem); margin: 2px 0; }
     .live-date { color: var(--ink3); }
+    .live-visited { color: var(--ink2); font-size: .9rem; margin-top: 2px; }
     .live-progress { width: 220px; height: 6px; background: var(--surface3); border-radius: 4px; overflow: hidden; }
     .live-progress-fill { height: 100%; background: var(--accent); border-radius: 4px; transition: width .6s var(--ease); }
     .next-card { background: var(--ink); color: var(--bg); border-radius: var(--r-lg); padding: 22px 26px; margin-bottom: 18px; }
